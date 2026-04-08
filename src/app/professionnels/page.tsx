@@ -1,89 +1,64 @@
-"use client";
-
 import Link from "next/link";
-import { Music, FileText, Download } from "lucide-react";
-import { motion } from "framer-motion";
+import { Music2, FileText, Image } from "lucide-react";
 
 const cards = [
   {
-    title: "Nos Formules",
-    description: "Decouvrez nos formules de spectacle",
+    title: "Nos formules",
+    description: "Découvrez nos formules spectacle",
     href: "/professionnels/formules",
-    icon: Music,
-    color: "primary",
+    icon: Music2,
+    cta: "Voir les formules",
   },
   {
-    title: "Demande de Devis",
-    description: "Obtenez un devis personnalise",
+    title: "Demander un devis",
+    description: "Obtenez un devis personnalisé",
     href: "/professionnels/demande-de-devis",
     icon: FileText,
-    color: "secondary",
+    cta: "Demander un devis",
   },
   {
     title: "Photos HD",
-    description: "Telechargez nos photos professionnelles",
+    description: "Téléchargez des visuels professionnels",
     href: "/professionnels/photos-hd",
-    icon: Download,
-    color: "primary",
+    icon: Image,
+    cta: "Télécharger les visuels",
   },
 ];
 
-export default function ProfessionnelsPage() {
+export default function ProfessionnelsPage(): React.JSX.Element {
   return (
-    <div>
-      {/* Hero */}
-      <section className="relative flex h-[40vh] items-center justify-center bg-gradient-to-b from-dark-light to-dark">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(194,47,40,0.15),transparent_70%)]" />
-        <div className="relative text-center">
-          <h1 className="text-5xl font-bold tracking-wider text-white md:text-6xl">
-            Espace Professionnels
-          </h1>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-gray-400">
-            La page dediee aux professionnels qui souhaitent faire appel a Ricoune
-          </p>
-          <div className="mx-auto mt-4 h-1 w-24 rounded-full bg-primary" />
-        </div>
-      </section>
+    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+      {/* Titre */}
+      <h1 className="text-center text-4xl font-bold font-[family-name:var(--font-oswald)] text-white md:text-5xl">
+        Espace Professionnels
+      </h1>
+      <p className="mx-auto mt-4 max-w-xl text-center text-lg text-white/70">
+        Tout pour organiser votre événement avec Ricoune
+      </p>
 
-      {/* Cards */}
-      <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          {cards.map((card, index) => {
-            const Icon = card.icon;
-            const borderColor =
-              card.color === "primary"
-                ? "border-primary/30 hover:border-primary"
-                : "border-secondary/30 hover:border-secondary";
-            const iconColor =
-              card.color === "primary" ? "text-primary" : "text-secondary";
-
-            return (
-              <motion.div
-                key={card.href}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.15 }}
-              >
-                <Link href={card.href}>
-                  <div
-                    className={`group rounded-xl border ${borderColor} bg-dark-light p-8 text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-xl`}
-                  >
-                    <div
-                      className={`mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-dark-lighter ${iconColor}`}
-                    >
-                      <Icon size={32} />
-                    </div>
-                    <h3 className="mb-2 text-xl font-bold text-white">
-                      {card.title}
-                    </h3>
-                    <p className="text-sm text-gray-400">{card.description}</p>
-                  </div>
-                </Link>
-              </motion.div>
-            );
-          })}
-        </div>
-      </section>
+      {/* Cartes */}
+      <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+        {cards.map((card) => {
+          const Icon = card.icon;
+          return (
+            <div
+              key={card.href}
+              className="rc-card flex flex-col items-center p-8 text-center transition-transform duration-200 hover:scale-[1.02]"
+            >
+              <Icon size={48} className="mb-4 text-rc-yellow" />
+              <h2 className="mb-2 text-xl font-bold font-[family-name:var(--font-oswald)] text-white">
+                {card.title}
+              </h2>
+              <p className="mb-6 flex-1 text-sm text-white/70">
+                {card.description}
+              </p>
+              <Link href={card.href} className="rc-btn-outline">
+                {card.cta}
+              </Link>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

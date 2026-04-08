@@ -1,77 +1,99 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { headers } from "next/headers";
+import { rateLimit } from "@/lib/rate-limit";
+import { devisSchema } from "@/lib/validations/devis";
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const body = await request.json();
-    const { nom, prenom, email, telephone, type_evenement, date_souhaitee, lieu, formule, message } = body;
-
-    if (!nom || !prenom || !email) {
+    const headersList = await headers();
+    const ip =
+      headersList.get("x-forwarded-for") ||
+      headersList.get("x-real-ip") ||
+      "unknown";
+    if (!rateLimit(ip)) {
       return NextResponse.json(
-        { error: "Nom, prénom et email sont requis." },
-        { status: 400 }
+        { error: "Trop de requêtes. Réessayez dans une minute." },
+        { status: 429 },
       );
     }
 
-    // Save to Supabase (if configured)
-    if (supabase) {
-      const { error: dbError } = await supabase
-        .from("devis_requests")
-        .insert({
-          nom,
-          prenom,
-          email,
-          telephone,
-          type_evenement,
-          date_souhaitee: date_souhaitee || null,
-          lieu,
-          formule,
-          message,
-        });
+    const body: unknown = await request.json();
 
-      if (dbError) {
-        console.error("Supabase error:", dbError);
-      }
+    const result = devisSchema.safeParse(body);
+    if (!result.success) {
+      const messages = result.error.issues.map((i) => i.message).join(", ");
+      return NextResponse.json(
+        { error: `Validation : ${messages}` },
+        { status: 400 },
+      );
     }
 
-    // Send email notification
-    const emailBody = `
-Nouvelle demande de devis sur ricoune.com
+    const {
+      nom,
+      prenom,
+      email,
+      telephone,
+      type_evenement,
+      date_souhaitee,
+      lieu,
+      formule,
+      message,
+    } = result.data;
+
+    const emailBody = `Nouvelle demande de devis sur ricoune.com
 
 Nom: ${nom} ${prenom}
 Email: ${email}
-Telephone: ${telephone || "Non renseigné"}
-Type d'événement: ${type_evenement || "Non renseigné"}
-Date souhaitée: ${date_souhaitee || "Non renseignée"}
-Lieu: ${lieu || "Non renseigné"}
-Formule: ${formule || "Non renseignée"}
+Telephone: ${telephone || "Non renseigne"}
+Type d'evenement: ${type_evenement || "Non renseigne"}
+Date souhaitee: ${date_souhaitee || "Non renseignee"}
+Lieu: ${lieu || "Non renseigne"}
+Formule: ${formule || "Non renseignee"}
 
 Message:
-${message || "Aucun message"}
-    `.trim();
+${message || "Aucun message"}`;
 
-    if (process.env.RESEND_API_KEY) {
-      await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "Site Ricoune <noreply@ricoune.com>",
-          to: "contact@ricoune.fr",
-          subject: `[Demande de Devis] ${nom} ${prenom} - ${type_evenement || "Événement"}`,
-          text: emailBody,
-          reply_to: email,
-        }),
-      });
+    if (!process.env.RESEND_API_KEY) {
+      console.error("[API /devis] RESEND_API_KEY missing");
+      return NextResponse.json(
+        { error: "Erreur de configuration serveur." },
+        { status: 500 },
+      );
+    }
+
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Site Ricoune <noreply@ricoune.com>",
+        to: "contact@ricoune.fr",
+        subject: `[Demande de Devis] ${nom} ${prenom} - ${type_evenement || "Evenement"}`,
+        text: emailBody,
+        reply_to: email,
+      }),
+    });
+
+    if (!res.ok) {
+      const errBody = await res.text();
+      console.error("[API /devis] Resend error:", res.status, errBody);
+      return NextResponse.json(
+        { error: "Erreur d'envoi. Veuillez reessayer." },
+        { status: 502 },
+      );
     }
 
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (err) {
+    console.error(
+      "[API /devis] Unexpected error:",
+      (err as Error).message,
+    );
     return NextResponse.json(
-      { error: "Erreur serveur. Veuillez réessayer." },
-      { status: 500 }
+      { error: "Erreur serveur. Veuillez reessayer." },
+      { status: 500 },
     );
   }
 }

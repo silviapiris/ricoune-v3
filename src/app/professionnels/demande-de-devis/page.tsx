@@ -1,29 +1,30 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { motion } from "framer-motion";
-import { Send, CheckCircle } from "lucide-react";
+import { useState, type FormEvent } from "react";
+import Link from "next/link";
 
-const eventTypes = [
-  "Fete votive",
-  "Feria",
+const EVENT_TYPES = [
   "Mariage",
-  "Anniversaire",
+  "Fête votive / Feria",
   "Festival",
-  "Soiree privee",
-  "Evenement d'entreprise",
+  "Soirée privée",
+  "Événement d'entreprise",
   "Autre",
-];
+] as const;
 
-const formuleOptions = [
-  "The Ricoune Show",
-  "L'ApeRicoune",
+const FORMULE_OPTIONS = [
+  "Formule complète",
+  "Cocktail / Show case",
   "Je ne sais pas encore",
-];
+] as const;
 
-export default function DemandeDevisPage() {
-  const [submitted, setSubmitted] = useState(false);
+const INPUT_CLASSES =
+  "w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-white/40 outline-none transition-colors focus:border-rc-yellow focus:outline-none";
+
+export default function DemandeDevisPage(): React.JSX.Element {
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
   const [formData, setFormData] = useState({
     nom: "",
     prenom: "",
@@ -36,17 +37,18 @@ export default function DemandeDevisPage() {
     message: "",
   });
 
-  const handleChange = (
+  function handleChange(
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
     >
-  ) => {
+  ): void {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  }
 
-  const handleSubmit = async (e: FormEvent) => {
+  async function handleSubmit(e: FormEvent): Promise<void> {
     e.preventDefault();
     setLoading(true);
+    setError(false);
 
     try {
       const res = await fetch("/api/devis", {
@@ -64,232 +66,264 @@ export default function DemandeDevisPage() {
           message: formData.message,
         }),
       });
-      if (!res.ok) throw new Error("Failed");
-      setSubmitted(true);
+      if (!res.ok) throw new Error("Request failed");
+      setSuccess(true);
+      setFormData({
+        nom: "",
+        prenom: "",
+        email: "",
+        telephone: "",
+        typeEvenement: "",
+        date: "",
+        lieu: "",
+        formule: "",
+        message: "",
+      });
     } catch {
-      alert("Une erreur est survenue. Veuillez réessayer.");
+      setError(true);
     } finally {
       setLoading(false);
     }
-  };
-
-  const inputClasses =
-    "w-full rounded-lg border border-dark-lighter bg-dark-light px-4 py-3 text-sm text-white placeholder-gray-500 outline-none transition-colors focus:border-primary";
+  }
 
   return (
-    <div>
-      {/* Hero */}
-      <section className="relative flex h-[40vh] items-center justify-center bg-gradient-to-b from-dark-light to-dark">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(194,47,40,0.15),transparent_70%)]" />
-        <div className="relative text-center">
-          <h1 className="text-5xl font-bold tracking-wider text-white md:text-6xl">
-            Demande de Devis
-          </h1>
-          <div className="mx-auto mt-4 h-1 w-24 rounded-full bg-primary" />
+    <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
+      {/* Titre */}
+      <h1 className="mb-10 text-center text-4xl font-bold font-[family-name:var(--font-oswald)] text-white">
+        Demander un devis
+      </h1>
+
+      {/* Messages feedback */}
+      {success && (
+        <div className="mb-6 rounded-xl border border-green-500/30 bg-green-500/10 p-4 text-center text-sm text-green-400">
+          Votre demande a été envoyée avec succès ! Nous vous recontacterons
+          rapidement.
+          <div className="mt-4 flex gap-4 justify-center">
+            <Link href="/" className="rc-btn-outline text-sm">Retour à l&apos;accueil</Link>
+            <Link href="/concerts" className="rc-btn-outline text-sm">Voir les concerts</Link>
+          </div>
         </div>
-      </section>
+      )}
+      {error && (
+        <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center text-sm text-red-400">
+          Une erreur est survenue. Veuillez réessayer.
+        </div>
+      )}
 
-      {/* Form */}
-      <section className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:px-8">
-        {submitted ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="rounded-xl border border-green-500/30 bg-dark-light p-8 text-center"
-          >
-            <CheckCircle size={48} className="mx-auto mb-4 text-green-500" />
-            <h2 className="mb-2 text-2xl font-bold text-white">
-              Demande envoyee !
-            </h2>
-            <p className="text-gray-400">
-              Votre demande a bien ete envoyee ! Nous vous repondrons dans les
-              plus brefs delais.
-            </p>
-          </motion.div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <p className="mb-8 text-center text-gray-400">
-              N&apos;hesitez pas a nous contacter pour toute demande
-              d&apos;information ou de devis. Nous vous repondrons dans les plus
-              brefs delais !
-            </p>
-
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Nom / Prenom */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-300">
-                    Nom *
-                  </label>
-                  <input
-                    type="text"
-                    name="nom"
-                    required
-                    value={formData.nom}
-                    onChange={handleChange}
-                    className={inputClasses}
-                    placeholder="Votre nom"
-                  />
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-300">
-                    Prenom *
-                  </label>
-                  <input
-                    type="text"
-                    name="prenom"
-                    required
-                    value={formData.prenom}
-                    onChange={handleChange}
-                    className={inputClasses}
-                    placeholder="Votre prenom"
-                  />
-                </div>
-              </div>
-
-              {/* Email / Telephone */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-300">
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={inputClasses}
-                    placeholder="votre@email.com"
-                  />
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-300">
-                    Telephone
-                  </label>
-                  <input
-                    type="tel"
-                    name="telephone"
-                    value={formData.telephone}
-                    onChange={handleChange}
-                    className={inputClasses}
-                    placeholder="06 XX XX XX XX"
-                  />
-                </div>
-              </div>
-
-              {/* Type d'evenement */}
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-300">
-                  Type d&apos;evenement
-                </label>
-                <select
-                  name="typeEvenement"
-                  value={formData.typeEvenement}
-                  onChange={handleChange}
-                  className={inputClasses}
-                >
-                  <option value="">-- Selectionnez --</option>
-                  {eventTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Date / Lieu */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-300">
-                    Date souhaitee
-                  </label>
-                  <input
-                    type="date"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleChange}
-                    className={inputClasses}
-                  />
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-300">
-                    Lieu / Ville
-                  </label>
-                  <input
-                    type="text"
-                    name="lieu"
-                    value={formData.lieu}
-                    onChange={handleChange}
-                    className={inputClasses}
-                    placeholder="Ville ou lieu"
-                  />
-                </div>
-              </div>
-
-              {/* Formule souhaitee */}
-              <div>
-                <label className="mb-2 block text-sm font-medium text-gray-300">
-                  Formule souhaitee
-                </label>
-                <div className="space-y-2">
-                  {formuleOptions.map((option) => (
-                    <label
-                      key={option}
-                      className="flex cursor-pointer items-center gap-3"
-                    >
-                      <input
-                        type="radio"
-                        name="formule"
-                        value={option}
-                        checked={formData.formule === option}
-                        onChange={handleChange}
-                        className="h-4 w-4 accent-primary"
-                      />
-                      <span className="text-sm text-gray-300">{option}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Message */}
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-300">
-                  Message / Precisions
-                </label>
-                <textarea
-                  name="message"
-                  rows={5}
-                  value={formData.message}
-                  onChange={handleChange}
-                  className={inputClasses}
-                  placeholder="Decrivez votre evenement, vos besoins..."
-                />
-              </div>
-
-              {/* Submit */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-light disabled:opacity-50"
+      {/* Formulaire */}
+      <div className="rc-card p-8">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Ligne 1 : Nom / Prénom */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="nom"
+                className="mb-1 block text-sm font-medium text-white/80"
               >
-                {loading ? (
-                  <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                ) : (
-                  <>
-                    <Send size={16} />
-                    Envoyer la demande
-                  </>
-                )}
-              </button>
-            </form>
-          </motion.div>
-        )}
-      </section>
+                Nom <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="nom"
+                type="text"
+                name="nom"
+                required
+                value={formData.nom}
+                onChange={handleChange}
+                className={INPUT_CLASSES}
+                placeholder="Votre nom"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="prenom"
+                className="mb-1 block text-sm font-medium text-white/80"
+              >
+                Prénom <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="prenom"
+                type="text"
+                name="prenom"
+                required
+                value={formData.prenom}
+                onChange={handleChange}
+                className={INPUT_CLASSES}
+                placeholder="Votre prénom"
+              />
+            </div>
+          </div>
+
+          {/* Ligne 2 : Email / Téléphone */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="email"
+                className="mb-1 block text-sm font-medium text-white/80"
+              >
+                Email <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                className={INPUT_CLASSES}
+                placeholder="votre@email.com"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="telephone"
+                className="mb-1 block text-sm font-medium text-white/80"
+              >
+                Téléphone
+              </label>
+              <input
+                id="telephone"
+                type="tel"
+                name="telephone"
+                value={formData.telephone}
+                onChange={handleChange}
+                className={INPUT_CLASSES}
+                placeholder="06 XX XX XX XX"
+              />
+            </div>
+          </div>
+
+          {/* Ligne 3 : Type d'événement */}
+          <div>
+            <label
+              htmlFor="typeEvenement"
+              className="mb-1 block text-sm font-medium text-white/80"
+            >
+              Type d&apos;événement <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="typeEvenement"
+              name="typeEvenement"
+              required
+              value={formData.typeEvenement}
+              onChange={handleChange}
+              className={INPUT_CLASSES}
+            >
+              <option value="" disabled>
+                -- Sélectionnez --
+              </option>
+              {EVENT_TYPES.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Ligne 4 : Date / Lieu */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="date"
+                className="mb-1 block text-sm font-medium text-white/80"
+              >
+                Date souhaitée
+              </label>
+              <input
+                id="date"
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                className={INPUT_CLASSES}
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="lieu"
+                className="mb-1 block text-sm font-medium text-white/80"
+              >
+                Lieu / Ville
+              </label>
+              <input
+                id="lieu"
+                type="text"
+                name="lieu"
+                value={formData.lieu}
+                onChange={handleChange}
+                className={INPUT_CLASSES}
+                placeholder="Ville ou lieu"
+              />
+            </div>
+          </div>
+
+          {/* Ligne 5 : Formule souhaitée (radio) */}
+          <fieldset>
+            <legend className="mb-2 block text-sm font-medium text-white/80">
+              Formule souhaitée <span className="text-red-500">*</span>
+            </legend>
+            <div className="space-y-2">
+              {FORMULE_OPTIONS.map((option) => (
+                <label
+                  key={option}
+                  htmlFor={`formule-${option}`}
+                  className="flex cursor-pointer items-center gap-3"
+                >
+                  <input
+                    id={`formule-${option}`}
+                    type="radio"
+                    name="formule"
+                    value={option}
+                    required
+                    checked={formData.formule === option}
+                    onChange={handleChange}
+                    className="h-4 w-4 accent-rc-yellow"
+                  />
+                  <span className="text-sm text-white/80">{option}</span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          {/* Ligne 6 : Message */}
+          <div>
+            <label
+              htmlFor="message"
+              className="mb-1 block text-sm font-medium text-white/80"
+            >
+              Message / Précisions <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows={4}
+              required
+              value={formData.message}
+              onChange={handleChange}
+              className={INPUT_CLASSES}
+              placeholder="Décrivez votre événement, vos besoins..."
+            />
+          </div>
+
+          {/* RGPD */}
+          <p className="text-sm text-white/50">
+            Les informations envoyées via ce site sont utilisées uniquement pour
+            répondre à votre demande.
+          </p>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="rc-btn-red w-full disabled:opacity-50"
+          >
+            {loading ? (
+              <span className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+            ) : (
+              "Envoyer la demande"
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

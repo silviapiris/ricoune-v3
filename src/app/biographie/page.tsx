@@ -1,182 +1,155 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { Quote } from "lucide-react";
+import Link from "next/link";
 import AnimatedSection from "@/components/AnimatedSection";
-import Timeline from "@/components/Timeline";
+import BioTimeline from "@/components/bio/BioTimeline";
 
-const timelineEvents = [
+const TIMELINE_EVENTS = [
   {
     year: "1963",
-    title:
-      "Naissance a Montpellier le 1er fevrier. Berce par la musique de son grand-pere saxophoniste.",
+    description: "Naissance \u00e0 Montpellier",
   },
   {
     year: "1983",
-    title:
-      "Creation de son premier groupe 'Generation 83'. Debut d'une aventure musicale de 5 ans.",
+    description: "Premier groupe",
   },
   {
-    year: "~1988",
-    title:
-      "Evolution vers 'Ricoune et les Counass', un format plus audacieux.",
+    year: "1988",
+    description:
+      "\u00c9volution artistique, d\u00e9but des grandes sc\u00e8nes",
   },
   {
     year: "2001",
-    title:
-      "Renaissance en solo sous le nom 'Ricoune'. Sortie du tube 'Dans un verre a ballon' qui deviendra l'hymne des fetes du Sud.",
+    description:
+      "\u00ab\u00a0Dans un verre \u00e0 ballon\u00a0\u00bb, le tube qui marque une g\u00e9n\u00e9ration",
   },
   {
     year: "2007",
-    title:
-      "Creation du generique de 'La Vache' pour l'emission Interville, diffusee sur France 2.",
-  },
-  {
-    year: "2015",
-    title:
-      "Sortie de plusieurs albums dont 'Le Best Of', 'Ricoune 20 Ans!', 'Le Kukela', 'Mets tes lunettes'.",
-  },
-  {
-    year: "2017",
-    title: "Sortie de l'album 'Face B'.",
-  },
-  {
-    year: "2021",
-    title: "Dernier album en date : 'Quand un faineant se rebelle'.",
+    description:
+      "G\u00e9n\u00e9rique de la c\u00e9l\u00e8bre \u00ab\u00a0vache\u00a0\u00bb d\u2019Interville",
   },
 ];
 
-export default function BiographiePage() {
+export default function BiographiePage(): React.ReactElement {
   return (
     <>
-      {/* ===== HERO BANNER ===== */}
-      <section className="relative flex h-[40vh] min-h-[320px] items-center justify-center overflow-hidden">
+      {/* ===== 1. HERO ===== */}
+      <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden">
         <Image
-          src="https://www.ricoune.com/wp-content/uploads/2022/10/Fond-Biographie-Ricoune.jpg"
-          alt="Ricoune"
+          src="/images/bio/bio-hero.webp"
+          alt="Ricoune sur sc&egrave;ne"
           fill
-          className="object-cover"
           priority
-          quality={75}
+          className="object-cover"
+          sizes="100vw"
         />
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-dark" />
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="relative z-10 text-center"
-        >
-          <h1 className="text-5xl font-bold tracking-wider text-white md:text-7xl">
-            Biographie
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative z-10 text-center">
+          <h1 className="font-[family-name:var(--font-oswald)] text-5xl font-bold uppercase text-white md:text-7xl">
+            RICOUNE
           </h1>
-          <div className="mx-auto mt-4 h-1 w-16 rounded-full bg-primary" />
-        </motion.div>
-      </section>
-
-      {/* ===== BIO INTRO / QUOTE ===== */}
-      <section className="py-16 lg:py-24">
-        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-          <AnimatedSection>
-            <Quote className="mx-auto mb-6 h-10 w-10 text-primary/40" />
-            <blockquote className="text-2xl font-medium leading-relaxed text-secondary md:text-3xl">
-              &laquo;&nbsp;Un artiste autodidacte, poete a ses heures, qui
-              revendique sa liberte creative&nbsp;&raquo;
-            </blockquote>
-          </AnimatedSection>
+          <p className="mt-4 font-[family-name:var(--font-raleway)] text-xl text-white/80">
+            L&apos;artiste incontournable des sc&egrave;nes festives
+          </p>
         </div>
       </section>
 
-      {/* ===== TIMELINE ===== */}
-      <section className="bg-dark-light py-20 lg:py-28">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <AnimatedSection className="mb-14 text-center">
-            <h2 className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">
-              Parcours
-            </h2>
-            <h3 className="text-3xl font-bold text-white md:text-4xl">
-              Les grandes dates
-            </h3>
-          </AnimatedSection>
-
-          <Timeline events={timelineEvents} />
-        </div>
-      </section>
-
-      {/* ===== FULL BIO TEXT ===== */}
-      <section className="py-20 lg:py-28">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <AnimatedSection className="mb-12 text-center">
-            <h2 className="mb-2 text-sm font-semibold uppercase tracking-widest text-primary">
-              L&apos;histoire
-            </h2>
-            <h3 className="text-3xl font-bold text-white md:text-4xl">
-              De Montpellier aux scenes du Sud
-            </h3>
-          </AnimatedSection>
-
+      {/* ===== 2. CITATION ===== */}
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-3xl px-4">
           <AnimatedSection>
-            <div className="grid gap-8 lg:grid-cols-2">
-              <div className="space-y-6 text-gray-300 leading-relaxed">
-                <p>
-                  Ne le 1er fevrier 1963 a Montpellier, Henri grandit berce par
-                  la musique de son grand-pere saxophoniste. Apres avoir exerce
-                  divers metiers — boulanger, bucheron, glacier — il fonde en
-                  1983 son premier groupe &laquo;&nbsp;Generation
-                  83&nbsp;&raquo;, qui durera cinq ans.
-                </p>
-                <p>
-                  S&apos;ensuit la periode &laquo;&nbsp;Ricoune et les
-                  Counass&nbsp;&raquo;, avant la renaissance en 2001 sous le nom
-                  de &laquo;&nbsp;Ricoune&nbsp;&raquo;, avec des compositions
-                  plus structurees. C&apos;est cette annee-la qu&apos;il lance
-                  son tube incontournable &laquo;&nbsp;Dans un verre a
-                  ballon&nbsp;&raquo;, devenu l&apos;hymne des fetes votives et
-                  des ferias du Sud de la France.
-                </p>
-              </div>
-              <div className="space-y-6 text-gray-300 leading-relaxed">
-                <p>
-                  En 2007, il signe le generique de la fameuse
-                  &laquo;&nbsp;vache&nbsp;&raquo; pour le segment final de
-                  l&apos;emission Interville sur France 2.
-                </p>
-                <p>
-                  Artiste autodidacte, poete a ses heures, Ricoune revendique sa
-                  liberte creative et refuse tout formatage mediatique. Un homme
-                  epanoui qui partage son talent a travers ses textes, fidele a
-                  lui-meme et a son public du Sud.
-                </p>
-              </div>
+            <div className="rc-card px-8 py-12 text-center md:px-16 md:py-16">
+              <span className="font-[family-name:var(--font-oswald)] text-6xl leading-none text-rc-yellow">
+                &laquo;
+              </span>
+              <blockquote className="mt-2 font-[family-name:var(--font-raleway)] text-xl italic leading-relaxed text-white md:text-2xl">
+                La musique, c&apos;est le partage. Je chante pour les gens,
+                avec les gens.
+              </blockquote>
+              <span className="mt-2 inline-block font-[family-name:var(--font-oswald)] text-6xl leading-none text-rc-yellow">
+                &raquo;
+              </span>
             </div>
           </AnimatedSection>
         </div>
       </section>
 
-      {/* ===== PHILOSOPHY SECTION ===== */}
-      <section className="pb-20 lg:pb-28">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      {/* ===== 3. HISTOIRE ===== */}
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-6xl px-4">
+          <AnimatedSection className="mb-10">
+            <h2 className="font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
+              De Montpellier aux sc&egrave;nes festives
+            </h2>
+          </AnimatedSection>
+
           <AnimatedSection>
-            <div className="rounded-2xl border border-dark-lighter bg-dark-light p-8 md:p-12">
-              <h3 className="mb-6 text-center text-2xl font-bold text-white">
-                Sa philosophie
-              </h3>
-              <div className="space-y-4 text-center text-gray-300 leading-relaxed">
-                <p>
-                  Ricoune est avant tout un homme libre. Autodidacte, il a
-                  toujours refuse le formatage de l&apos;industrie musicale pour
-                  rester fidele a son identite et a son public.
-                </p>
-                <p>
-                  Poete du quotidien, il puise son inspiration dans la vie du
-                  Sud, les fetes de village, les rencontres humaines et les
-                  moments simples qui font la beaute de la vie.
-                </p>
-                <p className="text-lg font-medium text-secondary">
-                  &laquo;&nbsp;La musique, c&apos;est le partage. Je chante pour
-                  les gens, avec les gens.&nbsp;&raquo;
-                </p>
+            <div className="grid gap-8 md:grid-cols-2">
+              <p className="leading-relaxed text-white/85">
+                N&eacute; &agrave; Montpellier en 1963, Ricoune grandit
+                berc&eacute; par la musique populaire du Sud. Tr&egrave;s
+                t&ocirc;t, il d&eacute;couvre sa passion pour la sc&egrave;ne et
+                le contact avec le public. En 1983, il forme son premier groupe
+                et commence &agrave; &eacute;cumer les f&ecirc;tes de village,
+                les bodegas et les f&eacute;rias qui font vibrer
+                l&apos;Occitanie.
+              </p>
+              <p className="leading-relaxed text-white/85">
+                Au fil des ann&eacute;es, Ricoune affine son style unique : un
+                m&eacute;lange de chansons festives, de reprises populaires et
+                de compositions originales qui mettent tout le monde
+                d&apos;accord. Son authenticit&eacute; et son &eacute;nergie sur
+                sc&egrave;ne en font rapidement une figure incontournable du
+                circuit festif du Sud de la France.
+              </p>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* ===== 4. MOMENTS CLES (Timeline) ===== */}
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-4xl px-4">
+          <AnimatedSection className="mb-10">
+            <h2 className="font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
+              Moments cl&eacute;s
+            </h2>
+          </AnimatedSection>
+
+          <BioTimeline events={TIMELINE_EVENTS} />
+        </div>
+      </section>
+
+      {/* ===== 5. PHILOSOPHIE ===== */}
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-3xl px-4 text-center">
+          <AnimatedSection>
+            <p className="text-lg leading-relaxed text-white/90">
+              Pour Ricoune, la musique n&apos;est pas un m&eacute;tier,
+              c&apos;est un art de vivre. Libre, authentique, sans artifice. Sur
+              sc&egrave;ne, il n&apos;y a pas de barri&egrave;re entre
+              l&apos;artiste et son public. Chaque concert est un moment de
+              partage, une c&eacute;l&eacute;bration collective o&ugrave; tout
+              le monde chante, danse et oublie le quotidien.
+            </p>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* ===== 6. CTA ===== */}
+      <section className="pb-16 md:pb-24">
+        <div className="mx-auto max-w-4xl px-4">
+          <AnimatedSection>
+            <div className="rc-card px-6 py-12 text-center md:px-12 md:py-16">
+              <p className="mb-8 text-xl text-white/90 md:text-2xl">
+                Envie de vivre l&apos;exp&eacute;rience Ricoune en live ?
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <Link href="/concerts" className="rc-btn">
+                  Voir les prochaines dates
+                </Link>
+                <Link href="/professionnels/demande-de-devis" className="rc-btn-outline">Demander un devis</Link>
               </div>
             </div>
           </AnimatedSection>

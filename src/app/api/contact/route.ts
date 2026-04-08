@@ -1,66 +1,102 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { headers } from "next/headers";
+import { rateLimit } from "@/lib/rate-limit";
+import { contactSchema } from "@/lib/validations/contact";
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const body = await request.json();
-    const { name, email, subject, message } = body;
-
-    if (!name || !email || !subject || !message) {
+    const headersList = await headers();
+    const ip =
+      headersList.get("x-forwarded-for") ||
+      headersList.get("x-real-ip") ||
+      "unknown";
+    if (!rateLimit(ip)) {
       return NextResponse.json(
-        { error: "Tous les champs sont requis." },
-        { status: 400 }
+        { error: "Trop de requêtes. Réessayez dans une minute." },
+        { status: 429 },
       );
     }
 
-    // Save to Supabase (if configured)
-    if (supabase) {
-      const { error: dbError } = await supabase
-        .from("contact_messages")
-        .insert({ name, email, subject, message });
+    const body: unknown = await request.json();
 
-      if (dbError) {
-        console.error("Supabase error:", dbError);
-      }
+    const result = contactSchema.safeParse(body);
+    if (!result.success) {
+      const messages = result.error.issues.map((i) => i.message).join(", ");
+      return NextResponse.json(
+        { error: `Validation : ${messages}` },
+        { status: 400 },
+      );
     }
 
-    // Send notification email via Supabase Edge Function or external service
-    // For now, we use a simple fetch to a webhook or email API
-    const emailBody = `
-Nouveau message de contact sur ricoune.com
+    const {
+      nom,
+      prenom,
+      email,
+      telephone,
+      type_evenement,
+      date_souhaitee,
+      ville,
+      message,
+    } = result.data;
 
-Nom: ${name}
-Email: ${email}
-Sujet: ${subject}
+    const subject = `[Contact] ${nom} ${prenom} - ${type_evenement || "General"}`;
 
-Message:
-${message}
-    `.trim();
+    const emailLines = [
+      "Nouveau message de contact sur ricoune.com",
+      "",
+      `Nom : ${nom} ${prenom}`,
+      `Email : ${email}`,
+    ];
+    if (telephone) emailLines.push(`Telephone : ${telephone}`);
+    if (type_evenement)
+      emailLines.push(`Type d'evenement : ${type_evenement}`);
+    if (date_souhaitee) emailLines.push(`Date souhaitee : ${date_souhaitee}`);
+    if (ville) emailLines.push(`Ville / Lieu : ${ville}`);
+    emailLines.push("", "Message :", message);
 
-    // Send email notification using Resend, SendGrid, or similar
-    // This will work when RESEND_API_KEY is configured
-    if (process.env.RESEND_API_KEY) {
-      await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          from: "Site Ricoune <noreply@ricoune.com>",
-          to: "contact@ricoune.fr",
-          subject: `[Contact Site] ${subject}`,
-          text: emailBody,
-          reply_to: email,
-        }),
-      });
+    const emailBody = emailLines.join("\n");
+
+    if (!process.env.RESEND_API_KEY) {
+      console.error("[API /contact] RESEND_API_KEY missing");
+      return NextResponse.json(
+        { error: "Erreur de configuration serveur." },
+        { status: 500 },
+      );
+    }
+
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Site Ricoune <noreply@ricoune.com>",
+        to: "contact@ricoune.fr",
+        subject,
+        text: emailBody,
+        reply_to: email,
+      }),
+    });
+
+    if (!res.ok) {
+      const errBody = await res.text();
+      console.error("[API /contact] Resend error:", res.status, errBody);
+      return NextResponse.json(
+        { error: "Erreur d'envoi. Veuillez reessayer." },
+        { status: 502 },
+      );
     }
 
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (err) {
+    console.error(
+      "[API /contact] Unexpected error:",
+      (err as Error).message,
+    );
     return NextResponse.json(
-      { error: "Erreur serveur. Veuillez réessayer." },
-      { status: 500 }
+      { error: "Erreur serveur. Veuillez reessayer." },
+      { status: 500 },
     );
   }
 }

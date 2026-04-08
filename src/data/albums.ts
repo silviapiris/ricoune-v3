@@ -27,7 +27,7 @@ export const albums: Album[] = [
     slug: "quand-un-faineant-se-rebelle",
     title: "Quand un fain\u00e9ant se rebelle",
     year: 2021,
-    coverUrl: "https://www.ricoune.com/wp-content/uploads/2021/12/Ricoune-Pochette-Quand-un-fainéant-se-rebelle-couleur-Automne-copie-400x400.jpg",
+    coverUrl: "/images/albums/quand-un-faineant-se-rebelle.webp",
     tracklist: [],
     streaming: { ...defaultStreaming },
   },
@@ -35,7 +35,7 @@ export const albums: Album[] = [
     slug: "face-b",
     title: "Face B",
     year: 2017,
-    coverUrl: "https://www.ricoune.com/wp-content/uploads/2017/11/POCHETTE-RICOUNE-FACE-B-1-400x400.jpg",
+    coverUrl: "/images/albums/ricoune-recto.webp",
     tracklist: [
       "On a le web \u00e0 la maison",
       "A 60 \u00e0 l\u2019heure sur mon tracteur",
@@ -54,7 +54,7 @@ export const albums: Album[] = [
     slug: "y-faut-etre-gentil",
     title: "Y faut \u00eatre gentil !",
     year: 2016,
-    coverUrl: "https://www.ricoune.com/wp-content/uploads/2016/01/Jaquette-y-faut-etre-gentil-400x400.jpg",
+    coverUrl: "/images/albums/y-faut-etre-gentil.webp",
     tracklist: [],
     streaming: { ...defaultStreaming },
   },
@@ -84,7 +84,7 @@ export const albums: Album[] = [
     slug: "le-kukela",
     title: "Le Kukela",
     year: 2015,
-    coverUrl: "https://www.ricoune.com/wp-content/uploads/2015/02/ricoune_lekukela-400x400.jpg",
+    coverUrl: "/images/albums/kukela.webp",
     tracklist: [
       "Le Kuk\u00e9la",
       "Es tout Pagat",
@@ -102,7 +102,7 @@ export const albums: Album[] = [
     slug: "le-best-of",
     title: "Le Best Of",
     year: 2015,
-    coverUrl: "https://www.ricoune.com/wp-content/uploads/2015/02/ricoune_bestof-400x400.jpg",
+    coverUrl: "/images/albums/bestof.webp",
     tracklist: [
       "Dans un verre \u00e0 Ballon",
       "Le Couscoussier",
@@ -123,7 +123,7 @@ export const albums: Album[] = [
     slug: "mets-tes-lunettes",
     title: "Mets tes lunettes",
     year: 2015,
-    coverUrl: "https://www.ricoune.com/wp-content/uploads/2015/02/ricouhe_mtleccsb-400x400.jpg",
+    coverUrl: "/images/albums/mets-tes-lunettes.webp",
     tracklist: [
       "Le reggae Marseillais",
       "Jacques \u00e0 dit",
@@ -142,7 +142,7 @@ export const albums: Album[] = [
     slug: "ricoune-20-ans",
     title: "Ricoune 20 Ans!",
     year: 2015,
-    coverUrl: "https://www.ricoune.com/wp-content/uploads/2015/02/ricoune_20ans-400x400.jpg",
+    coverUrl: "/images/albums/20-ans.webp",
     tracklist: [
       "La Coupo Santo",
       "La loi du silence",

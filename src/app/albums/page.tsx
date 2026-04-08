@@ -1,90 +1,73 @@
 "use client";
 
-import Link from "next/link";
+import { useState, useCallback } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import Link from "next/link";
 import { albums } from "@/data/albums";
+import type { Album } from "@/data/albums";
 
-const gradients = [
-  "from-primary to-primary-dark",
-  "from-secondary-dark to-primary",
-  "from-dark-lighter to-primary-dark",
-  "from-secondary to-secondary-dark",
-  "from-primary-light to-secondary",
-  "from-primary-dark to-dark-lighter",
-  "from-secondary-dark to-dark-lighter",
-  "from-primary to-secondary-dark",
-];
+const AlbumModal = dynamic(() => import("@/components/AlbumModal"), { ssr: false });
 
 export default function AlbumsPage() {
+  const [selectedAlbum, setSelectedAlbum] = useState<Album | null>(null);
+
+  const handleClose = useCallback(() => {
+    setSelectedAlbum(null);
+  }, []);
+
   return (
-    <>
-      {/* Hero */}
-      <section className="relative flex h-[40vh] items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-dark/30 to-dark" />
-        <div className="relative z-10 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-5xl font-bold tracking-wider text-white md:text-7xl"
+    <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+      {/* Page header */}
+      <h1 className="text-center font-[family-name:var(--font-oswald)] text-4xl font-bold tracking-wide text-white md:text-5xl">
+        Albums
+      </h1>
+      <p className="mt-3 text-center text-white/70">Discographie complète</p>
+
+      {/* Album grid */}
+      <div className="mt-12 grid grid-cols-2 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+        {albums.map((album) => (
+          <button
+            key={album.slug}
+            type="button"
+            onClick={() => setSelectedAlbum(album)}
+            className="group cursor-pointer text-left transition-transform duration-300 hover:scale-[1.03]"
+            aria-label={`${album.title} (${album.year})`}
           >
-            Discographie
-          </motion.h1>
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="mx-auto mt-4 h-1 w-24 rounded-full bg-primary"
-          />
-        </div>
+            {/* Cover */}
+            <div className="aspect-square overflow-hidden rounded-xl shadow-lg transition-shadow duration-300 group-hover:shadow-2xl">
+              <Image
+                src={album.coverUrl}
+                alt={album.title}
+                width={400}
+                height={400}
+                className="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
+
+            {/* Title + year */}
+            <p className="mt-3 font-[family-name:var(--font-inter)] text-sm font-semibold text-white md:text-base">
+              {album.title}
+            </p>
+            <p className="text-sm text-white/60">{album.year}</p>
+          </button>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <section className="mt-16 rc-card p-8 md:p-12 text-center">
+        <h2 className="font-[family-name:var(--font-oswald)] text-2xl md:text-3xl font-bold mb-4">
+          Envie de vivre Ricoune en live ?
+        </h2>
+        <p className="text-white/70 mb-6">Concerts, événements privés, festivals — Ricoune enflamme toutes les scènes.</p>
+        <Link href="/professionnels/demande-de-devis" className="rc-btn">Demander un devis</Link>
       </section>
 
-      {/* Albums Grid */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {albums.map((album, i) => (
-            <motion.div
-              key={album.slug}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-            >
-              <Link
-                href={`/albums/${album.slug}`}
-                className="group block overflow-hidden rounded-xl bg-dark-light transition-transform duration-300 hover:scale-[1.03]"
-              >
-                {/* Cover */}
-                <div className="relative aspect-square">
-                  <Image
-                    src={album.coverUrl}
-                    alt={album.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    loading={i < 4 ? "eager" : "lazy"}
-                  />
-                  {/* Year badge */}
-                  <span className="absolute right-3 top-3 rounded-full bg-black/50 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
-                    {album.year}
-                  </span>
-                  {/* Title overlay */}
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-4 pt-12">
-                    <h2 className="text-lg font-bold text-white">
-                      {album.title}
-                    </h2>
-                    {album.description && (
-                      <p className="mt-1 text-sm text-secondary">
-                        {album.description}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-    </>
+      {/* Modal */}
+      {selectedAlbum !== null && (
+        <AlbumModal album={selectedAlbum} onClose={handleClose} />
+      )}
+    </section>
   );
 }

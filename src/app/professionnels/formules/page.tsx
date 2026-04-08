@@ -1,111 +1,125 @@
-"use client";
-
+import Image from "next/image";
 import Link from "next/link";
 import { Check } from "lucide-react";
-import { motion } from "framer-motion";
 
-const formules = [
+interface FormulaItem {
+  text: string;
+  link?: { href: string; label: string };
+}
+
+const formules: {
+  name: string;
+  items: FormulaItem[];
+}[] = [
   {
-    name: "The Ricoune Show",
-    badge: "Groupe",
-    price: "Sur devis",
-    accent: "primary",
-    features: [
-      "Concert de 2 heures",
-      "Musiciens et comedien sur scene",
-      "DJ optionnel pour prolonger la soiree",
-      "Fiche technique fournie",
-      "Adaptation selon l'evenement",
+    name: "Formule complète",
+    items: [
+      { text: "Concert 1h30" },
+      { text: "7 musiciens sur scène" },
+      {
+        text: "Fiche technique",
+        link: {
+          href: "/documents/fiche-technique-groupe.pdf",
+          label: "Fiche technique",
+        },
+      },
+      { text: "Adaptation selon vos événements" },
     ],
   },
   {
-    name: "L'ApeRicoune",
-    badge: "Solo",
-    price: "Sur devis",
-    accent: "secondary",
-    features: [
-      "Animation musicale solo",
-      "Ideal pour aperitifs et cocktails",
-      "Format flexible et convivial",
-      "Dynamise vos evenements festifs",
-      "Ambiance garantie",
+    name: "Cocktail / Show case",
+    items: [
+      { text: "Idéal pour cocktail et show case" },
+      { text: "Sono fournie sauf départements hors Occitanie" },
+      {
+        text: "Fiche technique",
+        link: {
+          href: "/documents/fiche-technique-solo.pdf",
+          label: "Fiche technique",
+        },
+      },
+      { text: "Adaptation selon vos événements" },
     ],
   },
 ];
 
-export default function FormulesPage() {
+export default function FormulesPage(): React.JSX.Element {
   return (
-    <div>
-      {/* Hero */}
-      <section className="relative flex h-[40vh] items-center justify-center bg-gradient-to-b from-dark-light to-dark">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(194,47,40,0.15),transparent_70%)]" />
-        <div className="relative text-center">
-          <h1 className="text-5xl font-bold tracking-wider text-white md:text-6xl">
-            Nos Formules
-          </h1>
-          <div className="mx-auto mt-4 h-1 w-24 rounded-full bg-primary" />
+    <div className="relative min-h-screen">
+      {/* Background image + overlay */}
+      <div className="fixed inset-0 -z-10">
+        <Image
+          src="/images/hero/home-concert-scene.webp"
+          alt=""
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/60" />
+      </div>
+
+      <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
+        {/* Titre */}
+        <h1 className="text-center text-4xl font-bold font-[family-name:var(--font-oswald)] text-white md:text-5xl">
+          Nos Formules
+        </h1>
+
+        {/* Cartes */}
+        <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+          {formules.map((formule) => (
+            <div key={formule.name} className="rc-card flex flex-col p-8">
+              {/* Titre formule */}
+              <h2 className="mb-3 text-2xl font-bold font-[family-name:var(--font-oswald)] text-white">
+                {formule.name}
+              </h2>
+
+              {/* Badge */}
+              <span className="rc-section-label mb-6">Sur devis</span>
+
+              {/* Liste */}
+              <ul className="mb-8 flex-1 space-y-3">
+                {formule.items.map((item) => (
+                  <li key={item.text} className="flex items-start gap-3">
+                    <Check
+                      size={18}
+                      className="mt-0.5 shrink-0 text-rc-yellow"
+                    />
+                    <span className="text-sm text-white/80">
+                      {item.link ? (
+                        <a
+                          href={item.link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-rc-yellow underline"
+                        >
+                          {item.link.label}
+                        </a>
+                      ) : (
+                        item.text
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA */}
+              <Link href="/professionnels/demande-de-devis" className="rc-btn">
+                Demander un devis
+              </Link>
+            </div>
+          ))}
         </div>
-      </section>
 
-      {/* Pricing Cards */}
-      <section className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          {formules.map((formule, index) => {
-            const isPrimary = formule.accent === "primary";
-            const borderClass = isPrimary
-              ? "border-primary/40"
-              : "border-secondary/40";
-            const badgeBg = isPrimary ? "bg-primary" : "bg-secondary";
-            const checkColor = isPrimary ? "text-primary" : "text-secondary";
-            const btnBg = isPrimary
-              ? "bg-primary hover:bg-primary-light"
-              : "bg-secondary hover:bg-secondary-light";
-
-            return (
-              <motion.div
-                key={formule.name}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-                className={`flex flex-col rounded-xl border ${borderClass} bg-dark-light p-8`}
-              >
-                {/* Badge */}
-                <span
-                  className={`${badgeBg} mb-4 inline-block w-fit rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white`}
-                >
-                  {formule.badge}
-                </span>
-
-                {/* Name */}
-                <h3 className="mb-2 text-2xl font-bold text-white">
-                  {formule.name}
-                </h3>
-
-                {/* Price */}
-                <p className="mb-6 text-lg text-gray-400">{formule.price}</p>
-
-                {/* Features */}
-                <ul className="mb-8 flex-1 space-y-3">
-                  {formule.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
-                      <Check size={18} className={`mt-0.5 shrink-0 ${checkColor}`} />
-                      <span className="text-sm text-gray-300">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA */}
-                <Link
-                  href="/professionnels/demande-de-devis"
-                  className={`${btnBg} rounded-lg px-6 py-3 text-center text-sm font-semibold text-white transition-colors`}
-                >
-                  Demander un devis
-                </Link>
-              </motion.div>
-            );
-          })}
+        {/* CTA global */}
+        <div className="mt-16 text-center">
+          <p className="mb-6 text-lg text-white/80">
+            Un événement sur mesure ? Contactez-nous pour un devis personnalisé.
+          </p>
+          <Link href="/professionnels/demande-de-devis" className="rc-btn">
+            Demander un devis
+          </Link>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

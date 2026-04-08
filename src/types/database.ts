@@ -45,17 +45,21 @@ export interface Photo {
 }
 
 export interface ContactMessage {
-  id: string;
-  name: string;
+  id: number;
+  nom: string;
+  prenom: string;
   email: string;
-  subject: string;
+  telephone: string | null;
+  type_evenement: string | null;
+  date_souhaitee: string | null;
+  ville: string | null;
   message: string;
-  read: boolean;
+  lu: boolean;
   created_at: string;
 }
 
 export interface DevisRequest {
-  id: string;
+  id: number;
   nom: string;
   prenom: string;
   email: string;
@@ -65,14 +69,7 @@ export interface DevisRequest {
   lieu: string | null;
   formule: string | null;
   message: string | null;
-  budget: string | null;
   status: "nouveau" | "en_cours" | "traite" | "refuse";
-  created_at: string;
-}
-
-export interface NewsletterSubscriber {
-  id: string;
-  email: string;
   created_at: string;
 }
 
@@ -101,18 +98,13 @@ export interface Database {
       };
       contact_messages: {
         Row: ContactMessage;
-        Insert: Omit<ContactMessage, "id" | "read" | "created_at">;
+        Insert: Omit<ContactMessage, "id" | "lu" | "created_at">;
         Update: Partial<Omit<ContactMessage, "id" | "created_at">>;
       };
       devis_requests: {
         Row: DevisRequest;
         Insert: Omit<DevisRequest, "id" | "status" | "created_at">;
         Update: Partial<Omit<DevisRequest, "id" | "created_at">>;
-      };
-      newsletter_subscribers: {
-        Row: NewsletterSubscriber;
-        Insert: Omit<NewsletterSubscriber, "id" | "created_at">;
-        Update: Partial<Omit<NewsletterSubscriber, "id" | "created_at">>;
       };
     };
   };

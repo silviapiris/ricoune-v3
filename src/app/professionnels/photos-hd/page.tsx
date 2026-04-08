@@ -1,116 +1,98 @@
-"use client";
-
 import Image from "next/image";
+import Link from "next/link";
 import { Download } from "lucide-react";
-import { motion } from "framer-motion";
 
-const downloads = [
+const photos = [
   {
-    title: "Flyer",
-    type: "JPEG",
-    thumbnailUrl: "https://www.ricoune.com/wp-content/uploads/2024/06/flyer-Ricoune-rgb.jpg",
-    downloadUrl: "https://www.ricoune.com/wp-content/uploads/2024/06/Flyer_Ricoune.jpeg",
+    name: "Affiche verre à ballon",
+    format: "PNG",
+    src: "/images/photos-hd/visuel-01.png",
   },
   {
-    title: "Photo Professionnelle 1",
-    type: "JPEG",
-    thumbnailUrl: "https://www.ricoune.com/wp-content/uploads/2024/06/ricoune-8-1140x760.jpg",
-    downloadUrl: "https://www.ricoune.com/wp-content/uploads/2024/06/Ricoune__1.jpg",
-  },
-  {
-    title: "Affiche Vierge",
-    type: "JPEG",
-    thumbnailUrl: "https://www.ricoune.com/wp-content/uploads/2024/06/Ricoune-affiche-2021-vierge.jpg",
-    downloadUrl: "https://www.ricoune.com/wp-content/uploads/2024/06/Ricoune__affiche__vierge.jpeg",
-  },
-  {
-    title: "Photo Professionnelle 2",
-    type: "JPEG",
-    thumbnailUrl: "https://www.ricoune.com/wp-content/uploads/2024/06/ricoune-13-1140x760.jpg",
-    downloadUrl: "https://www.ricoune.com/wp-content/uploads/2024/06/Ricoune__2.jpg",
-  },
-  {
-    title: "Affiche Verre a Ballon",
-    type: "PDF",
-    thumbnailUrl: "https://www.ricoune.com/wp-content/uploads/2024/06/affiche_verre.jpg",
-    downloadUrl: "https://www.ricoune.com/wp-content/uploads/2024/06/Affiche_verre_ballon.pdf",
+    name: "Affiche Ricoune en concert",
+    format: "JPEG",
+    src: "/images/photos-hd/visuel-02.jpg",
   },
 ];
 
-export default function PhotosHDPage() {
+export default function PhotosHDPage(): React.JSX.Element {
   return (
-    <div>
-      {/* Hero */}
-      <section className="relative flex h-[40vh] items-center justify-center bg-gradient-to-b from-dark-light to-dark">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(194,47,40,0.15),transparent_70%)]" />
-        <div className="relative text-center">
-          <h1 className="text-5xl font-bold tracking-wider text-white md:text-6xl">
-            Photos HD
-          </h1>
-          <div className="mx-auto mt-4 h-1 w-24 rounded-full bg-primary" />
-        </div>
-      </section>
+    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
+      {/* Titre */}
+      <h1 className="text-center text-4xl font-bold font-[family-name:var(--font-oswald)] text-white md:text-5xl">
+        Photos HD
+      </h1>
+      <p className="mx-auto mt-4 max-w-2xl text-center text-white/70">
+        Téléchargez des visuels professionnels pour vos supports de
+        communication
+      </p>
 
-      {/* Downloads */}
-      <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-        <p className="mb-10 text-center text-gray-400">
-          Telechargez librement ces images en haute definition pour vos supports
-          de communication.
-        </p>
+      {/* Grille photos */}
+      <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+        {photos.map((photo) => (
+          <div key={photo.src} className="rc-card overflow-hidden">
+            {/* Aperçu — object-contain pour ne rien tronquer */}
+            <div className="relative h-72 bg-black/20">
+              <Image
+                src={photo.src}
+                alt={photo.name}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-contain"
+                loading="lazy"
+                quality={80}
+              />
+            </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {downloads.map((item, index) => (
-            <motion.div
-              key={item.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              className="overflow-hidden rounded-xl border border-dark-lighter bg-dark-light"
-            >
-              {/* Thumbnail */}
-              <div className="relative h-48">
-                <Image
-                  src={item.thumbnailUrl}
-                  alt={item.title}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover"
-                  loading="lazy"
-                  quality={70}
-                />
+            {/* Infos + téléchargement */}
+            <div className="flex items-center justify-between p-5">
+              <div>
+                <h2 className="text-sm font-semibold text-white">
+                  {photo.name}
+                </h2>
+                <span className="mt-1 inline-block rounded bg-rc-yellow/20 px-2 py-0.5 text-xs font-medium text-rc-yellow">
+                  {photo.format}
+                </span>
               </div>
+              <a
+                href={photo.src}
+                download
+                className="rc-btn-outline flex h-10 items-center gap-2 px-4 text-sm"
+                aria-label={`Télécharger ${photo.name}`}
+              >
+                <Download size={16} />
+                Télécharger
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
 
-              {/* Info */}
-              <div className="flex items-center justify-between p-4">
-                <div>
-                  <h3 className="text-sm font-semibold text-white">
-                    {item.title}
-                  </h3>
-                  <span
-                    className={`mt-1 inline-block rounded px-2 py-0.5 text-xs font-medium ${
-                      item.type === "PDF"
-                        ? "bg-primary/20 text-primary"
-                        : "bg-secondary/20 text-secondary"
-                    }`}
-                  >
-                    {item.type}
-                  </span>
-                </div>
-                <a
-                  href={item.downloadUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-dark-lighter text-gray-400 transition-colors hover:bg-primary hover:text-white"
-                  aria-label={`Telecharger ${item.title}`}
-                >
-                  <Download size={18} />
-                </a>
-              </div>
-            </motion.div>
-          ))}
+      {/* CTA bas de page */}
+      <div className="relative mt-16 overflow-hidden rounded-2xl">
+        <Image
+          src="/images/hero/home-concert-scene.webp"
+          alt=""
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/70" />
+        <div className="relative px-6 py-16 text-center">
+          <h2 className="text-2xl font-bold font-[family-name:var(--font-oswald)] text-white md:text-3xl">
+            Organisez votre événement avec Ricoune
+          </h2>
+          <p className="mx-auto mt-3 max-w-xl text-white/70">
+            Mairies, comités des fêtes, particuliers : faites appel à
+            l&apos;artiste incontournable du Sud.
+          </p>
+          <Link
+            href="/professionnels/demande-de-devis"
+            className="rc-btn mt-6"
+          >
+            Demander un devis
+          </Link>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

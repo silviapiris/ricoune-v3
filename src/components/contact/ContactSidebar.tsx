@@ -1,0 +1,140 @@
+"use client";
+
+import Link from "next/link";
+import { MapPin } from "lucide-react";
+import { socialLinks } from "@/data/social-links";
+
+interface ContactSocialLink {
+  name: string;
+  href: string;
+  icon: React.ReactElement;
+}
+
+const SOCIAL_LINKS: ContactSocialLink[] = [
+  {
+    name: "Spotify",
+    href: socialLinks.spotify.href,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="#1DB954" width="18" height="18" aria-hidden="true">
+        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+      </svg>
+    ),
+  },
+  {
+    name: "Instagram",
+    href: socialLinks.instagram.href,
+    icon: (
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <defs>
+          <linearGradient id="ig-grad-sidebar" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#feda75" />
+            <stop offset="25%" stopColor="#fa7e1e" />
+            <stop offset="50%" stopColor="#d62976" />
+            <stop offset="75%" stopColor="#962fbf" />
+            <stop offset="100%" stopColor="#4f5bd5" />
+          </linearGradient>
+        </defs>
+        <path
+          fill="url(#ig-grad-sidebar)"
+          d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"
+        />
+      </svg>
+    ),
+  },
+  {
+    name: "TikTok",
+    href: socialLinks.tiktok.href,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="#ffffff" width="18" height="18" aria-hidden="true">
+        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
+      </svg>
+    ),
+  },
+  {
+    name: "Facebook",
+    href: socialLinks.facebook.href,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="#1877F2" width="18" height="18" aria-hidden="true">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+      </svg>
+    ),
+  },
+  {
+    name: "YouTube",
+    href: socialLinks.youtube.href,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="#FF0000" width="18" height="18" aria-hidden="true">
+        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+      </svg>
+    ),
+  },
+  {
+    name: "Apple Music",
+    href: socialLinks.appleMusic.href,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="#FA2D48" width="18" height="18" aria-hidden="true">
+        <path d="M23.994 6.124a9.23 9.23 0 0 0-.24-2.19c-.317-1.31-1.062-2.31-2.18-3.043A5.022 5.022 0 0 0 19.7.28a10.16 10.16 0 0 0-1.564-.15C17.51.073 16.882.04 16.254.04H7.746c-.628 0-1.256.033-1.882.09A10.2 10.2 0 0 0 4.3.28a5.022 5.022 0 0 0-1.874.61C1.308 1.603.563 2.6.246 3.91A9.23 9.23 0 0 0 .006 6.1v11.8a9.23 9.23 0 0 0 .24 2.19c.317 1.31 1.062 2.31 2.18 3.043a5.022 5.022 0 0 0 1.874.61c.626.058 1.254.09 1.882.09h8.508c.628 0 1.256-.032 1.882-.09a5.022 5.022 0 0 0 1.874-.61c1.118-.733 1.863-1.733 2.18-3.043a9.23 9.23 0 0 0 .24-2.19V6.124zM16.95 13.27c0 1.66-.54 2.94-1.62 3.84-.96.8-2.14 1.2-3.54 1.2-.52 0-1.04-.08-1.56-.24-.52-.16-.98-.4-1.38-.72-.8-.64-1.2-1.52-1.2-2.64v-.24c0-.16.12-.28.28-.28h1.44c.16 0 .28.12.28.28v.16c0 .48.16.88.48 1.2.32.32.72.48 1.2.48.56 0 1.04-.2 1.44-.6.4-.4.6-.88.6-1.44V8.58l-5.4 1.68c-.16.04-.28-.04-.28-.2V8.62c0-.12.08-.22.2-.26l6.12-1.88c.04-.02.08-.02.12-.02.16 0 .28.12.28.28v6.5z" />
+      </svg>
+    ),
+  },
+  {
+    name: "Deezer",
+    href: socialLinks.deezer.href,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="#A238FF" width="18" height="18" aria-hidden="true">
+        <path d="M18.81 4.16v3.03H24V4.16h-5.19zM6.27 8.38v3.027h5.189V8.38h-5.19zm12.54 0v3.027H24V8.38h-5.19zM6.27 12.594v3.027h5.189v-3.027h-5.19zm6.271 0v3.027h5.19v-3.027h-5.19zm6.27 0v3.027H24v-3.027h-5.19zM0 16.81v3.029h5.19v-3.03H0zm6.27 0v3.029h5.189v-3.03h-5.19zm6.271 0v3.029h5.19v-3.03h-5.19zm6.27 0v3.029H24v-3.03h-5.19z" />
+      </svg>
+    ),
+  },
+];
+
+interface ContactSidebarProps {
+  className?: string;
+}
+
+export default function ContactSidebar({
+  className = "",
+}: ContactSidebarProps): React.ReactElement {
+  return (
+    <div className={`space-y-6 ${className}`}>
+      {/* Reseaux sociaux */}
+      <div className="rc-card p-6">
+        <span className="rc-section-label">Reseaux sociaux</span>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {SOCIAL_LINKS.map((social) => (
+            <a
+              key={social.name}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+              aria-label={`Suivre Ricoune sur ${social.name}`}
+            >
+              {social.icon}
+              {social.name}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* Professionnels */}
+      <div className="rc-card p-6">
+        <span className="rc-section-label">Professionnels</span>
+        <div className="mt-4">
+          <Link href="/professionnels/formules" className="rc-btn-outline">
+            Voir les formules
+          </Link>
+        </div>
+      </div>
+
+      {/* Localisation */}
+      <div className="rc-card p-6">
+        <span className="rc-section-label">Localisation</span>
+        <div className="mt-4 flex items-center gap-3">
+          <MapPin size={20} className="shrink-0 text-rc-yellow" />
+          <span className="text-white/80">Montpellier &amp; Sud de la France</span>
+        </div>
+      </div>
+    </div>
+  );
+}
