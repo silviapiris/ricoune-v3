@@ -89,7 +89,7 @@ const SOCIAL_LINKS: SocialBarLink[] = [
 
 export default function SocialBar(): React.ReactElement {
   return (
-    <section className="rc-card mx-auto max-w-6xl py-4 px-4">
+    <section className="mx-auto max-w-6xl py-4 px-4">
       <AnimatedSection>
         <div className="flex items-center justify-center gap-3 overflow-x-auto py-2">
           {SOCIAL_LINKS.map((social) => (
@@ -98,7 +98,7 @@ export default function SocialBar(): React.ReactElement {
               href={social.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex shrink-0 items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/20"
+              className="rc-card flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-white transition-opacity hover:opacity-80"
               aria-label={`Suivre Ricoune sur ${social.name}`}
             >
               {social.icon}

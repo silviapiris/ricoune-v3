@@ -56,14 +56,27 @@ export default function Lightbox({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/95"
+      className="fixed inset-0 z-50 overflow-hidden"
       onClick={onClose}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       role="dialog"
       aria-modal="true"
       aria-label={current.alt}
-    >
+          >{/* Background flou */}
+<div className="absolute inset-0">
+  <Image
+    src={current.src}
+    alt=""
+    fill
+    sizes="100vw"
+    className="scale-110 object-cover blur-2xl brightness-40 saturate-150"
+    priority
+  />
+</div>
+
+{/* Overlay sombre */}
+<div className="absolute inset-0 bg-black/30" />
       {/* Close button */}
       <button
         onClick={onClose}
@@ -87,7 +100,7 @@ export default function Lightbox({
 
       {/* Image */}
       <div
-        className="relative mx-16 h-[85vh] w-full max-w-5xl"
+        className="relative w-full h-full"
         onClick={(e) => e.stopPropagation()}
       >
         <Image
@@ -96,7 +109,7 @@ export default function Lightbox({
           alt={current.alt}
           fill
           sizes="90vw"
-          className="object-contain transition-opacity duration-300"
+          className="object-cover transition-opacity duration-300"
           priority
         />
       </div>

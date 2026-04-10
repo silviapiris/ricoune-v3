@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(where python:*)",
+      "Bash(/c/Users/kevin/AppData/Local/Programs/Python/Python312/python:*)"
+    ]
+  }
+}

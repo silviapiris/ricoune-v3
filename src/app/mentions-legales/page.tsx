@@ -13,16 +13,10 @@ interface LegalSectionProps {
 function LegalSection({ title, children }: LegalSectionProps) {
   return (
     <section className="mb-8">
-      <h2
-        className="mb-3 text-xl font-bold text-rc-white"
-        style={{ fontFamily: "var(--font-oswald), system-ui, sans-serif" }}
-      >
+      <h2 className="mb-3 text-xl font-bold text-rc-white">
         {title}
       </h2>
-      <div
-        className="text-rc-white/80 leading-relaxed"
-        style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
-      >
+      <div className="text-rc-white/80 leading-relaxed">
         {children}
       </div>
     </section>
@@ -32,10 +26,7 @@ function LegalSection({ title, children }: LegalSectionProps) {
 export default function MentionsLegalesPage(): React.ReactElement {
   return (
     <div className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
-      <h1
-        className="mb-12 text-4xl font-bold uppercase text-rc-white"
-        style={{ fontFamily: "var(--font-oswald), system-ui, sans-serif" }}
-      >
+      <h1 className="mb-12 text-4xl font-bold uppercase text-rc-white">
         Mentions légales
       </h1>
 

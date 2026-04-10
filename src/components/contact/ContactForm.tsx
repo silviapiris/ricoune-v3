@@ -11,10 +11,10 @@ const INPUT_CLASS =
 
 const EVENT_TYPES = [
   "Mariage",
-  "Fête votive",
+  "Fête votive / Feria",
   "Festival",
   "Soirée privée",
-  "Entreprise",
+  "Événement d'entreprise",
   "Autre",
 ] as const;
 

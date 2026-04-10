@@ -41,7 +41,7 @@ export default function ConcertsPage(): React.ReactElement {
   }, [filter]);
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="pt-20 pb-16 md:py-24">
       <div className="mx-auto max-w-4xl px-4">
         {/* 1. Titre */}
         <AnimatedSection className="mb-10 text-center">
@@ -51,7 +51,7 @@ export default function ConcertsPage(): React.ReactElement {
         </AnimatedSection>
 
         {/* 2. Filtres */}
-        <AnimatedSection className="mb-10 flex justify-center gap-3">
+        <AnimatedSection className="mb-10 flex flex-wrap justify-center gap-3 gap-y-2">
           {FILTERS.map((f) => (
             <button
               key={f.key}

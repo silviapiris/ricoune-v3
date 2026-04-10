@@ -67,7 +67,7 @@ export default function UniversSection(): React.ReactElement {
 }
 
 function CardWrapper({ card }: { card: UniversCard }): React.ReactElement {
-  const inner = (
+  return (
     <div className="rc-card flex flex-col items-center p-8 text-center transition-transform hover:scale-[1.02]">
       <div className="mb-4 text-rc-yellow">{card.icon}</div>
       <h3 className="mb-4 font-[family-name:var(--font-oswald)] text-xl font-bold text-white">
@@ -98,14 +98,4 @@ function CardWrapper({ card }: { card: UniversCard }): React.ReactElement {
       </div>
     </div>
   );
-
-  if (card.mainHref.startsWith("http")) {
-    return (
-      <a href={card.mainHref} target="_blank" rel="noopener noreferrer" className="block">
-        {inner}
-      </a>
-    );
-  }
-
-  return <Link href={card.mainHref} className="block">{inner}</Link>;
 }

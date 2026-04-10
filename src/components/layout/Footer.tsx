@@ -90,16 +90,10 @@ const SOCIAL_LINKS: SocialLink[] = [
 function FooterBranding() {
   return (
     <div>
-      <p
-        className="text-2xl font-bold tracking-widest text-rc-white"
-        style={{ fontFamily: "var(--font-oswald), system-ui, sans-serif" }}
-      >
+      <p className="font-[family-name:var(--font-oswald)] text-2xl font-bold tracking-widest text-rc-white">
         RICOUNE
       </p>
-      <p
-        className="mt-2 text-sm text-rc-white/70"
-        style={{ fontFamily: "var(--font-raleway), system-ui, sans-serif" }}
-      >
+      <p className="font-[family-name:var(--font-raleway)] mt-2 text-sm text-rc-white/70">
         La musique du Sud, partout en France.
       </p>
     </div>

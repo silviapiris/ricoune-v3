@@ -5,57 +5,9 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import VideoGrid from "@/components/videos/VideoGrid";
+import { clips, lives, FEATURED_YOUTUBE_ID, type VideoItem } from "@/data/videos";
 
 const VideoModal = dynamic(() => import("@/components/videos/VideoModal"), { ssr: false });
-
-interface VideoItem {
-  id: string;
-  title: string;
-  youtubeId: string;
-  year?: number;
-}
-
-const clips: VideoItem[] = [
-  {
-    id: "1",
-    title: "Dans un verre a ballon",
-    youtubeId: "dQw4w9WgXcQ",
-    year: 2001,
-  },
-  { id: "2", title: "Le Kukela", youtubeId: "dQw4w9WgXcQ", year: 2015 },
-  {
-    id: "3",
-    title: "Y faut etre gentil",
-    youtubeId: "dQw4w9WgXcQ",
-    year: 2016,
-  },
-  {
-    id: "4",
-    title: "Quand un faineant se rebelle",
-    youtubeId: "dQw4w9WgXcQ",
-    year: 2021,
-  },
-];
-
-const lives: VideoItem[] = [
-  {
-    id: "l1",
-    title: "Live Feria de Beziers 2025",
-    youtubeId: "dQw4w9WgXcQ",
-  },
-  {
-    id: "l2",
-    title: "Live Fete de Montpellier 2024",
-    youtubeId: "dQw4w9WgXcQ",
-  },
-  {
-    id: "l3",
-    title: "Live Festival du Sud 2023",
-    youtubeId: "dQw4w9WgXcQ",
-  },
-];
-
-const FEATURED_YOUTUBE_ID = "dQw4w9WgXcQ";
 
 export default function VideosPage() {
   const [activeVideo, setActiveVideo] = useState<VideoItem | null>(null);

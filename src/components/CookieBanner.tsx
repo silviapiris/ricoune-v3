@@ -36,10 +36,7 @@ export default function CookieBanner(): React.ReactElement | null {
       aria-label="Bandeau cookies"
     >
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-4 sm:flex-row sm:justify-between">
-        <p
-          className="text-sm text-rc-white/80 leading-relaxed sm:max-w-2xl"
-          style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
-        >
+        <p className="text-sm text-rc-white/80 leading-relaxed sm:max-w-2xl">
           Ce site utilise des cookies pour améliorer votre expérience. En
           continuant votre navigation, vous acceptez leur utilisation.{" "}
           <Link
@@ -54,7 +51,7 @@ export default function CookieBanner(): React.ReactElement | null {
           <button
             type="button"
             onClick={handleRefuse}
-            className="rc-btn-outline h-10 px-5 text-sm"
+            className="rc-btn-outline"
             aria-label="Refuser les cookies"
           >
             Refuser
@@ -62,7 +59,7 @@ export default function CookieBanner(): React.ReactElement | null {
           <button
             type="button"
             onClick={handleAccept}
-            className="rc-btn h-10 px-5 text-sm"
+            className="rc-btn"
             aria-label="Accepter les cookies"
           >
             Accepter

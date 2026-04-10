@@ -41,9 +41,14 @@ export default function LatestAlbum(): React.ReactElement {
                 >
                   &Eacute;couter sur Spotify
                 </a>
-                <Link href="/albums" className="rc-btn-outline">
-                  Voir tous les albums
-                </Link>
+                <a
+                  href="https://open.spotify.com/artist/5nGIFgo1InYsrFRHCHNJBL"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rc-btn-outline"
+                >
+                  Suivre sur Spotify
+                </a>
               </div>
             </div>
           </div>

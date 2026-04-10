@@ -97,9 +97,9 @@ export default function ContactSidebar({
 }: ContactSidebarProps): React.ReactElement {
   return (
     <div className={`space-y-6 ${className}`}>
-      {/* Reseaux sociaux */}
+      {/* Réseaux sociaux */}
       <div className="rc-card p-6">
-        <span className="rc-section-label">Reseaux sociaux</span>
+        <span className="rc-section-label">Réseaux sociaux</span>
         <div className="mt-4 flex flex-wrap gap-2">
           {SOCIAL_LINKS.map((social) => (
             <a
