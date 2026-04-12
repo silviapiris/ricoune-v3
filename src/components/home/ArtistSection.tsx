@@ -13,7 +13,7 @@ export default function ArtistSection(): React.ReactElement {
             {/* Image */}
             <div className="relative aspect-[3/4] w-full overflow-hidden md:aspect-auto md:h-full md:min-h-[400px]">
               <Image
-                src="/images/artist/l-artiste.webp"
+                src="/images/bio/home-bio-portrait.webp"
                 alt="Ricoune, l'artiste du Sud"
                 fill
                 className="object-cover"
