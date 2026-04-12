@@ -11,12 +11,12 @@ export default function ArtistSection(): React.ReactElement {
         <AnimatedSection>
           <div className="rc-card grid items-center gap-8 overflow-hidden md:grid-cols-[2fr_3fr]">
             {/* Image */}
-            <div className="relative aspect-[3/4] w-full md:aspect-auto md:h-full md:min-h-[400px]">
+            <div className="relative aspect-[3/4] w-full overflow-hidden md:aspect-auto md:h-full md:min-h-[400px]">
               <Image
                 src="/images/artist/l-artiste.webp"
                 alt="Ricoune, l'artiste du Sud"
                 fill
-                className="object-cover md:rounded-xl"
+                className="object-cover"
                 sizes="(max-width: 768px) 100vw, 40vw"
               />
             </div>
