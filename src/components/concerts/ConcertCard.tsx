@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { MapPin, CalendarPlus } from "lucide-react";
 import type { Concert } from "@/data/concerts";
-import MapModal from "./MapModal";
 
 function buildGoogleCalendarUrl(concert: Concert): string {
   const [y, mo, day] = concert.date.split("-").map(Number);
@@ -74,11 +72,9 @@ export default function ConcertCard({
 }: ConcertCardProps): React.ReactElement {
   const date = formatDate(concert.date);
   const isSolo = concert.type === "solo";
-  const [mapOpen, setMapOpen] = useState(false);
 
   return (
-    <>
-      <div className="rc-card p-5 md:p-6">
+    <div className="rc-card p-5 md:p-6">
         {/* Desktop : horizontal | Mobile : 2 rows */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
           {/* Row 1 mobile / Left block desktop : date + badge */}
@@ -111,9 +107,11 @@ export default function ConcertCard({
             <p className="text-lg font-semibold text-white">
               {concert.city} ({concert.postalCode})
             </p>
-            {/* Lieu cliquable — ouvre la popup Google Maps */}
-            <button
-              onClick={() => setMapOpen(true)}
+            {/* Lieu — lien direct Google Maps */}
+            <a
+              href={concert.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="group flex items-center gap-1 text-sm text-white/70 transition-colors hover:text-rc-yellow"
               aria-label={`Voir sur Google Maps : ${concert.venue}, ${concert.city}`}
             >
@@ -125,17 +123,17 @@ export default function ConcertCard({
               <span className="underline-offset-2 group-hover:underline">
                 {concert.venue}
               </span>
-            </button>
+            </a>
             {/* Lien agenda Google Calendar */}
             <a
               href={buildGoogleCalendarUrl(concert)}
               target="_blank"
               rel="noopener noreferrer"
-              className="group mt-1 flex items-center gap-1 text-sm text-white/70 transition-colors hover:text-rc-yellow"
+              className="group mt-1 flex items-center gap-1 text-xs text-white/40 transition-colors hover:text-white/60"
             >
               <CalendarPlus
-                size={13}
-                className="shrink-0 opacity-60 transition-opacity group-hover:opacity-100"
+                size={11}
+                className="shrink-0 opacity-50 transition-opacity group-hover:opacity-80"
                 aria-hidden="true"
               />
               <span className="underline-offset-2 group-hover:underline">
@@ -162,17 +160,5 @@ export default function ConcertCard({
           <span className="text-sm text-white sm:hidden">{concert.time}</span>
         </div>
       </div>
-
-      {/* Popup Google Maps */}
-      {mapOpen && (
-        <MapModal
-          venue={concert.venue}
-          city={concert.city}
-          postalCode={concert.postalCode}
-          mapsUrl={concert.mapsUrl}
-          onClose={() => setMapOpen(false)}
-        />
-      )}
-    </>
   );
 }

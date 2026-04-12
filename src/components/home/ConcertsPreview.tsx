@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { MapPin, CalendarPlus } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import { concerts } from "@/data/concerts";
 import type { Concert } from "@/data/concerts";
-import MapModal from "@/components/concerts/MapModal";
 
 function formatMonth(dateStr: string): string {
   const date = new Date(dateStr);
@@ -62,7 +60,6 @@ function buildGoogleCalendarUrl(concert: Concert): string {
 
 export default function ConcertsPreview(): React.ReactElement {
   const upcoming = getUpcomingConcerts(3);
-  const [openMapId, setOpenMapId] = useState<number | null>(null);
 
   return (
     <section className="py-16 md:py-24">
@@ -92,9 +89,11 @@ export default function ConcertsPreview(): React.ReactElement {
                   <p className="text-lg font-bold text-white">
                     {concert.city} ({concert.postalCode})
                   </p>
-                  {/* Lieu cliquable — ouvre la popup Google Maps */}
-                  <button
-                    onClick={() => setOpenMapId(concert.id)}
+                  {/* Lieu — lien direct Google Maps */}
+                  <a
+                    href={concert.mapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="group flex items-center gap-1 text-sm text-white/70 transition-colors hover:text-rc-yellow"
                     aria-label={`Voir sur Google Maps : ${concert.venue}, ${concert.city}`}
                   >
@@ -106,17 +105,17 @@ export default function ConcertsPreview(): React.ReactElement {
                     <span className="underline-offset-2 group-hover:underline">
                       {concert.venue}
                     </span>
-                  </button>
+                  </a>
                   {/* Lien agenda Google Calendar */}
                   <a
                     href={buildGoogleCalendarUrl(concert)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group mt-1 flex items-center gap-1 text-sm text-white/70 transition-colors hover:text-rc-yellow"
+                    className="group mt-1 flex items-center gap-1 text-xs text-white/40 transition-colors hover:text-white/60"
                   >
                     <CalendarPlus
-                      size={13}
-                      className="shrink-0 opacity-60 transition-opacity group-hover:opacity-100"
+                      size={11}
+                      className="shrink-0 opacity-50 transition-opacity group-hover:opacity-80"
                       aria-hidden="true"
                     />
                     <span className="underline-offset-2 group-hover:underline">
@@ -136,17 +135,6 @@ export default function ConcertsPreview(): React.ReactElement {
                   {concert.type === "solo" ? "En Solo" : "En Groupe"}
                 </span>
               </div>
-
-              {/* Popup Google Maps */}
-              {openMapId === concert.id && (
-                <MapModal
-                  venue={concert.venue}
-                  city={concert.city}
-                  postalCode={concert.postalCode}
-                  mapsUrl={concert.mapsUrl}
-                  onClose={() => setOpenMapId(null)}
-                />
-              )}
             </AnimatedSection>
           ))}
         </div>
