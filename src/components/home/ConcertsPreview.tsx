@@ -1,9 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { MapPin, CalendarPlus } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import { concerts } from "@/data/concerts";
 import type { Concert } from "@/data/concerts";
+import MapModal from "@/components/concerts/MapModal";
 
 function formatMonth(dateStr: string): string {
   const date = new Date(dateStr);
@@ -27,8 +30,39 @@ function getUpcomingConcerts(count: number): Concert[] {
     .slice(0, count);
 }
 
+function buildGoogleCalendarUrl(concert: Concert): string {
+  const [y, mo, day] = concert.date.split("-").map(Number);
+  const [h, m] = concert.time.split(":").map(Number);
+  const hh = h.toString().padStart(2, "0");
+  const mm = m.toString().padStart(2, "0");
+  const endTotalH = h + 2;
+  const endHH = (endTotalH % 24).toString().padStart(2, "0");
+
+  const startD = concert.date.replace(/-/g, "");
+  let endD = startD;
+  if (endTotalH >= 24) {
+    const next = new Date(y, mo - 1, day + 1);
+    endD = [
+      next.getFullYear(),
+      (next.getMonth() + 1).toString().padStart(2, "0"),
+      next.getDate().toString().padStart(2, "0"),
+    ].join("");
+  }
+
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: `Concert Ricoune \u2014 ${concert.city}`,
+    dates: `${startD}T${hh}${mm}00/${endD}T${endHH}${mm}00`,
+    location: `${concert.venue}, ${concert.city} ${concert.postalCode}`,
+    details: "Concert de Ricoune",
+  });
+
+  return `https://www.google.com/calendar/render?${params.toString()}`;
+}
+
 export default function ConcertsPreview(): React.ReactElement {
   const upcoming = getUpcomingConcerts(3);
+  const [openMapId, setOpenMapId] = useState<number | null>(null);
 
   return (
     <section className="py-16 md:py-24">
@@ -55,8 +89,40 @@ export default function ConcertsPreview(): React.ReactElement {
 
                 {/* Info */}
                 <div className="min-w-0 flex-1">
-                  <p className="text-lg font-bold text-white">{concert.city}</p>
-                  <p className="text-sm text-white/70">{concert.venue}</p>
+                  <p className="text-lg font-bold text-white">
+                    {concert.city} ({concert.postalCode})
+                  </p>
+                  {/* Lieu cliquable — ouvre la popup Google Maps */}
+                  <button
+                    onClick={() => setOpenMapId(concert.id)}
+                    className="group flex items-center gap-1 text-sm text-white/70 transition-colors hover:text-rc-yellow"
+                    aria-label={`Voir sur Google Maps : ${concert.venue}, ${concert.city}`}
+                  >
+                    <MapPin
+                      size={13}
+                      className="shrink-0 opacity-60 transition-opacity group-hover:opacity-100"
+                      aria-hidden="true"
+                    />
+                    <span className="underline-offset-2 group-hover:underline">
+                      {concert.venue}
+                    </span>
+                  </button>
+                  {/* Lien agenda Google Calendar */}
+                  <a
+                    href={buildGoogleCalendarUrl(concert)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group mt-1 flex items-center gap-1 text-sm text-white/70 transition-colors hover:text-rc-yellow"
+                  >
+                    <CalendarPlus
+                      size={13}
+                      className="shrink-0 opacity-60 transition-opacity group-hover:opacity-100"
+                      aria-hidden="true"
+                    />
+                    <span className="underline-offset-2 group-hover:underline">
+                      Ajouter à Google Calendar
+                    </span>
+                  </a>
                 </div>
 
                 {/* Badge */}
@@ -70,6 +136,17 @@ export default function ConcertsPreview(): React.ReactElement {
                   {concert.type === "solo" ? "En Solo" : "En Groupe"}
                 </span>
               </div>
+
+              {/* Popup Google Maps */}
+              {openMapId === concert.id && (
+                <MapModal
+                  venue={concert.venue}
+                  city={concert.city}
+                  postalCode={concert.postalCode}
+                  mapsUrl={concert.mapsUrl}
+                  onClose={() => setOpenMapId(null)}
+                />
+              )}
             </AnimatedSection>
           ))}
         </div>
