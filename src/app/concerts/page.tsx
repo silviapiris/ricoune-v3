@@ -30,9 +30,11 @@ export default function ConcertsPage(): React.ReactElement {
         ? concerts
         : concerts.filter((c) => c.type === filter);
 
-    const sorted = [...filtered].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    );
+    const sorted = [...filtered].sort((a, b) => {
+      const aTs = new Date(`${a.date}T${a.time}:00`).getTime();
+      const bTs = new Date(`${b.date}T${b.time}:00`).getTime();
+      return aTs - bTs;
+    });
 
     return {
       upcoming: sorted.filter((c) => !isPast(c.date)),

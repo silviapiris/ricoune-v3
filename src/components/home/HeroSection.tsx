@@ -19,12 +19,19 @@ export default function HeroSection(): React.ReactElement {
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
       {/* Vignette latérale gauche discrète pour ancrer le texte */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />
+      {/* Atténuation haute pour lisibilité navbar sur spots lumineux */}
+      <div className="pointer-events-none absolute left-0 right-0 top-0 h-[160px] bg-gradient-to-b from-black/70 via-black/40 to-transparent" />
 
-      <div className="relative z-10 w-full max-w-2xl px-6 pb-10 text-left md:px-16 md:pb-24 lg:px-20 lg:pb-28">
+      <div className="relative z-10 w-full max-w-2xl px-6 pb-4 text-left md:px-16 md:pb-8 lg:px-20 lg:pb-8">
         <AnimatedSection>
-          <h1 className="mb-4 font-[family-name:var(--font-oswald)] text-6xl font-bold uppercase tracking-wider text-white md:text-8xl">
-            RICOUNE
-          </h1>
+          <Image
+            src="/images/hero/ricoune-logo-hero.png"
+            alt="Ricoune"
+            width={520}
+            height={260}
+            priority
+            className="mb-4 w-64 md:w-[420px] md:translate-y-14"
+          />
         </AnimatedSection>
 
         <AnimatedSection delay={0.2}>

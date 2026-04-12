@@ -35,16 +35,17 @@ interface DesktopNavProps {
 
 function DesktopNav({ pathname }: DesktopNavProps) {
   return (
-    <div className="hidden items-center gap-1 md:flex">
+    <div className="hidden items-center gap-1 rounded-xl px-2 py-1 backdrop-blur-sm md:flex" style={{ background: "rgba(0,0,0,0.25)" }}>
       {NAV_LINKS.map((link) => (
         <Link
           key={link.href}
           href={link.href}
-          className={`rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200 ${
+          className={`rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-200 ${
             isActivePath(link.href, pathname)
               ? "text-rc-yellow"
               : "text-rc-white hover:text-rc-yellow"
           }`}
+          style={{ textShadow: "0 1px 3px rgba(0,0,0,0.6), 0 0 1px rgba(0,0,0,0.8), 1px 0 2px rgba(0,0,0,0.5), -1px 0 2px rgba(0,0,0,0.5)" }}
         >
           {link.label}
         </Link>
@@ -82,10 +83,11 @@ function MobileDrawer({ isOpen, onClose, pathname }: MobileDrawerProps) {
         <div className="flex h-16 items-center justify-between px-5">
           <Link href="/" onClick={onClose} className="flex items-center gap-2">
             <Image
-              src="/images/logo/ricoune-icon.png"
+              src="/images/logo/logo-vache.png"
               alt="Ricoune"
               width={36}
               height={36}
+              unoptimized
               className="rounded"
             />
           </Link>
@@ -153,16 +155,21 @@ export default function Navbar() {
           background: scrolled ? "rgba(26, 34, 68, 0.85)" : "transparent",
         }}
       >
+        {/* Gradient de contraste discret — visible uniquement avant scroll */}
+        {!scrolled && (
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-transparent" />
+        )}
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Logo */}
           <Link href="/" className="flex shrink-0 items-center gap-2">
             <Image
-              src="/images/logo/ricoune-icon.png"
-              alt="Ricoune"
-              width={48}
-              height={48}
+              src="/images/logo/logo-vache.png"
+              alt="Ricoune logo"
+              width={160}
+              height={80}
               priority
-              className="rounded"
+              unoptimized
+              className="h-12 w-auto md:h-14"
             />
           </Link>
 

@@ -65,16 +65,16 @@ export default function AboutSection(): React.ReactElement {
       <div className="mx-auto max-w-6xl px-4">
         <div className="grid items-center gap-10 md:grid-cols-[2fr_3fr]">
           <AnimatedSection>
-            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl">
-              <Image
-                src="/images/bio/home-bio-portrait.webp"
-                alt="Portrait de Ricoune"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 40vw"
-              />
-            </div>
-          </AnimatedSection>
+  <div className="relative w-full h-[300px] md:h-[420px] overflow-hidden rounded-2xl shadow-xl">
+    <Image
+      src="/images/bio/home-bio-portrait.webp"
+      alt="Portrait de Ricoune"
+      fill
+      className="object-cover object-top"
+      sizes="(max-width: 768px) 100vw, 40vw"
+    />
+  </div>
+</AnimatedSection>
 
           <AnimatedSection delay={0.2}>
             <h2 className="mb-6 font-[family-name:var(--font-oswald)] text-3xl font-bold text-white md:text-4xl">
@@ -89,7 +89,7 @@ export default function AboutSection(): React.ReactElement {
             </p>
             <p className="mb-8 leading-relaxed text-white/90">
               &Agrave; travers ses concerts, Ricoune partage une &eacute;nergie communicative et
-              rassemble toutes les g&eacute;n&eacute;rations autour d&apos;un m&ecirc;me esprit de
+              rassemble toutes les g&eacute;n&eacute;rationsRicoune/RicouneV3/src/components/home/AboutSection.tsx Ricoune/RicouneV3/src/components/home/ArtistSection.tsx Ricoune/RicouneV3/src/components/home/ConcertsPreview.tsx Ricoune/RicouneV3/src/components/home/CtaSection.tsx Ricoune/RicouneV3/src/components/home/HeroSection.tsx Ricoune/RicouneV3/src/components/home/LatestAlbum.tsx Ricoune/RicouneV3/src/components/home/SocialBar.tsx Ricoune/RicouneV3/src/components/home/UniversSection.tsx autour d&apos;un m&ecirc;me esprit de
               convivialit&eacute;.
             </p>
 
