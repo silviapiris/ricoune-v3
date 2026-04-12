@@ -124,16 +124,19 @@ export default function ConcertsPreview(): React.ReactElement {
                   </a>
                 </div>
 
-                {/* Badge */}
-                <span
-                  className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
-                    concert.type === "solo"
-                      ? "bg-rc-yellow/20 text-rc-yellow"
-                      : "bg-rc-blue/20 text-rc-blue-mid"
-                  }`}
-                >
-                  {concert.type === "solo" ? "En Solo" : "En Groupe"}
-                </span>
+                {/* Heure + Badge */}
+                <div className="shrink-0 flex flex-col items-end gap-1.5 sm:flex-row sm:items-center sm:gap-3">
+                  <span className="text-sm text-white/70">{concert.time}</span>
+                  <span
+                    className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                      concert.type === "solo"
+                        ? "bg-rc-yellow/20 text-rc-yellow"
+                        : "bg-rc-blue/20 text-rc-blue-mid"
+                    }`}
+                  >
+                    {concert.type === "solo" ? "En Solo" : "En Groupe"}
+                  </span>
+                </div>
               </div>
             </AnimatedSection>
           ))}
