@@ -126,7 +126,7 @@ export default function ConcertsPreview(): React.ReactElement {
 
                 {/* Heure + Badge */}
                 <div className="shrink-0 flex flex-col items-end gap-1.5 sm:flex-row sm:items-center sm:gap-3">
-                  <span className="text-sm text-white/70">{concert.time}</span>
+                  <span className="text-sm text-white">{concert.time}</span>
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-semibold ${
                       concert.type === "solo"
