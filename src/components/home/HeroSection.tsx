@@ -7,7 +7,7 @@ import { socialLinks } from "@/data/social-links";
 
 export default function HeroSection(): React.ReactElement {
   return (
-    <section className="relative flex min-h-[72svh] md:min-h-screen items-start md:items-end justify-start pb-4 sm:pb-0 overflow-hidden">
+    <section className="relative flex min-h-[100svh] md:min-h-screen items-start md:items-end justify-start pb-4 sm:pb-0 overflow-hidden">
       <Image
         src="/images/hero/hero-concert-hd.webp"
         alt="Ricoune en concert devant une foule en fete"
