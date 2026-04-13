@@ -12,7 +12,7 @@ export default function HeroSection(): React.ReactElement {
         alt="Ricoune en concert devant une foule en fete"
         fill
         priority
-        className="object-cover object-[center_25%]"
+        className="object-cover object-center"
         sizes="(max-width: 768px) 300vw, 100vw"
       />
       {/* Gradient soutenant le texte en bas sans écraser le sujet */}
