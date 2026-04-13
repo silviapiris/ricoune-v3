@@ -101,13 +101,13 @@ function MobileDrawer({ isOpen, onClose, pathname }: MobileDrawerProps) {
         </div>
 
         {/* Drawer links */}
-        <nav className="flex flex-col gap-1 overflow-y-auto px-4 py-4">
+        <nav className="flex flex-col items-center gap-1 overflow-y-auto px-4 py-4">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={onClose}
-              className={`rounded-md px-6 py-3.5 text-base font-medium text-center sm:text-left transition-colors duration-200 ${
+              className={`w-full max-w-xs rounded-md px-4 py-3.5 text-base font-medium text-center transition-colors duration-200 ${
                 isActivePath(link.href, pathname)
                   ? "text-rc-yellow"
                   : "text-rc-white hover:text-rc-yellow"
