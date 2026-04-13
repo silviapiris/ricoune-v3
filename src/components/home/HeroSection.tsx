@@ -24,7 +24,7 @@ export default function HeroSection(): React.ReactElement {
       <div className="pointer-events-none absolute left-0 right-0 top-0 h-[160px] bg-gradient-to-b from-black/70 via-black/40 to-transparent" />
 
       {/* Mobile layout — absolute SVH-based positioning */}
-      <AnimatedSection className="absolute left-1/2 top-[8svh] z-10 w-[40vw] max-w-[300px] -translate-x-1/2 md:top-auto md:w-auto md:max-w-none md:hidden">
+      <AnimatedSection className="absolute left-1/2 top-[8svh] z-10 w-[55vw] max-w-[300px] -translate-x-1/2 md:top-auto md:w-auto md:max-w-none md:hidden">
         <Image
           src="/images/hero/ricoune-logo-hero.png"
           alt="Ricoune"
