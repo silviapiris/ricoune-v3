@@ -22,7 +22,7 @@ export default function HeroSection(): React.ReactElement {
       {/* Atténuation haute pour lisibilité navbar sur spots lumineux */}
       <div className="pointer-events-none absolute left-0 right-0 top-0 h-[160px] bg-gradient-to-b from-black/70 via-black/40 to-transparent" />
 
-      <div className="relative z-10 w-full max-w-2xl px-6 pb-4 pt-[70vh] md:pt-0 text-left md:px-16 md:pb-8 lg:px-20 lg:pb-8">
+      <div className="relative z-10 w-full max-w-2xl px-6 pb-4 pt-[70vh] md:pt-0 text-center md:text-left md:px-16 md:pb-8 lg:px-20 lg:pb-8">
         <AnimatedSection>
           <Image
             src="/images/hero/ricoune-logo-hero.png"
@@ -30,18 +30,18 @@ export default function HeroSection(): React.ReactElement {
             width={520}
             height={260}
             priority
-            className="mb-4 w-64 md:w-[420px] md:translate-y-14"
+            className="mb-4 block mx-auto md:mx-0 w-64 md:w-[420px] md:translate-y-14"
           />
         </AnimatedSection>
 
         <AnimatedSection delay={0.2}>
-          <p className="mb-10 font-[family-name:var(--font-raleway)] text-xl text-white/80 md:text-2xl">
+          <p className="mb-5 md:mb-10 font-[family-name:var(--font-raleway)] text-xl text-white/80 md:text-2xl">
             L&apos;artiste incontournable des f&ecirc;tes du Sud
           </p>
         </AnimatedSection>
 
         <AnimatedSection delay={0.4}>
-          <div className="flex flex-col items-start gap-4 sm:flex-row">
+          <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start md:items-start">
             <a
               href="https://open.spotify.com/artist/5nGIFgo1InYsrFRHCHNJBL"
               target="_blank"
