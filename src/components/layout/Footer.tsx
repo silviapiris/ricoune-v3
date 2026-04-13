@@ -89,7 +89,7 @@ const SOCIAL_LINKS: SocialLink[] = [
 
 function FooterBranding() {
   return (
-    <div>
+    <div className="text-center md:text-left">
       <p className="font-[family-name:var(--font-oswald)] text-2xl font-bold tracking-widest text-rc-white">
         RICOUNE
       </p>
@@ -102,7 +102,7 @@ function FooterBranding() {
 
 function FooterNavigation() {
   return (
-    <div>
+    <div className="text-center md:text-left">
       <p className="rc-section-label mb-4">Navigation</p>
       <ul className="space-y-2">
         {FOOTER_NAV_LINKS.map((link) => (
@@ -122,9 +122,9 @@ function FooterNavigation() {
 
 function FooterSocial() {
   return (
-    <div>
+    <div className="text-center md:text-left">
       <p className="rc-section-label mb-4">Suivez Ricoune</p>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-center md:justify-start gap-4">
         {SOCIAL_LINKS.map((social) => (
           <a
             key={social.label}
