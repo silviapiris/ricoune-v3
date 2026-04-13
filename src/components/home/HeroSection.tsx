@@ -30,7 +30,7 @@ export default function HeroSection(): React.ReactElement {
             width={520}
             height={260}
             priority
-            className="mb-4 block mx-auto md:mx-0 w-64 md:w-[420px] md:translate-y-14"
+            className="mb-4 block mx-auto md:mx-0 w-64 md:w-[420px] translate-y-4 md:translate-y-14"
           />
         </AnimatedSection>
 
