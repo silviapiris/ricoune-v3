@@ -107,7 +107,7 @@ function MobileDrawer({ isOpen, onClose, pathname }: MobileDrawerProps) {
               key={link.href}
               href={link.href}
               onClick={onClose}
-              className={`rounded-md px-6 py-3.5 text-base font-medium transition-colors duration-200 ${
+              className={`rounded-md px-6 py-3.5 text-base font-medium text-center sm:text-left transition-colors duration-200 ${
                 isActivePath(link.href, pathname)
                   ? "text-rc-yellow"
                   : "text-rc-white hover:text-rc-yellow"
