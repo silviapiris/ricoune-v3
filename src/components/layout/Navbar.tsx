@@ -74,7 +74,7 @@ function MobileDrawer({ isOpen, onClose, pathname }: MobileDrawerProps) {
 
       {/* Drawer panel */}
       <div
-        className={`fixed right-0 top-0 z-50 flex h-full w-72 flex-col transition-transform duration-300 md:hidden ${
+        className={`fixed right-0 top-0 z-50 flex h-full w-full sm:w-72 flex-col transition-transform duration-300 md:hidden ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
         style={{ background: "rgba(26, 34, 68, 0.95)" }}
@@ -107,7 +107,7 @@ function MobileDrawer({ isOpen, onClose, pathname }: MobileDrawerProps) {
               key={link.href}
               href={link.href}
               onClick={onClose}
-              className={`rounded-md px-4 py-3 text-base font-medium transition-colors duration-200 ${
+              className={`rounded-md px-6 py-3.5 text-base font-medium transition-colors duration-200 ${
                 isActivePath(link.href, pathname)
                   ? "text-rc-yellow"
                   : "text-rc-white hover:text-rc-yellow"
