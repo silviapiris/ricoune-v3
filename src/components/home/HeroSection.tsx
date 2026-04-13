@@ -8,7 +8,7 @@ export default function HeroSection(): React.ReactElement {
   return (
     <section className="relative flex min-h-screen items-start md:items-end justify-start pb-24 sm:pb-0 overflow-hidden">
       <Image
-        src="/images/hero/home-concert-scene.webp"
+        src="/images/hero/hero-concert-hd.webp"
         alt="Ricoune en concert devant une foule en fete"
         fill
         priority
