@@ -67,7 +67,7 @@ export default function AboutSection(): React.ReactElement {
           <AnimatedSection>
   <div className="relative w-full h-[300px] md:h-[420px] overflow-hidden rounded-2xl shadow-xl">
     <Image
-      src="/images/bio/home-bio-portrait.webp"
+      src="/images/bio/home-bio-portrait-original.png"
       alt="Portrait de Ricoune"
       fill
       className="object-cover object-top"
@@ -89,7 +89,7 @@ export default function AboutSection(): React.ReactElement {
             </p>
             <p className="mb-8 leading-relaxed text-white/90">
               &Agrave; travers ses concerts, Ricoune partage une &eacute;nergie communicative et
-              rassemble toutes les g&eacute;n&eacute;rationsRicoune/RicouneV3/src/components/home/AboutSection.tsx Ricoune/RicouneV3/src/components/home/ArtistSection.tsx Ricoune/RicouneV3/src/components/home/ConcertsPreview.tsx Ricoune/RicouneV3/src/components/home/CtaSection.tsx Ricoune/RicouneV3/src/components/home/HeroSection.tsx Ricoune/RicouneV3/src/components/home/LatestAlbum.tsx Ricoune/RicouneV3/src/components/home/SocialBar.tsx Ricoune/RicouneV3/src/components/home/UniversSection.tsx autour d&apos;un m&ecirc;me esprit de
+              rassemble toutes les g&eacute;n&eacute;rations autour d&apos;un m&ecirc;me esprit de
               convivialit&eacute;.
             </p>
 

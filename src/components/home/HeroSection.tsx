@@ -22,7 +22,7 @@ export default function HeroSection(): React.ReactElement {
       {/* Atténuation haute pour lisibilité navbar sur spots lumineux */}
       <div className="pointer-events-none absolute left-0 right-0 top-0 h-[160px] bg-gradient-to-b from-black/70 via-black/40 to-transparent" />
 
-      <div className="relative z-10 w-full max-w-2xl px-6 pb-4 pt-[62vh] md:pt-0 text-left md:px-16 md:pb-8 lg:px-20 lg:pb-8">
+      <div className="relative z-10 w-full max-w-2xl px-6 pb-4 pt-[70vh] md:pt-0 text-left md:px-16 md:pb-8 lg:px-20 lg:pb-8">
         <AnimatedSection>
           <Image
             src="/images/hero/ricoune-logo-hero.png"

@@ -147,7 +147,7 @@ function FooterBottom() {
     <div className="mt-10 border-t border-rc-white/10 pt-6">
       <div className="flex flex-col items-center gap-2 text-center text-xs text-rc-white/50 sm:flex-row sm:justify-between">
         <p>&copy; 2026 Ricoune — Tous droits réservés</p>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
           <Link
             href="/mentions-legales"
             className="transition-colors duration-200 hover:text-rc-white/80"
