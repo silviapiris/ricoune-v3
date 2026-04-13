@@ -6,7 +6,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 
 export default function HeroSection(): React.ReactElement {
   return (
-    <section className="relative flex min-h-screen items-start md:items-end justify-start pb-6 sm:pb-0 overflow-hidden">
+    <section className="relative flex min-h-[72svh] md:min-h-screen items-start md:items-end justify-start pb-4 sm:pb-0 overflow-hidden">
       <Image
         src="/images/hero/hero-concert-hd.webp"
         alt="Ricoune en concert devant une foule en fete"
@@ -22,7 +22,7 @@ export default function HeroSection(): React.ReactElement {
       {/* Atténuation haute pour lisibilité navbar sur spots lumineux */}
       <div className="pointer-events-none absolute left-0 right-0 top-0 h-[160px] bg-gradient-to-b from-black/70 via-black/40 to-transparent" />
 
-      <div className="relative z-10 w-full max-w-2xl px-6 pb-4 pt-[46svh] md:pt-0 text-center md:text-left md:px-16 md:pb-8 lg:px-20 lg:pb-8">
+      <div className="relative z-10 w-full max-w-2xl px-6 pb-4 pt-14 md:pt-0 text-center md:text-left md:px-16 md:pb-8 lg:px-20 lg:pb-8">
         <AnimatedSection>
           <Image
             src="/images/hero/ricoune-logo-hero.png"
@@ -41,7 +41,7 @@ export default function HeroSection(): React.ReactElement {
         </AnimatedSection>
 
         <AnimatedSection delay={0.4}>
-          <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start md:items-start">
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-start md:items-start">
             <a
               href="https://open.spotify.com/artist/5nGIFgo1InYsrFRHCHNJBL"
               target="_blank"
