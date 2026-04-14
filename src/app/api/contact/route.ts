@@ -72,7 +72,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       },
       body: JSON.stringify({
         from: "Site Ricoune <noreply@ricoune.com>",
-        to: "contact@ricoune.fr",
+        to: "ricouneofficiel@gmail.com",
         subject,
         text: emailBody,
         reply_to: email,

@@ -69,7 +69,7 @@ ${message || "Aucun message"}`;
       },
       body: JSON.stringify({
         from: "Site Ricoune <noreply@ricoune.com>",
-        to: "contact@ricoune.fr",
+        to: "ricouneofficiel@gmail.com",
         subject: `[Demande de Devis] ${nom} ${prenom} - ${type_evenement || "Evenement"}`,
         text: emailBody,
         reply_to: email,

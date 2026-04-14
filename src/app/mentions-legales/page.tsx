@@ -35,10 +35,10 @@ export default function MentionsLegalesPage(): React.ReactElement {
         <p>
           Email :{" "}
           <a
-            href="mailto:contact@ricoune.fr"
+            href="mailto:ricouneofficiel@gmail.com"
             className="text-rc-yellow underline transition-colors duration-200 hover:text-rc-yellow/80"
           >
-            contact@ricoune.fr
+            ricouneofficiel@gmail.com
           </a>
         </p>
       </LegalSection>

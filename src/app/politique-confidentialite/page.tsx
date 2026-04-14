@@ -58,10 +58,10 @@ export default function PolitiqueConfidentialitePage(): React.ReactElement {
         <p>
           Accès, rectification, suppression :{" "}
           <a
-            href="mailto:contact@ricoune.fr"
+            href="mailto:ricouneofficiel@gmail.com"
             className="text-rc-yellow underline transition-colors duration-200 hover:text-rc-yellow/80"
           >
-            contact@ricoune.fr
+            ricouneofficiel@gmail.com
           </a>
         </p>
       </LegalSection>
