@@ -10,14 +10,12 @@ export interface Album {
     apple?: string;
     amazon?: string;
     youtube?: string;
-    soundcloud?: string;
   };
 }
 
-// Liens canal / artiste partagés (pas spécifiques à un album)
+// Lien canal YouTube partagé (pas spécifique à un album)
 const channelLinks = {
   youtube: "https://www.youtube.com/@Ricouneofficiel",
-  soundcloud: "https://soundcloud.com/ricouneofficial",
 };
 
 export const albums: Album[] = [
