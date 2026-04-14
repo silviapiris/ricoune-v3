@@ -35,13 +35,13 @@ export default function HeroSection(): React.ReactElement {
         />
       </AnimatedSection>
 
-      <AnimatedSection delay={0.2} className="absolute left-1/2 top-[41svh] w-[84vw] -translate-x-1/2 text-center md:hidden">
+      <AnimatedSection delay={0.2} className="absolute left-1/2 top-[50svh] w-[84vw] -translate-x-1/2 text-center md:hidden">
         <p className="font-[family-name:var(--font-raleway)] text-xl text-white/80">
           L&apos;artiste incontournable des f&ecirc;tes du Sud
         </p>
       </AnimatedSection>
 
-      <AnimatedSection delay={0.4} className="absolute left-1/2 top-[58svh] w-[65vw] -translate-x-1/2 md:hidden">
+      <AnimatedSection delay={0.4} className="absolute left-1/2 top-[64svh] w-[65vw] -translate-x-1/2 md:hidden">
         <a
           href="https://open.spotify.com/artist/5nGIFgo1InYsrFRHCHNJBL"
           target="_blank"
@@ -53,7 +53,7 @@ export default function HeroSection(): React.ReactElement {
         </a>
       </AnimatedSection>
 
-      <AnimatedSection delay={0.5} className="absolute left-1/2 top-[70svh] w-[60vw] -translate-x-1/2 md:hidden">
+      <AnimatedSection delay={0.5} className="absolute left-1/2 top-[75svh] w-[60vw] -translate-x-1/2 md:hidden">
         <Link
           href="/professionnels/demande-de-devis"
           className="rc-btn-outline w-full justify-center"
