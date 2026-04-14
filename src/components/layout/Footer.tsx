@@ -63,17 +63,17 @@ const SOCIAL_LINKS: SocialLink[] = [
   {
     label: "Facebook",
     href: socialLinks.facebook.href,
-    icon: <Facebook size={22} />,
+    icon: <Facebook size={20} />,
   },
   {
     label: "Instagram",
     href: socialLinks.instagram.href,
-    icon: <Instagram size={22} />,
+    icon: <Instagram size={20} />,
   },
   {
     label: "YouTube",
     href: socialLinks.youtube.href,
-    icon: <Youtube size={22} />,
+    icon: <Youtube size={20} />,
   },
   {
     label: "TikTok",
@@ -96,7 +96,7 @@ function FooterBranding() {
         </p>
       </Link>
       <div className="mt-2 mb-4 h-px w-10 bg-rc-yellow mx-auto md:mx-0" />
-      <p className="font-[family-name:var(--font-raleway)] text-sm text-white/60 leading-relaxed max-w-[220px] mx-auto md:mx-0">
+      <p className="font-[family-name:var(--font-raleway)] text-sm text-white/70 leading-relaxed max-w-[200px] mx-auto md:mx-0">
         La musique du Sud,<br />partout en France.
       </p>
     </div>
@@ -112,9 +112,9 @@ function FooterNavigation() {
           <li key={link.href}>
             <Link
               href={link.href}
-              className="group inline-flex items-center gap-1.5 text-sm text-white/60 transition-colors duration-200 hover:text-white"
+              className="group inline-flex items-center gap-1.5 text-sm text-white/65 transition-colors duration-200 hover:text-white"
             >
-              <span className="block w-0 h-px bg-rc-yellow transition-all duration-200 group-hover:w-3" />
+              <span className="block w-0 h-px bg-rc-yellow transition-all duration-200 group-hover:w-3 flex-shrink-0" />
               {link.label}
             </Link>
           </li>
@@ -128,7 +128,7 @@ function FooterSocial() {
   return (
     <div className="text-center md:text-left">
       <p className="rc-section-label mb-4">Suivez Ricoune</p>
-      <div className="flex items-center justify-center md:justify-start flex-wrap gap-2.5">
+      <div className="flex items-center justify-center md:justify-start flex-wrap gap-3">
         {SOCIAL_LINKS.map((social) => (
           <a
             key={social.label}
@@ -136,14 +136,14 @@ function FooterSocial() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.label}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/8 text-white/70 transition-all duration-200 hover:border-rc-yellow/50 hover:bg-rc-yellow/10 hover:text-rc-yellow hover:scale-110"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/75 transition-all duration-200 hover:border-rc-yellow/60 hover:bg-rc-yellow/15 hover:text-rc-yellow hover:scale-110"
           >
             {social.icon}
           </a>
         ))}
       </div>
-      <p className="mt-4 text-xs text-white/35 font-[family-name:var(--font-raleway)] leading-relaxed">
-        Concerts, clips &amp; actualités
+      <p className="mt-4 text-xs text-white/50 font-[family-name:var(--font-raleway)]">
+        Concerts · Clips · Actualités
       </p>
     </div>
   );
@@ -151,21 +151,21 @@ function FooterSocial() {
 
 function FooterBottom() {
   return (
-    <div className="mt-8 pt-5 border-t border-white/[0.08]">
-      <div className="flex flex-col items-center gap-2 text-center text-xs text-white/35 sm:flex-row sm:justify-between sm:text-left">
+    <div className="mt-10 pt-5 border-t border-white/15">
+      <div className="flex flex-col items-center gap-2 text-center text-xs text-white/50 sm:flex-row sm:justify-between sm:text-left">
         <p className="font-[family-name:var(--font-raleway)]">
           &copy; 2026 Ricoune — Tous droits réservés
         </p>
-        <div className="flex flex-wrap justify-center gap-x-5 gap-y-1">
+        <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
           <Link
             href="/mentions-legales"
-            className="transition-colors duration-200 hover:text-white/70"
+            className="transition-colors duration-200 hover:text-white"
           >
             Mentions légales
           </Link>
           <Link
             href="/politique-confidentialite"
-            className="transition-colors duration-200 hover:text-white/70"
+            className="transition-colors duration-200 hover:text-white"
           >
             Politique de confidentialité
           </Link>
@@ -175,7 +175,7 @@ function FooterBottom() {
               href="https://custom-digital-services.fr"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-colors duration-200 hover:text-white/70"
+              className="transition-colors duration-200 hover:text-white"
             >
               Custom Digital Services
             </a>
@@ -188,14 +188,13 @@ function FooterBottom() {
 
 export default function Footer() {
   return (
-    <footer className="mt-auto border-t border-white/10 bg-[#0d1b3e]">
+    <footer className="mt-auto border-t border-white/15 bg-gradient-to-b from-[#1a2e5a] to-[#0c1a38]">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-10">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-[1fr_0.85fr_1.15fr] md:gap-10">
           <FooterBranding />
           <FooterNavigation />
           <FooterSocial />
         </div>
-
         <FooterBottom />
       </div>
     </footer>
