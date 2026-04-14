@@ -97,7 +97,7 @@ export default function PhotosPage() {
                 alt={photo.alt}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover transition-transform duration-300 group-hover:scale-[1.03] group-hover:brightness-105"
+                className="object-cover object-top transition-transform duration-300 group-hover:scale-[1.03] group-hover:brightness-105"
                 loading={index < 3 ? "eager" : "lazy"}
               />
             </button>
