@@ -91,7 +91,7 @@ function FooterBranding() {
   return (
     <div className="text-center md:text-left">
       <Link href="/" className="inline-block group">
-        <p className="font-[family-name:var(--font-oswald)] text-4xl font-bold tracking-[0.18em] text-white transition-colors duration-200 group-hover:text-rc-yellow">
+        <p className="font-[family-name:var(--font-oswald)] text-4xl font-bold tracking-[0.22em] text-white transition-colors duration-200 group-hover:text-rc-yellow">
           RICOUNE
         </p>
       </Link>
@@ -136,13 +136,13 @@ function FooterSocial() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.label}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/65 shadow-md shadow-black/30 backdrop-blur-sm transition-all duration-200 hover:border-rc-yellow/70 hover:bg-rc-yellow/10 hover:text-rc-yellow hover:scale-110 hover:shadow-rc-yellow/10"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/70 shadow-md shadow-black/20 backdrop-blur-sm transition-all duration-200 hover:border-rc-yellow/70 hover:bg-rc-yellow/10 hover:text-rc-yellow hover:scale-105"
           >
             {social.icon}
           </a>
         ))}
       </div>
-      <p className="mt-4 text-xs text-white/50 font-[family-name:var(--font-raleway)]">
+      <p className="mt-4 text-xs text-white/55 font-[family-name:var(--font-raleway)]">
         Concerts · Clips · Actualités
       </p>
     </div>
@@ -152,7 +152,7 @@ function FooterSocial() {
 function FooterBottom() {
   return (
     <div className="mt-10 pt-6 border-t border-white/10">
-      <div className="flex flex-col items-center gap-2 text-center text-xs text-white/55 sm:flex-row sm:justify-between sm:text-left">
+      <div className="flex flex-col items-center gap-2 text-center text-xs text-white/60 sm:flex-row sm:justify-between sm:text-left">
         <p className="font-[family-name:var(--font-raleway)]">
           &copy; 2026 Ricoune — Tous droits réservés
         </p>
