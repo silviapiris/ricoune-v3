@@ -91,11 +91,11 @@ function FooterBranding() {
   return (
     <div className="text-center md:text-left">
       <Link href="/" className="inline-block group">
-        <p className="font-[family-name:var(--font-oswald)] text-3xl font-bold tracking-widest text-white transition-colors duration-200 group-hover:text-rc-yellow">
+        <p className="font-[family-name:var(--font-oswald)] text-4xl font-bold tracking-[0.18em] text-white transition-colors duration-200 group-hover:text-rc-yellow">
           RICOUNE
         </p>
       </Link>
-      <div className="mt-2 mb-4 h-px w-10 bg-rc-yellow mx-auto md:mx-0" />
+      <div className="mt-3 mb-5 h-px w-12 bg-gradient-to-r from-rc-yellow to-rc-yellow/40 mx-auto md:mx-0" />
       <p className="font-[family-name:var(--font-raleway)] text-sm text-white/70 leading-relaxed max-w-[200px] mx-auto md:mx-0">
         La musique du Sud,<br />partout en France.
       </p>
@@ -107,7 +107,7 @@ function FooterNavigation() {
   return (
     <div className="text-center md:text-left">
       <p className="rc-section-label mb-4">Navigation</p>
-      <ul className="space-y-2">
+      <ul className="space-y-2.5">
         {FOOTER_NAV_LINKS.map((link) => (
           <li key={link.href}>
             <Link
@@ -136,7 +136,7 @@ function FooterSocial() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.label}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/75 transition-all duration-200 hover:border-rc-yellow/60 hover:bg-rc-yellow/15 hover:text-rc-yellow hover:scale-110"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white/65 shadow-md shadow-black/30 backdrop-blur-sm transition-all duration-200 hover:border-rc-yellow/70 hover:bg-rc-yellow/10 hover:text-rc-yellow hover:scale-110 hover:shadow-rc-yellow/10"
           >
             {social.icon}
           </a>
@@ -151,7 +151,7 @@ function FooterSocial() {
 
 function FooterBottom() {
   return (
-    <div className="mt-10 pt-5 border-t border-white/15">
+    <div className="mt-10 pt-6 border-t border-white/10">
       <div className="flex flex-col items-center gap-2 text-center text-xs text-white/50 sm:flex-row sm:justify-between sm:text-left">
         <p className="font-[family-name:var(--font-raleway)]">
           &copy; 2026 Ricoune — Tous droits réservés
@@ -188,8 +188,10 @@ function FooterBottom() {
 
 export default function Footer() {
   return (
-    <footer className="mt-auto border-t border-white/15 bg-gradient-to-b from-[#1a2e5a] to-[#0c1a38]">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <footer className="mt-auto bg-gradient-to-b from-[#152040] to-[#080f1e]">
+      {/* Séparateur dégradé premium */}
+      <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-[1fr_0.85fr_1.15fr] md:gap-10">
           <FooterBranding />
           <FooterNavigation />
