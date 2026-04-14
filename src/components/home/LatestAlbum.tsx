@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import AnimatedSection from "@/components/AnimatedSection";
+import { socialLinks } from "@/data/social-links";
 
 export default function LatestAlbum(): React.ReactElement {
   return (
@@ -34,7 +35,7 @@ export default function LatestAlbum(): React.ReactElement {
               </p>
               <div className="flex flex-wrap gap-4">
                 <a
-                  href="https://open.spotify.com/artist/5nGIFgo1InYsrFRHCHNJBL"
+                  href="https://open.spotify.com/album/5GiHsOwaDeNXTVznrG1VxO"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rc-btn"
@@ -42,7 +43,7 @@ export default function LatestAlbum(): React.ReactElement {
                   &Eacute;couter sur Spotify
                 </a>
                 <a
-                  href="https://open.spotify.com/artist/5nGIFgo1InYsrFRHCHNJBL"
+                  href={socialLinks.spotify.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rc-btn-outline"

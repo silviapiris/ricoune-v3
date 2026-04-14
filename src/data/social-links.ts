@@ -27,7 +27,7 @@ export const socialLinks: Record<string, SocialLink> = {
   },
   youtube: {
     name: "YouTube",
-    href: "https://www.youtube.com/@ricoune",
+    href: "https://www.youtube.com/@Ricouneofficiel",
     label: "Voir sur YouTube",
   },
   appleMusic: {

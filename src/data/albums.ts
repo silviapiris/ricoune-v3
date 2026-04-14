@@ -18,7 +18,7 @@ const defaultStreaming = {
   spotify: "https://open.spotify.com/artist/4NcNxqo5fOC2RGY2Jrx0On",
   apple: "https://itunes.apple.com/fr/artist/ricoune/id78593832",
   amazon: "https://www.amazon.fr/s?k=ricoune",
-  youtube: "https://www.youtube.com/channel/UC49kjqlusTVhH7hL_fT3MDg",
+  youtube: "https://www.youtube.com/@Ricouneofficiel",
   soundcloud: "https://soundcloud.com/ricouneofficial",
 };
 
@@ -29,7 +29,10 @@ export const albums: Album[] = [
     year: 2021,
     coverUrl: "/images/albums/quand-un-faineant-se-rebelle.webp",
     tracklist: [],
-    streaming: { ...defaultStreaming },
+    streaming: {
+      ...defaultStreaming,
+      spotify: "https://open.spotify.com/album/5GiHsOwaDeNXTVznrG1VxO",
+    },
   },
   {
     slug: "face-b",

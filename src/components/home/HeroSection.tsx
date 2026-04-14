@@ -43,7 +43,7 @@ export default function HeroSection(): React.ReactElement {
 
       <AnimatedSection delay={0.4} className="absolute left-1/2 top-[64svh] w-[65vw] -translate-x-1/2 md:hidden">
         <a
-          href="https://open.spotify.com/artist/5nGIFgo1InYsrFRHCHNJBL"
+          href={socialLinks.spotify.href}
           target="_blank"
           rel="noopener noreferrer"
           className="rc-btn w-full justify-center"
@@ -102,7 +102,7 @@ export default function HeroSection(): React.ReactElement {
         <AnimatedSection delay={0.4}>
           <div className="flex items-start gap-3">
             <a
-              href="https://open.spotify.com/artist/5nGIFgo1InYsrFRHCHNJBL"
+              href={socialLinks.spotify.href}
               target="_blank"
               rel="noopener noreferrer"
               className="rc-btn"
