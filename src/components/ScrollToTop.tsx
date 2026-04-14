@@ -18,16 +18,16 @@ export default function ScrollToTop(): React.ReactElement | null {
       type="button"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       aria-label="Retour en haut de page"
-      className="fixed bottom-6 right-6 z-50 flex h-11 w-11 items-center justify-center rounded-full bg-rc-yellow text-rc-dark shadow-lg transition-all duration-200 hover:scale-110 hover:shadow-rc-yellow/40 hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-rc-yellow md:bottom-8 md:right-8"
+      className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-rc-yellow text-rc-dark ring-2 ring-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.4)] transition-all duration-200 hover:scale-110 hover:shadow-[0_6px_24px_rgba(0,0,0,0.5)] focus:outline-none focus-visible:ring-2 focus-visible:ring-rc-yellow md:bottom-8 md:right-8"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
+        width="22"
+        height="22"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        strokeWidth="2.5"
+        strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
         aria-hidden="true"
