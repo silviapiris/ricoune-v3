@@ -14,10 +14,8 @@ export interface Album {
   };
 }
 
-const defaultStreaming = {
-  spotify: "https://open.spotify.com/artist/4NcNxqo5fOC2RGY2Jrx0On",
-  apple: "https://itunes.apple.com/fr/artist/ricoune/id78593832",
-  amazon: "https://www.amazon.fr/s?k=ricoune",
+// Liens canal / artiste partagés (pas spécifiques à un album)
+const channelLinks = {
   youtube: "https://www.youtube.com/@Ricouneofficiel",
   soundcloud: "https://soundcloud.com/ricouneofficial",
 };
@@ -30,8 +28,9 @@ export const albums: Album[] = [
     coverUrl: "/images/albums/quand-un-faineant-se-rebelle.webp",
     tracklist: [],
     streaming: {
-      ...defaultStreaming,
       spotify: "https://open.spotify.com/album/5GiHsOwaDeNXTVznrG1VxO",
+      apple: "https://music.apple.com/fr/album/quand-un-fain%C3%A9ant-se-rebelle/1600426016",
+      ...channelLinks,
     },
   },
   {
@@ -51,7 +50,11 @@ export const albums: Album[] = [
       "Sauvons les glacons",
       "Le temps s\u2019est arr\u00eat\u00e9",
     ],
-    streaming: { ...defaultStreaming },
+    streaming: {
+      spotify: "https://open.spotify.com/album/0cRZ70hi15S9poCFM2ktcM",
+      apple: "https://music.apple.com/fr/album/face-b/1318581436",
+      ...channelLinks,
+    },
   },
   {
     slug: "y-faut-etre-gentil",
@@ -59,7 +62,10 @@ export const albums: Album[] = [
     year: 2016,
     coverUrl: "/images/albums/y-faut-etre-gentil.webp",
     tracklist: [],
-    streaming: { ...defaultStreaming },
+    streaming: {
+      // Pas disponible individuellement sur Spotify / Apple Music
+      ...channelLinks,
+    },
   },
   {
     slug: "cest-lete",
@@ -81,7 +87,10 @@ export const albums: Album[] = [
       "C\u2019est l\u2019\u00e9t\u00e9",
       "La crapola",
     ],
-    streaming: { ...defaultStreaming },
+    streaming: {
+      // CD Collector — non disponible sur les plateformes de streaming
+      ...channelLinks,
+    },
   },
   {
     slug: "le-kukela",
@@ -99,7 +108,10 @@ export const albums: Album[] = [
       "L\u2019histoire de ma vie",
       "Babou",
     ],
-    streaming: { ...defaultStreaming },
+    streaming: {
+      // Pas disponible individuellement sur Spotify / Apple Music
+      ...channelLinks,
+    },
   },
   {
     slug: "le-best-of",
@@ -120,7 +132,11 @@ export const albums: Album[] = [
       "La F\u00e9ria de N\u00eemes",
       "Aquilou",
     ],
-    streaming: { ...defaultStreaming },
+    streaming: {
+      spotify: "https://open.spotify.com/album/6DAzunktHPNkNF73eCrz3m",
+      apple: "https://music.apple.com/fr/album/le-best-of/1205219812",
+      ...channelLinks,
+    },
   },
   {
     slug: "mets-tes-lunettes",
@@ -139,7 +155,10 @@ export const albums: Album[] = [
       "A Marseille",
       "Champion de la chaise longue",
     ],
-    streaming: { ...defaultStreaming },
+    streaming: {
+      // Pas disponible individuellement sur Spotify / Apple Music
+      ...channelLinks,
+    },
   },
   {
     slug: "ricoune-20-ans",
@@ -158,7 +177,11 @@ export const albums: Album[] = [
       "Le rap des villes le rap des champs",
       "La Saint-Louis",
     ],
-    streaming: { ...defaultStreaming },
+    streaming: {
+      spotify: "https://open.spotify.com/album/4EqfTB2ozv5qDKjRn9Dw9Y",
+      apple: "https://music.apple.com/fr/album/20-ans/1204158745",
+      ...channelLinks,
+    },
   },
 ];
 
