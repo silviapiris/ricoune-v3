@@ -106,8 +106,8 @@ function FooterBranding() {
 function FooterNavigation() {
   return (
     <div className="text-center md:text-left">
-      <p className="rc-section-label mb-5">Navigation</p>
-      <ul className="space-y-2.5">
+      <p className="rc-section-label mb-4">Navigation</p>
+      <ul className="space-y-2">
         {FOOTER_NAV_LINKS.map((link) => (
           <li key={link.href}>
             <Link
@@ -127,8 +127,8 @@ function FooterNavigation() {
 function FooterSocial() {
   return (
     <div className="text-center md:text-left">
-      <p className="rc-section-label mb-5">Suivez Ricoune</p>
-      <div className="flex items-center justify-center md:justify-start flex-wrap gap-3">
+      <p className="rc-section-label mb-4">Suivez Ricoune</p>
+      <div className="flex items-center justify-center md:justify-start flex-wrap gap-2.5">
         {SOCIAL_LINKS.map((social) => (
           <a
             key={social.label}
@@ -136,14 +136,14 @@ function FooterSocial() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.label}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 transition-all duration-200 hover:border-rc-yellow/40 hover:bg-rc-yellow/10 hover:text-rc-yellow hover:scale-110"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/8 text-white/70 transition-all duration-200 hover:border-rc-yellow/50 hover:bg-rc-yellow/10 hover:text-rc-yellow hover:scale-110"
           >
             {social.icon}
           </a>
         ))}
       </div>
-      <p className="mt-5 text-xs text-white/40 font-[family-name:var(--font-raleway)]">
-        Restez connectés pour les dernières actualités
+      <p className="mt-4 text-xs text-white/35 font-[family-name:var(--font-raleway)] leading-relaxed">
+        Concerts, clips &amp; actualités
       </p>
     </div>
   );
@@ -151,8 +151,8 @@ function FooterSocial() {
 
 function FooterBottom() {
   return (
-    <div className="mt-12 pt-6 border-t border-white/[0.06]">
-      <div className="flex flex-col items-center gap-3 text-center text-xs text-white/40 sm:flex-row sm:justify-between sm:text-left">
+    <div className="mt-8 pt-5 border-t border-white/[0.08]">
+      <div className="flex flex-col items-center gap-2 text-center text-xs text-white/35 sm:flex-row sm:justify-between sm:text-left">
         <p className="font-[family-name:var(--font-raleway)]">
           &copy; 2026 Ricoune — Tous droits réservés
         </p>
@@ -188,9 +188,9 @@ function FooterBottom() {
 
 export default function Footer() {
   return (
-    <footer className="mt-auto border-t border-white/[0.06] bg-[#07101f]">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
+    <footer className="mt-auto border-t border-white/10 bg-[#0d1b3e]">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-10">
           <FooterBranding />
           <FooterNavigation />
           <FooterSocial />
