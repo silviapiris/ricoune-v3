@@ -27,7 +27,7 @@ const formules: {
     ],
   },
   {
-    name: "Cocktail / Show case",
+    name: "Apéro concert / Show case",
     items: [
       { text: "Idéal pour cocktail et show case" },
       { text: "Sono fournie sauf départements hors Occitanie" },

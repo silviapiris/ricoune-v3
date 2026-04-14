@@ -11,7 +11,7 @@ const EVENT_TYPES = [
 
 const FORMULE_TYPES = [
   "Formule complète",
-  "Cocktail / Show case",
+  "Apéro concert / Show case",
   "Je ne sais pas encore",
 ] as const;
 
