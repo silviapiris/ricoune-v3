@@ -12,7 +12,7 @@ export const socialLinks: Record<string, SocialLink> = {
   },
   tiktok: {
     name: "TikTok",
-    href: "https://www.tiktok.com/@ricoune",
+    href: "https://www.tiktok.com/@ricouneofficiel_",
     label: "Suivre sur TikTok",
   },
   instagram: {
