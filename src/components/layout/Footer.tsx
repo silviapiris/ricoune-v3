@@ -152,7 +152,7 @@ function FooterSocial() {
 function FooterBottom() {
   return (
     <div className="mt-10 pt-6 border-t border-white/10">
-      <div className="flex flex-col items-center gap-2 text-center text-xs text-white/50 sm:flex-row sm:justify-between sm:text-left">
+      <div className="flex flex-col items-center gap-2 text-center text-xs text-white/55 sm:flex-row sm:justify-between sm:text-left">
         <p className="font-[family-name:var(--font-raleway)]">
           &copy; 2026 Ricoune — Tous droits réservés
         </p>
@@ -188,9 +188,9 @@ function FooterBottom() {
 
 export default function Footer() {
   return (
-    <footer className="mt-auto bg-gradient-to-b from-[#152040] to-[#080f1e]">
+    <footer className="mt-auto bg-[linear-gradient(to_bottom,#1e3a6a_0%,#111d3b_45%,#070d1c_100%)]">
       {/* Séparateur dégradé premium */}
-      <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      <div className="h-px bg-gradient-to-r from-transparent via-white/25 to-transparent" />
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-[1fr_0.85fr_1.15fr] md:gap-10">
           <FooterBranding />
