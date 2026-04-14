@@ -32,7 +32,7 @@ export const socialLinks: Record<string, SocialLink> = {
   },
   appleMusic: {
     name: "Apple Music",
-    href: "https://music.apple.com/fr/artist/ricoune",
+    href: "https://music.apple.com/fr/artist/ricoune/78593832",
     label: "Ecouter sur Apple Music",
   },
   deezer: {
