@@ -4,7 +4,6 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 
 const EVENT_TYPES = [
-  "Mariage",
   "Fête votive / Feria",
   "Festival",
   "Soirée privée",
@@ -20,6 +19,9 @@ const FORMULE_OPTIONS = [
 
 const INPUT_CLASSES =
   "w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-white/40 outline-none transition-colors focus:border-rc-yellow focus:outline-none";
+
+const SELECT_CLASSES =
+  "w-full rounded-xl border border-white/20 bg-[#2a2a2a] px-4 py-3 text-white outline-none transition-colors focus:border-rc-yellow focus:outline-none [&>option]:bg-[#2a2a2a] [&>option]:text-white";
 
 export default function DemandeDevisPage(): React.JSX.Element {
   const [loading, setLoading] = useState(false);
@@ -206,7 +208,7 @@ export default function DemandeDevisPage(): React.JSX.Element {
               required
               value={formData.typeEvenement}
               onChange={handleChange}
-              className={INPUT_CLASSES}
+              className={SELECT_CLASSES}
             >
               <option value="" disabled>
                 -- Sélectionnez --
