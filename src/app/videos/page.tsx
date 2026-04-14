@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import VideoGrid from "@/components/videos/VideoGrid";
-import { clips, lives, FEATURED_YOUTUBE_ID, type VideoItem } from "@/data/videos";
+import { clips, lives, FEATURED_YOUTUBE_ID, FEATURED_TITLE, type VideoItem } from "@/data/videos";
 
 const VideoModal = dynamic(() => import("@/components/videos/VideoModal"), { ssr: false });
 
@@ -38,7 +38,7 @@ export default function VideosPage() {
               <iframe
                 className="h-full w-full"
                 src={`https://www.youtube.com/embed/${FEATURED_YOUTUBE_ID}?autoplay=1`}
-                title="Clip officiel — Dans un verre a ballon"
+                title={FEATURED_TITLE}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />
@@ -47,11 +47,11 @@ export default function VideosPage() {
                 type="button"
                 onClick={() => setFeaturedPlaying(true)}
                 className="relative block h-full w-full cursor-pointer"
-                aria-label="Lire le clip officiel — Dans un verre a ballon"
+                aria-label={`Lire : ${FEATURED_TITLE}`}
               >
                 <Image
                   src={`https://img.youtube.com/vi/${FEATURED_YOUTUBE_ID}/maxresdefault.jpg`}
-                  alt="Clip officiel — Dans un verre a ballon"
+                  alt={FEATURED_TITLE}
                   fill
                   className="object-cover"
                   sizes="(max-width: 896px) 100vw, 896px"
@@ -68,7 +68,7 @@ export default function VideosPage() {
           </div>
         </div>
         <h2 className="mt-4 text-center font-[family-name:var(--font-oswald)] text-xl text-white">
-          Clip officiel — Dans un verre a ballon
+          {FEATURED_TITLE}
         </h2>
       </section>
 

@@ -5,44 +5,54 @@ export interface VideoItem {
   year?: number;
 }
 
-export const FEATURED_YOUTUBE_ID = "dQw4w9WgXcQ";
+// Vidéo mise en avant (héro de la page Vidéos)
+export const FEATURED_YOUTUBE_ID = "L_NfdWk1KdU";
+export const FEATURED_TITLE = "RICOUNE — Le Vieux Chêne Des Cévennes";
 
+// Clips officiels (source : ricoune.com)
 export const clips: VideoItem[] = [
   {
     id: "1",
-    title: "Dans un verre a ballon",
-    youtubeId: "dQw4w9WgXcQ",
-    year: 2001,
+    title: "Je Passerai Demain",
+    youtubeId: "pUYaxz_MSjM",
   },
-  { id: "2", title: "Le Kukela", youtubeId: "dQw4w9WgXcQ", year: 2015 },
+  {
+    id: "2",
+    title: "La Goutte De Trop",
+    youtubeId: "wsBOgchog5Y",
+  },
   {
     id: "3",
-    title: "Y faut etre gentil",
-    youtubeId: "dQw4w9WgXcQ",
-    year: 2016,
+    title: "Quand une femme s'en va",
+    youtubeId: "6B0wjW1DdAI",
   },
   {
     id: "4",
-    title: "Quand un faineant se rebelle",
-    youtubeId: "dQw4w9WgXcQ",
-    year: 2021,
+    title: "La Crapola",
+    youtubeId: "g_kT8OqT1fc",
+  },
+  {
+    id: "5",
+    title: "C'est l'été",
+    youtubeId: "b-scwkE0qtQ",
+  },
+  {
+    id: "6",
+    title: "Le Tube",
+    youtubeId: "zYl1kI748dY",
+  },
+  {
+    id: "7",
+    title: "Mon petit village",
+    youtubeId: "9MmBcm-3RNk",
   },
 ];
 
+// Extraits live / concerts
 export const lives: VideoItem[] = [
   {
     id: "l1",
-    title: "Live Feria de Beziers 2025",
-    youtubeId: "dQw4w9WgXcQ",
-  },
-  {
-    id: "l2",
-    title: "Live Fete de Montpellier 2024",
-    youtubeId: "dQw4w9WgXcQ",
-  },
-  {
-    id: "l3",
-    title: "Live Festival du Sud 2023",
-    youtubeId: "dQw4w9WgXcQ",
+    title: "Ricoune en concert (Extrait)",
+    youtubeId: "X-uCGJlec4Y",
   },
 ];
