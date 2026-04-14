@@ -92,7 +92,7 @@ export default function Lightbox({
           e.stopPropagation();
           onPrev();
         }}
-        className="absolute left-4 z-10 rounded-full bg-white/10 p-3 text-white transition-colors hover:text-rc-yellow"
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 rounded-full bg-white/10 p-3 text-white transition-colors hover:text-rc-yellow"
         aria-label="Photo précédente"
       >
         <ChevronLeft size={36} />
@@ -109,7 +109,7 @@ export default function Lightbox({
           alt={current.alt}
           fill
           sizes="90vw"
-          className="object-cover transition-opacity duration-300"
+          className="object-contain transition-opacity duration-300"
           priority
         />
       </div>
@@ -120,14 +120,14 @@ export default function Lightbox({
           e.stopPropagation();
           onNext();
         }}
-        className="absolute right-4 z-10 rounded-full bg-white/10 p-3 text-white transition-colors hover:text-rc-yellow"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 rounded-full bg-white/10 p-3 text-white transition-colors hover:text-rc-yellow"
         aria-label="Photo suivante"
       >
         <ChevronRight size={36} />
       </button>
 
       {/* Counter */}
-      <div className="absolute bottom-6 text-sm text-white/60">
+      <div className="absolute bottom-6 left-0 right-0 text-center text-sm text-white/60">
         {currentIndex + 1} / {images.length}
       </div>
     </div>
