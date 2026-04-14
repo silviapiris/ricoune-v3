@@ -47,10 +47,21 @@ export default function MentionsLegalesPage(): React.ReactElement {
         <p>Ricoune</p>
       </LegalSection>
 
-      <LegalSection title="Hébergement">
+      <LegalSection title="Hébergement &amp; technologies">
         <p>
-          O2Switch — 222 Boulevard Gustave Flaubert, 63000 Clermont-Ferrand,
-          France
+          Site développé avec <strong className="text-rc-white">Next.js / React</strong> et hébergé sur{" "}
+          <strong className="text-rc-white">Vercel</strong>.
+        </p>
+        <p className="mt-1">
+          Vercel Inc. — 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis —{" "}
+          <a
+            href="https://vercel.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-rc-yellow underline transition-colors duration-200 hover:text-rc-yellow/80"
+          >
+            vercel.com
+          </a>
         </p>
       </LegalSection>
 
