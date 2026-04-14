@@ -7,7 +7,7 @@ export interface SocialLink {
 export const socialLinks: Record<string, SocialLink> = {
   spotify: {
     name: "Spotify",
-    href: "https://open.spotify.com/artist/5nGIFgo1InYsrFRHCHNJBL",
+    href: "https://open.spotify.com/artist/4NcNxqo5fOC2RGY2Jrx0On",
     label: "Ecouter sur Spotify",
   },
   tiktok: {
