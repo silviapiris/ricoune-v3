@@ -17,7 +17,7 @@ const photos = [
   { id: "4", src: "/images/photos/photos-04.webp", alt: "Ricoune en spectacle" },
   { id: "5", src: "/images/photos/photos-05.webp", alt: "Ambiance concert Ricoune" },
   // Session photo professionnelle septembre 2023 (ricoune.com)
-  { id: "p01",  src: `${BASE}/3O8A8719-800x826.jpg`,                          alt: "Ricoune sur scène" },
+  { id: "p01",  src: `${BASE}/3O8A8719-800x826.jpg`,                          alt: "Ricoune sur scène",          objectPosition: "object-bottom" },
   { id: "p02",  src: `${BASE}/3O8A8880-774x1000.jpg`,                         alt: "Portrait de Ricoune", objectPosition: "object-center" },
   { id: "p03",  src: `${BASE}/3O8A8705-800x384.jpg`,                          alt: "Ricoune en concert" },
   { id: "p04",  src: `${BASE}/3O8A8773-800x453.jpg`,                          alt: "Ricoune et la foule" },
