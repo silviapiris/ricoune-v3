@@ -67,10 +67,10 @@ export default function AboutSection(): React.ReactElement {
           <AnimatedSection>
   <div className="relative w-full h-[300px] md:h-[420px] overflow-hidden rounded-2xl shadow-xl">
     <Image
-      src="/images/bio/home-concert-scene.jpg"
-      alt="Ricoune en concert"
+      src="/images/bio/ricoune-micro.jpg"
+      alt="Ricoune au micro"
       fill
-      className="object-cover object-center"
+      className="object-cover object-top"
       sizes="(max-width: 768px) 100vw, 40vw"
     />
   </div>

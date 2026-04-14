@@ -16,7 +16,7 @@ export default function ArtistSection(): React.ReactElement {
                 src="/images/bio/home-bio-portrait.webp"
                 alt="Ricoune, l'artiste du Sud"
                 fill
-                className="object-cover object-top"
+                className="object-cover object-top scale-[1.15] origin-top"
                 sizes="(max-width: 768px) 100vw, 40vw"
               />
             </div>
