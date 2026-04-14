@@ -18,7 +18,7 @@ const photos = [
   { id: "5", src: "/images/photos/photos-05.webp", alt: "Ambiance concert Ricoune" },
   // Session photo professionnelle septembre 2023 (ricoune.com)
   { id: "p01",  src: `${BASE}/3O8A8719-800x826.jpg`,                          alt: "Ricoune sur scène" },
-  { id: "p02",  src: `${BASE}/3O8A8880-774x1000.jpg`,                         alt: "Portrait de Ricoune" },
+  { id: "p02",  src: `${BASE}/3O8A8880-774x1000.jpg`,                         alt: "Portrait de Ricoune", objectPosition: "object-center" },
   { id: "p03",  src: `${BASE}/3O8A8705-800x384.jpg`,                          alt: "Ricoune en concert" },
   { id: "p04",  src: `${BASE}/3O8A8773-800x453.jpg`,                          alt: "Ricoune et la foule" },
   { id: "p05",  src: `${BASE}/3O8A8900-800x465.jpg`,                          alt: "Ricoune sur scène" },
@@ -97,7 +97,7 @@ export default function PhotosPage() {
                 alt={photo.alt}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                className="object-cover object-top transition-transform duration-300 group-hover:scale-[1.03] group-hover:brightness-105"
+                className={`object-cover ${photo.objectPosition ?? "object-top"} transition-transform duration-300 group-hover:scale-[1.03] group-hover:brightness-105`}
                 loading={index < 3 ? "eager" : "lazy"}
               />
             </button>
