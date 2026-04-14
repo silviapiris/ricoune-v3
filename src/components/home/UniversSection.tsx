@@ -20,10 +20,10 @@ const CARDS: UniversCard[] = [
       </svg>
     ),
     links: [
-      { label: "Spotify", href: "https://open.spotify.com/artist/5nGIFgo1InYsrFRHCHNJBL", external: true },
+      { label: "Spotify", href: socialLinks.spotify.href, external: true },
       { label: "Deezer", href: socialLinks.deezer.href, external: true },
     ],
-    mainHref: "https://open.spotify.com/artist/5nGIFgo1InYsrFRHCHNJBL",
+    mainHref: socialLinks.spotify.href,
   },
   {
     title: "Regarder",
