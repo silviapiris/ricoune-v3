@@ -12,13 +12,13 @@ const BUTTON_CLASS =
   "group w-full flex items-center justify-between rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white outline-none transition-colors hover:border-white/40 focus:border-rc-yellow focus-visible:ring-2 focus-visible:ring-rc-yellow/40 focus-visible:ring-offset-1 focus-visible:ring-offset-transparent data-[open]:border-rc-yellow";
 
 const OPTIONS_CLASS =
-  "absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/30 bg-[#1e2d4a] shadow-xl shadow-black/40 outline-none";
+  "absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/25 bg-gradient-to-b from-[#1f3f7a]/85 to-[#1a3368]/85 backdrop-blur-[6px] shadow-lg shadow-black/30 outline-none";
 
 const OPTION_CLASS =
-  "group flex cursor-pointer items-center gap-3 px-5 py-4 text-sm text-white/90 transition-colors border-b border-white/[0.18] last:border-0 hover:bg-white/[0.12] hover:text-white data-[focus]:bg-rc-blue/20 data-[focus]:text-white data-[selected]:bg-rc-yellow/10 data-[selected]:text-rc-yellow";
+  "group flex cursor-pointer items-center gap-3 px-5 py-4 text-sm text-white rounded-md transition-colors hover:bg-white/5 data-[focus]:bg-white/5 data-[focus]:text-white data-[selected]:bg-white/[0.08] data-[selected]:text-white";
 
 const OPTION_EMPTY_CLASS =
-  "group flex cursor-pointer items-center gap-3 px-5 py-4 text-sm text-white/40 transition-colors border-b border-white/[0.18] hover:bg-white/[0.12] hover:text-white/70 data-[focus]:bg-rc-blue/20 data-[focus]:text-white/70";
+  "group flex cursor-pointer items-center gap-3 px-5 py-4 text-sm text-white/40 rounded-md transition-colors hover:bg-white/5 hover:text-white/70 data-[focus]:bg-white/5 data-[focus]:text-white/70";
 
 interface SelectFieldProps {
   value: string | undefined;
@@ -57,7 +57,7 @@ export function SelectField({
         </ListboxButton>
 
         <ListboxOptions className={OPTIONS_CLASS} transition>
-          <div className="origin-top transition duration-150 ease-out data-[closed]:scale-y-95 data-[closed]:opacity-0 py-2">
+          <div className="origin-top transition duration-150 ease-out data-[closed]:scale-y-95 data-[closed]:opacity-0 py-2 px-2 space-y-1">
             {allowEmpty && (
               <ListboxOption value="" className={OPTION_EMPTY_CLASS}>
                 <span className="h-4 w-4 flex-shrink-0" />
