@@ -12,13 +12,13 @@ const BUTTON_CLASS =
   "group w-full flex items-center justify-between rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white outline-none transition-colors hover:border-white/40 focus:border-rc-yellow focus-visible:ring-2 focus-visible:ring-rc-yellow/40 focus-visible:ring-offset-1 focus-visible:ring-offset-transparent data-[open]:border-rc-yellow";
 
 const OPTIONS_CLASS =
-  "absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/[0.15] bg-[#242e48] shadow-2xl shadow-black/60 outline-none";
+  "absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/[0.18] bg-[#2a3552] shadow-xl shadow-black/40 outline-none";
 
 const OPTION_CLASS =
-  "group flex cursor-pointer items-center gap-3 px-4 py-3.5 text-sm text-white/80 transition-colors border-b border-white/[0.08] last:border-0 hover:bg-white/[0.12] hover:text-white data-[focus]:bg-rc-blue/20 data-[focus]:text-white data-[selected]:bg-rc-yellow/10 data-[selected]:text-rc-yellow";
+  "group flex cursor-pointer items-center gap-3 px-4 py-4 text-sm text-white/80 transition-colors border-b border-white/[0.10] last:border-0 hover:bg-white/[0.12] hover:text-white data-[focus]:bg-rc-blue/20 data-[focus]:text-white data-[selected]:bg-rc-yellow/10 data-[selected]:text-rc-yellow";
 
 const OPTION_EMPTY_CLASS =
-  "group flex cursor-pointer items-center gap-3 px-4 py-3.5 text-sm text-white/40 transition-colors border-b border-white/[0.08] hover:bg-white/[0.12] hover:text-white/70 data-[focus]:bg-rc-blue/20 data-[focus]:text-white/70";
+  "group flex cursor-pointer items-center gap-3 px-4 py-4 text-sm text-white/40 transition-colors border-b border-white/[0.10] hover:bg-white/[0.12] hover:text-white/70 data-[focus]:bg-rc-blue/20 data-[focus]:text-white/70";
 
 interface SelectFieldProps {
   value: string | undefined;
