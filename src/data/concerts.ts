@@ -93,7 +93,7 @@ export const concerts: Concert[] = [
   },
   {
     id: 7,
-    date: "2026-06-12",
+    date: "2026-06-19",
     city: "Meynes",
     department: "30",
     postalCode: "30840",
@@ -743,7 +743,7 @@ export const concerts: Concert[] = [
   },
   {
     id: 57,
-    date: "2026-09-10",
+    date: "2026-09-12",
     city: "La Garnache",
     department: "85",
     postalCode: "85710",

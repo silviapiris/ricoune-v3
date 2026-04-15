@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 const EVENT_TYPES = [
-  "Mariage",
   "Fête votive / Feria",
   "Festival",
   "Soirée privée",

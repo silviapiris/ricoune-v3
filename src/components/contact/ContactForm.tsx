@@ -2,7 +2,8 @@
 
 import { useState, FormEvent, useCallback } from "react";
 import Link from "next/link";
-import { Loader2, CheckCircle, XCircle, Send } from "lucide-react";
+import { Loader2, CheckCircle, XCircle, Send, ChevronDown, Check } from "lucide-react";
+import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/react";
 import { contactSchema } from "@/lib/validations/contact";
 import type { ContactFormData } from "@/lib/validations/contact";
 
@@ -10,7 +11,6 @@ const INPUT_CLASS =
   "w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:border-rc-yellow focus:outline-none transition-colors";
 
 const EVENT_TYPES = [
-  "Mariage",
   "Fête votive / Feria",
   "Festival",
   "Soirée privée",
@@ -176,24 +176,58 @@ export default function ContactForm({
         {/* Ligne 3 : Type événement */}
         <div>
           <label
-            htmlFor="type_evenement"
+            id="type_evenement-label"
             className="mb-1.5 block text-sm text-white/80"
           >
             Type d&apos;événement
           </label>
-          <select
-            id="type_evenement"
+          <Listbox
             value={formData.type_evenement}
-            onChange={(e) => updateField("type_evenement", e.target.value)}
-            className={INPUT_CLASS}
+            onChange={(value) => updateField("type_evenement", value)}
           >
-            <option value="">-- Optionnel --</option>
-            {EVENT_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
+            <div className="relative">
+              <ListboxButton
+                aria-labelledby="type_evenement-label"
+                className="group w-full flex items-center justify-between rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white outline-none transition-colors hover:border-white/40 focus:border-rc-yellow data-[open]:border-rc-yellow"
+              >
+                <span className={formData.type_evenement ? "text-white" : "text-white/40"}>
+                  {formData.type_evenement || "-- Optionnel --"}
+                </span>
+                <ChevronDown
+                  className="h-4 w-4 text-white/60 transition-transform duration-200 group-data-[open]:rotate-180"
+                  aria-hidden="true"
+                />
+              </ListboxButton>
+
+              <ListboxOptions
+                className="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/10 bg-[#1e2433] shadow-2xl shadow-black/60 outline-none"
+                transition
+              >
+                <div className="origin-top transition duration-150 ease-out data-[closed]:scale-y-95 data-[closed]:opacity-0 py-1">
+                  <ListboxOption
+                    value=""
+                    className="group flex cursor-pointer items-center gap-3 px-4 py-3 text-white/40 transition-colors hover:bg-white/10 hover:text-white/70"
+                  >
+                    <span className="h-4 w-4 flex-shrink-0" />
+                    <span className="text-sm">-- Optionnel --</span>
+                  </ListboxOption>
+                  {EVENT_TYPES.map((type) => (
+                    <ListboxOption
+                      key={type}
+                      value={type}
+                      className="group flex cursor-pointer items-center gap-3 px-4 py-3 text-white/80 transition-colors hover:bg-white/10 hover:text-white data-[selected]:bg-rc-yellow/10 data-[selected]:text-rc-yellow"
+                    >
+                      <Check
+                        className="h-4 w-4 flex-shrink-0 text-rc-yellow opacity-0 group-data-[selected]:opacity-100 transition-opacity"
+                        aria-hidden="true"
+                      />
+                      <span className="text-sm">{type}</span>
+                    </ListboxOption>
+                  ))}
+                </div>
+              </ListboxOptions>
+            </div>
+          </Listbox>
         </div>
 
         {/* Ligne 4 : Date + Ville */}
