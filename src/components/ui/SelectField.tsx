@@ -15,10 +15,10 @@ const OPTIONS_CLASS =
   "absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/[0.18] bg-[#2a3552] shadow-xl shadow-black/40 outline-none";
 
 const OPTION_CLASS =
-  "group flex cursor-pointer items-center gap-3 px-4 py-4 text-sm text-white/80 transition-colors border-b border-white/[0.10] last:border-0 hover:bg-white/[0.12] hover:text-white data-[focus]:bg-rc-blue/20 data-[focus]:text-white data-[selected]:bg-rc-yellow/10 data-[selected]:text-rc-yellow";
+  "group flex cursor-pointer items-center gap-3 px-4 py-5 text-sm text-white/80 transition-colors border-b border-white/[0.10] last:border-0 hover:bg-white/[0.12] hover:text-white data-[focus]:bg-rc-blue/20 data-[focus]:text-white data-[selected]:bg-rc-yellow/10 data-[selected]:text-rc-yellow";
 
 const OPTION_EMPTY_CLASS =
-  "group flex cursor-pointer items-center gap-3 px-4 py-4 text-sm text-white/40 transition-colors border-b border-white/[0.10] hover:bg-white/[0.12] hover:text-white/70 data-[focus]:bg-rc-blue/20 data-[focus]:text-white/70";
+  "group flex cursor-pointer items-center gap-3 px-4 py-5 text-sm text-white/40 transition-colors border-b border-white/[0.10] hover:bg-white/[0.12] hover:text-white/70 data-[focus]:bg-rc-blue/20 data-[focus]:text-white/70";
 
 interface SelectFieldProps {
   value: string | undefined;
