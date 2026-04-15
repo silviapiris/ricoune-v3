@@ -2,8 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/react";
-import { ChevronDown, Check } from "lucide-react";
+import { SelectField } from "@/components/ui/SelectField";
 
 const EVENT_TYPES = [
   "Fête votive / Feria",
@@ -212,43 +211,12 @@ export default function DemandeDevisPage(): React.JSX.Element {
             >
               Type d&apos;événement <span className="text-red-500">*</span>
             </label>
-            <Listbox value={formData.typeEvenement} onChange={handleEventTypeChange}>
-              <div className="relative">
-                <ListboxButton
-                  aria-labelledby="typeEvenement-label"
-                  className="group w-full flex items-center justify-between rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white outline-none transition-colors hover:border-white/40 focus:border-rc-yellow data-[open]:border-rc-yellow"
-                >
-                  <span className={formData.typeEvenement ? "text-white" : "text-white/40"}>
-                    {formData.typeEvenement || "-- Sélectionnez --"}
-                  </span>
-                  <ChevronDown
-                    className="h-4 w-4 text-white/60 transition-transform duration-200 group-data-[open]:rotate-180"
-                    aria-hidden="true"
-                  />
-                </ListboxButton>
-
-                <ListboxOptions
-                  className="absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/10 bg-[#1e2433] shadow-2xl shadow-black/60 outline-none"
-                  transition
-                >
-                  <div className="origin-top transition duration-150 ease-out data-[closed]:scale-y-95 data-[closed]:opacity-0 py-1">
-                    {EVENT_TYPES.map((type) => (
-                      <ListboxOption
-                        key={type}
-                        value={type}
-                        className="group flex cursor-pointer items-center gap-3 px-4 py-3 text-white/80 transition-colors hover:bg-white/10 hover:text-white data-[selected]:bg-rc-yellow/10 data-[selected]:text-rc-yellow"
-                      >
-                        <Check
-                          className="h-4 w-4 flex-shrink-0 text-rc-yellow opacity-0 group-data-[selected]:opacity-100 transition-opacity"
-                          aria-hidden="true"
-                        />
-                        <span className="text-sm">{type}</span>
-                      </ListboxOption>
-                    ))}
-                  </div>
-                </ListboxOptions>
-              </div>
-            </Listbox>
+            <SelectField
+              value={formData.typeEvenement}
+              onChange={handleEventTypeChange}
+              options={EVENT_TYPES}
+              aria-labelledby="typeEvenement-label"
+            />
           </div>
 
           {/* Ligne 4 : Date / Lieu */}
