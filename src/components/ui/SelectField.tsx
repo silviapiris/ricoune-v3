@@ -9,7 +9,7 @@ import {
 } from "@headlessui/react";
 
 const BUTTON_CLASS =
-  "group w-full flex items-center justify-between rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white outline-none transition-colors hover:border-white/40 focus:border-rc-yellow focus-visible:ring-2 focus-visible:ring-rc-yellow/40 focus-visible:ring-offset-1 focus-visible:ring-offset-transparent data-[open]:border-rc-yellow";
+  "group w-full flex items-center justify-between rounded-xl border border-white/25 bg-[#1f3f7a]/80 backdrop-blur-[4px] shadow-md shadow-black/20 px-4 py-3 text-white outline-none transition-colors hover:border-white/40 hover:bg-[#1f3f7a]/90 focus:border-rc-yellow focus:ring-1 focus:ring-rc-yellow/40 data-[open]:border-rc-yellow";
 
 const OPTIONS_CLASS =
   "absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/25 bg-gradient-to-b from-[#1f3f7a]/85 to-[#1a3368]/85 backdrop-blur-[6px] shadow-lg shadow-black/30 outline-none";
