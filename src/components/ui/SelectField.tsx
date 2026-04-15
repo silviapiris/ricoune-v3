@@ -21,7 +21,7 @@ const OPTION_EMPTY_CLASS =
   "group flex cursor-pointer items-center gap-3 px-4 py-3 text-sm text-white/40 transition-colors border-b border-white/[0.05] hover:bg-white/[0.12] hover:text-white/70 data-[focus]:bg-rc-blue/20 data-[focus]:text-white/70";
 
 interface SelectFieldProps {
-  value: string;
+  value: string | undefined;
   onChange: (value: string) => void;
   options: readonly string[];
   placeholder?: string;
@@ -39,15 +39,16 @@ export function SelectField({
   emptyLabel = "-- Optionnel --",
   "aria-labelledby": ariaLabelledby,
 }: SelectFieldProps): React.ReactElement {
+  const safeValue = value ?? "";
   return (
-    <Listbox value={value} onChange={onChange}>
+    <Listbox value={safeValue} onChange={onChange}>
       <div className="relative">
         <ListboxButton
           aria-labelledby={ariaLabelledby}
           className={BUTTON_CLASS}
         >
-          <span className={value ? "text-white" : "text-white/40"}>
-            {value || (allowEmpty ? emptyLabel : placeholder)}
+          <span className={safeValue ? "text-white" : "text-white/40"}>
+            {safeValue || (allowEmpty ? emptyLabel : placeholder)}
           </span>
           <ChevronDown
             className="h-4 w-4 text-white/60 transition-transform duration-200 group-data-[open]:rotate-180"
