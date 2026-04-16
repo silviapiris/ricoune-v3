@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CookieBanner from "@/components/CookieBanner";
 import ScrollToTop from "@/components/ScrollToTop";
+import Providers from "@/components/layout/Providers";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -40,11 +41,13 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${oswald.variable} ${raleway.variable} antialiased`}
       >
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-        <CookieBanner />
-        <ScrollToTop />
+        <Providers>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+          <CookieBanner />
+          <ScrollToTop />
+        </Providers>
       </body>
     </html>
   );
