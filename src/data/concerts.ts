@@ -754,4 +754,17 @@ export const concerts: Concert[] = [
     type: "solo",
     allAges: true,
   },
+  {
+    id: 58,
+    date: "2026-07-24",
+    city: "Cers",
+    department: "34",
+    postalCode: "34420",
+    venue: "Ville de Cers",
+    mapsUrl:
+      "https://www.google.com/maps/search/?api=1&query=Ville+de+Cers%2C+Cers+34420",
+    time: "19:00",
+    type: "solo",
+    allAges: true,
+  },
 ];
