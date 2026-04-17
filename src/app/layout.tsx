@@ -43,7 +43,7 @@ export default function RootLayout({
       >
         <Providers>
           <Navbar />
-          <main>{children}</main>
+          <main className="pt-20 md:pt-24">{children}</main>
           <Footer />
           <CookieBanner />
           <ScrollToTop />

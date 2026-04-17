@@ -9,7 +9,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 export default function HeroSection(): React.ReactElement {
   const { t } = useLanguage();
   return (
-    <section className="relative flex min-h-[100svh] md:min-h-screen items-start md:items-end justify-start pb-4 sm:pb-0 overflow-hidden">
+    <section className="relative flex min-h-[100svh] md:min-h-screen items-start md:items-end justify-start pb-4 sm:pb-0 overflow-hidden -mt-20 md:-mt-24">
       <Image
         src="/images/hero/hero-concert-hd.webp"
         alt="Ricoune en concert devant une foule en fete"
