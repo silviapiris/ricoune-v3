@@ -10,7 +10,7 @@ const Lightbox = dynamic(() => import("@/components/Lightbox"), { ssr: false });
 
 const BASE = "https://www.ricoune.com/wp-content/uploads/2023/09";
 
-const photos = [
+const photos: { id: string; src: string; alt: string; pos?: string; contain?: boolean }[] = [
   // Photos locales (concerts indoor)
   { id: "1", src: "/images/photos/ricoune1.webp", alt: "Ricoune en concert" },
   { id: "2", src: "/images/photos/ricoune2.webp", alt: "Ricoune sur scène", pos: "object-[center_35%]" },
