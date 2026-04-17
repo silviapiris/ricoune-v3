@@ -33,7 +33,7 @@ export default function HeroSection(): React.ReactElement {
           width={520}
           height={260}
           priority
-          className="w-full"
+          className="w-full object-contain"
         />
       </AnimatedSection>
 
@@ -91,7 +91,7 @@ export default function HeroSection(): React.ReactElement {
             width={520}
             height={260}
             priority
-            className="md:translate-y-14 md:mx-0 md:w-[420px] md:max-w-none md:mb-4"
+            className="object-contain md:translate-y-14 md:mx-0 md:w-[420px] md:max-w-none md:mb-4"
           />
         </AnimatedSection>
 
