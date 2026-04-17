@@ -60,6 +60,29 @@ function LanguageSwitcher(): React.ReactElement {
   );
 }
 
+function MobileHeaderLangSwitch(): React.ReactElement {
+  const { lang, setLang } = useLanguage();
+  return (
+    <div className="flex items-center gap-1.5 text-xs font-semibold tracking-widest">
+      <button
+        onClick={() => setLang("fr")}
+        className={lang === "fr" ? "text-white" : "text-white/35"}
+        aria-pressed={lang === "fr"}
+      >
+        FR
+      </button>
+      <span className="text-white/20">|</span>
+      <button
+        onClick={() => setLang("en")}
+        className={lang === "en" ? "text-white" : "text-white/35"}
+        aria-pressed={lang === "en"}
+      >
+        EN
+      </button>
+    </div>
+  );
+}
+
 interface DesktopNavProps {
   pathname: string;
 }
@@ -268,13 +291,16 @@ export default function Navbar() {
             />
           </Link>
           <DesktopNav pathname={pathname} />
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 text-rc-white transition-colors hover:text-rc-yellow md:hidden"
-            aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          >
-            {mobileOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+          <div className="flex items-center gap-2 md:hidden">
+            <MobileHeaderLangSwitch />
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="p-2 text-rc-white transition-colors hover:text-rc-yellow"
+              aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            >
+              {mobileOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
         </div>
       </nav>
       <MobileDrawer isOpen={mobileOpen} onClose={closeMobile} pathname={pathname} />
