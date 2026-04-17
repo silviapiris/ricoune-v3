@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import AnimatedSection from "@/components/AnimatedSection";
 import { socialLinks } from "@/data/social-links";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function LatestAlbum(): React.ReactElement {
+  const { t } = useLanguage();
   return (
     <section className="py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-4">
@@ -24,15 +26,11 @@ export default function LatestAlbum(): React.ReactElement {
 
             {/* Info */}
             <div>
-              <span className="rc-section-label">DERNIER ALBUM</span>
+              <span className="rc-section-label">{t.album.label}</span>
               <h2 className="mt-3 mb-4 font-[family-name:var(--font-oswald)] text-2xl font-bold text-white md:text-3xl">
                 Quand un fain&eacute;ant se rebelle
               </h2>
-              <p className="mb-8 leading-relaxed text-white/80">
-                Le dernier opus de Ricoune, c&apos;est pure musique du Sud. De la bonne humeur, des
-                chansons populaires qui rassemblent, et l&apos;&eacute;nergie festive qui fait sa
-                signature.
-              </p>
+              <p className="mb-8 leading-relaxed text-white/80">{t.album.description}</p>
               <div className="flex flex-wrap gap-4">
                 <a
                   href="https://open.spotify.com/album/5GiHsOwaDeNXTVznrG1VxO"
@@ -40,7 +38,7 @@ export default function LatestAlbum(): React.ReactElement {
                   rel="noopener noreferrer"
                   className="rc-btn"
                 >
-                  &Eacute;couter sur Spotify
+                  {t.album.listenSpotify}
                 </a>
                 <a
                   href={socialLinks.spotify.href}
@@ -48,7 +46,7 @@ export default function LatestAlbum(): React.ReactElement {
                   rel="noopener noreferrer"
                   className="rc-btn-outline"
                 >
-                  Suivre sur Spotify
+                  {t.album.followSpotify}
                 </a>
               </div>
             </div>

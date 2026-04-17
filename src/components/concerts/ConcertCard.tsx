@@ -2,6 +2,7 @@
 
 import { MapPin, CalendarPlus } from "lucide-react";
 import type { Concert } from "@/data/concerts";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function buildGoogleCalendarUrl(concert: Concert): string {
   const [y, mo, day] = concert.date.split("-").map(Number);
@@ -33,32 +34,18 @@ function buildGoogleCalendarUrl(concert: Concert): string {
   return `https://www.google.com/calendar/render?${params.toString()}`;
 }
 
-const MONTHS_FR = [
-  "Jan",
-  "Fev",
-  "Mar",
-  "Avr",
-  "Mai",
-  "Juin",
-  "Juil",
-  "Aout",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
 interface FormattedDate {
   day: number;
   month: string;
   year: number;
 }
 
-function formatDate(dateStr: string): FormattedDate {
+function formatDate(dateStr: string, lang: string): FormattedDate {
   const d = new Date(dateStr + "T00:00:00");
+  const locale = lang === "en" ? "en-US" : "fr-FR";
   return {
     day: d.getDate(),
-    month: MONTHS_FR[d.getMonth()],
+    month: d.toLocaleDateString(locale, { month: "short" }).replace(".", "").toUpperCase(),
     year: d.getFullYear(),
   };
 }
@@ -70,7 +57,8 @@ interface ConcertCardProps {
 export default function ConcertCard({
   concert,
 }: ConcertCardProps): React.ReactElement {
-  const date = formatDate(concert.date);
+  const { t, lang } = useLanguage();
+  const date = formatDate(concert.date, lang);
   const isSolo = concert.type === "solo";
 
   return (
@@ -98,7 +86,7 @@ export default function ConcertCard({
                   : "bg-rc-blue-mid/20 text-rc-blue-mid"
               }`}
             >
-              {isSolo ? "En Solo" : "En Groupe"}
+              {isSolo ? t.concerts.solo : t.concerts.group}
             </span>
           </div>
 
@@ -137,7 +125,7 @@ export default function ConcertCard({
                 aria-hidden="true"
               />
               <span className="underline-offset-2 group-hover:underline">
-                Ajouter à Google Calendar
+                {t.concerts.addCalendar}
               </span>
             </a>
           </div>
@@ -152,7 +140,7 @@ export default function ConcertCard({
                   : "bg-rc-blue-mid/20 text-rc-blue-mid"
               }`}
             >
-              {isSolo ? "En Solo" : "En Groupe"}
+              {isSolo ? t.concerts.solo : t.concerts.group}
             </span>
           </div>
 

@@ -9,13 +9,13 @@ import {
 } from "@headlessui/react";
 
 const BUTTON_CLASS =
-  "group w-full flex items-center justify-between rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white outline-none transition-colors hover:border-white/40 focus:border-rc-yellow data-[open]:border-rc-yellow";
+  "group w-full flex items-center justify-between rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white outline-none transition-colors hover:border-white/30 focus:border-rc-yellow data-[open]:border-rc-yellow";
 
 const OPTIONS_CLASS =
-  "absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/25 bg-gradient-to-b from-[#1f3f7a]/85 to-[#1a3368]/85 backdrop-blur-[6px] shadow-lg shadow-black/30 outline-none";
+  "absolute z-50 mt-1 w-full overflow-hidden rounded-xl border border-white/20 bg-[#3D4F6A] shadow-md shadow-black/30 outline-none";
 
 const OPTION_CLASS =
-  "group flex cursor-pointer items-center gap-3 px-5 py-4 text-sm text-white rounded-md transition-colors hover:bg-white/5 data-[focus]:bg-white/5 data-[focus]:text-white data-[selected]:bg-white/[0.08] data-[selected]:text-white";
+  "group flex cursor-pointer items-center gap-3 px-5 py-4 text-sm text-white rounded-md transition-colors duration-150 ease-out hover:bg-white/[0.08] data-[focus]:bg-white/[0.08] data-[focus]:text-white data-[selected]:bg-white/10 data-[selected]:text-white";
 
 const OPTION_EMPTY_CLASS =
   "group flex cursor-pointer items-center gap-3 px-5 py-4 text-sm text-white/40 rounded-md transition-colors hover:bg-white/5 hover:text-white/70 data-[focus]:bg-white/5 data-[focus]:text-white/70";

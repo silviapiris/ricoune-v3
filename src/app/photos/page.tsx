@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Lightbox = dynamic(() => import("@/components/Lightbox"), { ssr: false });
 
@@ -55,6 +56,7 @@ const photos = [
 ];
 
 export default function PhotosPage() {
+  const { t } = useLanguage();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
@@ -76,9 +78,9 @@ export default function PhotosPage() {
       {/* Page title */}
       <section className="px-4 pt-16 pb-8 text-center">
         <h1 className="font-[family-name:var(--font-oswald)] text-4xl font-bold text-white md:text-5xl">
-          Photos
+          {t.photos.title}
         </h1>
-        <p className="mt-3 text-white/70">Ricoune en images</p>
+        <p className="mt-3 text-white/70">{t.photos.subtitle}</p>
       </section>
 
       {/* Photo grid */}
@@ -112,13 +114,13 @@ export default function PhotosPage() {
       <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
         <div className="rc-card p-8 text-center sm:p-12">
           <p className="font-[family-name:var(--font-oswald)] text-xl text-white">
-            Vous souhaitez programmer Ricoune ?
+            {t.photos.ctaText}
           </p>
           <Link
             href="/professionnels/demande-de-devis"
             className="rc-btn mt-6"
           >
-            Demander un devis
+            {t.photos.requestQuote}
           </Link>
         </div>
       </section>

@@ -1,49 +1,33 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Check } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import type { ContentItem } from "@/locales/fr";
 
-interface FormulaItem {
-  text: string;
-  link?: { href: string; label: string };
+function renderFeature(feature: ContentItem): React.ReactNode {
+  if (typeof feature === "string") {
+    return feature;
+  }
+  if ("link" in feature) {
+    return (
+      <a
+        href={feature.link.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-rc-yellow underline"
+      >
+        {feature.link.label}
+      </a>
+    );
+  }
+  return null;
 }
 
-const formules: {
-  name: string;
-  items: FormulaItem[];
-}[] = [
-  {
-    name: "Formule complète",
-    items: [
-      { text: "Concert 1h30" },
-      { text: "7 musiciens sur scène" },
-      {
-        text: "Fiche technique",
-        link: {
-          href: "/documents/fiche-technique-groupe.pdf",
-          label: "Fiche technique",
-        },
-      },
-      { text: "Adaptation selon vos événements" },
-    ],
-  },
-  {
-    name: "Apéro concert / Show case",
-    items: [
-      { text: "Idéal pour cocktail et show case" },
-      { text: "Sono fournie sauf départements hors Occitanie" },
-      {
-        text: "Fiche technique",
-        link: {
-          href: "/documents/fiche-technique-solo.pdf",
-          label: "Fiche technique",
-        },
-      },
-      { text: "Adaptation selon vos événements" },
-    ],
-  },
-];
-
 export default function FormulesPage(): React.JSX.Element {
+  const { t } = useLanguage();
+
   return (
     <div className="relative min-h-screen">
       {/* Background image + overlay */}
@@ -61,42 +45,31 @@ export default function FormulesPage(): React.JSX.Element {
       <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
         {/* Titre */}
         <h1 className="text-center text-4xl font-bold font-[family-name:var(--font-oswald)] text-white md:text-5xl">
-          Nos Formules
+          {t.formules.title}
         </h1>
 
         {/* Cartes */}
         <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
-          {formules.map((formule) => (
-            <div key={formule.name} className="rc-card flex flex-col p-8">
+          {t.formules.offers.map((offer) => (
+            <div key={offer.title} className="rc-card flex flex-col p-8">
               {/* Titre formule */}
               <h2 className="mb-3 text-2xl font-bold font-[family-name:var(--font-oswald)] text-white">
-                {formule.name}
+                {offer.title}
               </h2>
 
               {/* Badge */}
-              <span className="rc-section-label mb-6">Sur devis</span>
+              <span className="rc-section-label mb-6">{t.formules.quote}</span>
 
               {/* Liste */}
               <ul className="mb-8 flex-1 space-y-3">
-                {formule.items.map((item) => (
-                  <li key={item.text} className="flex items-start gap-3">
+                {offer.features.map((feature, idx) => (
+                  <li key={idx} className="flex items-start gap-3">
                     <Check
                       size={18}
                       className="mt-0.5 shrink-0 text-rc-yellow"
                     />
                     <span className="text-sm text-white/80">
-                      {item.link ? (
-                        <a
-                          href={item.link.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-rc-yellow underline"
-                        >
-                          {item.link.label}
-                        </a>
-                      ) : (
-                        item.text
-                      )}
+                      {renderFeature(feature)}
                     </span>
                   </li>
                 ))}
@@ -104,7 +77,7 @@ export default function FormulesPage(): React.JSX.Element {
 
               {/* CTA */}
               <Link href="/professionnels/demande-de-devis" className="rc-btn">
-                Demander un devis
+                {t.formules.cta}
               </Link>
             </div>
           ))}
@@ -113,10 +86,10 @@ export default function FormulesPage(): React.JSX.Element {
         {/* CTA global */}
         <div className="mt-16 text-center">
           <p className="mb-6 text-lg text-white/80">
-            Un événement sur mesure ? Contactez-nous pour un devis personnalisé.
+            {t.formules.ctaGlobal}
           </p>
           <Link href="/professionnels/demande-de-devis" className="rc-btn">
-            Demander un devis
+            {t.formules.cta}
           </Link>
         </div>
       </div>

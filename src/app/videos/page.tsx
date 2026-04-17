@@ -6,10 +6,12 @@ import Image from "next/image";
 import Link from "next/link";
 import VideoGrid from "@/components/videos/VideoGrid";
 import { clips, lives, FEATURED_YOUTUBE_ID, FEATURED_TITLE, type VideoItem } from "@/data/videos";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const VideoModal = dynamic(() => import("@/components/videos/VideoModal"), { ssr: false });
 
 export default function VideosPage() {
+  const { t } = useLanguage();
   const [activeVideo, setActiveVideo] = useState<VideoItem | null>(null);
   const [featuredPlaying, setFeaturedPlaying] = useState(false);
 
@@ -26,7 +28,7 @@ export default function VideosPage() {
       {/* Page title */}
       <section className="px-4 pt-16 pb-8">
         <h1 className="text-center font-[family-name:var(--font-oswald)] text-4xl font-bold text-white md:text-5xl">
-          Vidéos
+          {t.videos.title}
         </h1>
       </section>
 
@@ -75,7 +77,7 @@ export default function VideosPage() {
       {/* Clips officiels */}
       <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         <h2 className="mb-6 font-[family-name:var(--font-oswald)] text-2xl font-bold text-white">
-          Clips officiels
+          {t.videos.officialClips}
         </h2>
         <VideoGrid items={clips} onSelect={handleSelect} />
       </section>
@@ -83,7 +85,7 @@ export default function VideosPage() {
       {/* Extraits live */}
       <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         <h2 className="mb-6 font-[family-name:var(--font-oswald)] text-2xl font-bold text-white">
-          Extraits live
+          {t.videos.liveExcerpts}
         </h2>
         <VideoGrid items={lives} onSelect={handleSelect} showLiveBadge />
       </section>
@@ -92,13 +94,13 @@ export default function VideosPage() {
       <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="rc-card p-8 text-center sm:p-12">
           <p className="font-[family-name:var(--font-oswald)] text-xl text-white">
-            Vous aimez l&apos;ambiance ?
+            {t.videos.ctaText}
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
             <Link href="/concerts" className="rc-btn">
-              Voir les prochaines dates
+              {t.videos.viewDates}
             </Link>
-            <Link href="/professionnels/demande-de-devis" className="rc-btn-outline">Demander un devis</Link>
+            <Link href="/professionnels/demande-de-devis" className="rc-btn-outline">{t.videos.requestQuote}</Link>
           </div>
         </div>
       </section>

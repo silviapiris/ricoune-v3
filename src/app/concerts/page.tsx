@@ -5,14 +5,9 @@ import Link from "next/link";
 import AnimatedSection from "@/components/AnimatedSection";
 import { concerts } from "@/data/concerts";
 import ConcertCard from "@/components/concerts/ConcertCard";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Filter = "tous" | "solo" | "groupe";
-
-const FILTERS: { key: Filter; label: string }[] = [
-  { key: "tous", label: "Tous" },
-  { key: "solo", label: "En solo" },
-  { key: "groupe", label: "En groupe" },
-];
 
 function isPast(dateStr: string): boolean {
   const today = new Date();
@@ -21,8 +16,15 @@ function isPast(dateStr: string): boolean {
 }
 
 export default function ConcertsPage(): React.ReactElement {
+  const { t } = useLanguage();
   const [filter, setFilter] = useState<Filter>("tous");
   const [showPast, setShowPast] = useState(false);
+
+  const FILTERS: { key: Filter; label: string }[] = [
+    { key: "tous", label: t.concerts.all },
+    { key: "solo", label: t.concerts.solo },
+    { key: "groupe", label: t.concerts.group },
+  ];
 
   const { upcoming, past } = useMemo(() => {
     const filtered =
@@ -70,7 +72,7 @@ export default function ConcertsPage(): React.ReactElement {
           <AnimatedSection>
             <div className="rc-card px-6 py-12 text-center">
               <p className="text-white/70">
-                Aucun concert programmé pour le moment
+                {t.concerts.noneScheduled}
               </p>
             </div>
           </AnimatedSection>
@@ -91,7 +93,7 @@ export default function ConcertsPage(): React.ReactElement {
               onClick={() => setShowPast((prev) => !prev)}
               className="rc-btn-outline mx-auto mb-6 flex items-center gap-2"
             >
-              <span>Concerts passés ({past.length})</span>
+              <span>{t.concerts.pastConcerts} ({past.length})</span>
               <svg
                 className={`h-4 w-4 transition-transform ${showPast ? "rotate-180" : ""}`}
                 fill="none"
@@ -123,10 +125,10 @@ export default function ConcertsPage(): React.ReactElement {
         <AnimatedSection className="mt-16">
           <div className="rc-card px-6 py-12 text-center md:px-12 md:py-16">
             <p className="mb-8 text-xl text-white/90 md:text-2xl">
-              Vous souhaitez privatiser Ricoune ?
+              {t.concerts.privatize}
             </p>
             <Link href="/professionnels/demande-de-devis" className="rc-btn">
-              Demander un devis
+              {t.concerts.requestQuote}
             </Link>
           </div>
         </AnimatedSection>

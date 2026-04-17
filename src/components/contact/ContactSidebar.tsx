@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { socialLinks } from "@/data/social-links";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ContactSocialLink {
   name: string;
@@ -95,11 +96,12 @@ interface ContactSidebarProps {
 export default function ContactSidebar({
   className = "",
 }: ContactSidebarProps): React.ReactElement {
+  const { t } = useLanguage();
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Réseaux sociaux */}
       <div className="rc-card p-6">
-        <span className="rc-section-label">Réseaux sociaux</span>
+        <span className="rc-section-label">{t.contact.sidebar.social}</span>
         <div className="mt-4 flex flex-wrap gap-2">
           {SOCIAL_LINKS.map((social) => (
             <a
@@ -119,20 +121,20 @@ export default function ContactSidebar({
 
       {/* Professionnels */}
       <div className="rc-card p-6">
-        <span className="rc-section-label">Professionnels</span>
+        <span className="rc-section-label">{t.contact.sidebar.professionals}</span>
         <div className="mt-4">
           <Link href="/professionnels/formules" className="rc-btn-outline">
-            Voir les formules
+            {t.contact.sidebar.viewFormulas}
           </Link>
         </div>
       </div>
 
       {/* Localisation */}
       <div className="rc-card p-6">
-        <span className="rc-section-label">Localisation</span>
+        <span className="rc-section-label">{t.contact.sidebar.location}</span>
         <div className="mt-4 flex items-center gap-3">
           <MapPin size={20} className="shrink-0 text-rc-yellow" />
-          <span className="text-white/80">Montpellier &amp; Sud de la France</span>
+          <span className="text-white/80">{t.contact.sidebar.locationText}</span>
         </div>
       </div>
     </div>

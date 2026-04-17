@@ -4,8 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import AnimatedSection from "@/components/AnimatedSection";
 import { socialLinks } from "@/data/social-links";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function HeroSection(): React.ReactElement {
+  const { t } = useLanguage();
   return (
     <section className="relative flex min-h-[100svh] md:min-h-screen items-start md:items-end justify-start pb-4 sm:pb-0 overflow-hidden">
       <Image
@@ -37,7 +39,7 @@ export default function HeroSection(): React.ReactElement {
 
       <AnimatedSection delay={0.2} className="absolute left-1/2 top-[50svh] w-[84vw] -translate-x-1/2 text-center md:hidden">
         <p className="font-[family-name:var(--font-raleway)] text-xl text-white/80">
-          L&apos;artiste incontournable des f&ecirc;tes du Sud
+          {t.hero.tagline}
         </p>
       </AnimatedSection>
 
@@ -49,7 +51,7 @@ export default function HeroSection(): React.ReactElement {
           className="rc-btn w-full justify-center"
         >
           <SpotifyIcon />
-          &Eacute;couter sur Spotify
+          {t.hero.listenSpotify}
         </a>
       </AnimatedSection>
 
@@ -58,7 +60,7 @@ export default function HeroSection(): React.ReactElement {
           href="/professionnels/demande-de-devis"
           className="rc-btn-outline w-full justify-center"
         >
-          Demander une date
+          {t.hero.bookDate}
         </Link>
       </AnimatedSection>
 
@@ -95,7 +97,7 @@ export default function HeroSection(): React.ReactElement {
 
         <AnimatedSection delay={0.2}>
           <p className="mb-10 font-[family-name:var(--font-raleway)] text-2xl text-white/80">
-            L&apos;artiste incontournable des f&ecirc;tes du Sud
+            {t.hero.tagline}
           </p>
         </AnimatedSection>
 
@@ -108,13 +110,13 @@ export default function HeroSection(): React.ReactElement {
               className="rc-btn"
             >
               <SpotifyIcon />
-              &Eacute;couter sur Spotify
+              {t.hero.listenSpotify}
             </a>
             <Link
               href="/professionnels/demande-de-devis"
               className="rc-btn-outline"
             >
-              Demander une date
+              {t.hero.bookDate}
             </Link>
           </div>
         </AnimatedSection>

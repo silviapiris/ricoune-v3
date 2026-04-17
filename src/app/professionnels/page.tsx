@@ -1,39 +1,44 @@
+"use client";
+
 import Link from "next/link";
 import { Music2, FileText, Image } from "lucide-react";
-
-const cards = [
-  {
-    title: "Nos formules",
-    description: "Découvrez nos formules spectacle",
-    href: "/professionnels/formules",
-    icon: Music2,
-    cta: "Voir les formules",
-  },
-  {
-    title: "Demander un devis",
-    description: "Obtenez un devis personnalisé",
-    href: "/professionnels/demande-de-devis",
-    icon: FileText,
-    cta: "Demander un devis",
-  },
-  {
-    title: "Photos HD",
-    description: "Téléchargez des visuels professionnels",
-    href: "/professionnels/photos-hd",
-    icon: Image,
-    cta: "Télécharger les visuels",
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ProfessionnelsPage(): React.JSX.Element {
+  const { t } = useLanguage();
+
+  const cards = [
+    {
+      title: t.professionals.offers,
+      description: t.professionals.offersDesc,
+      href: "/professionnels/formules",
+      icon: Music2,
+      cta: t.professionals.offersCta,
+    },
+    {
+      title: t.professionals.quote,
+      description: t.professionals.quoteDesc,
+      href: "/professionnels/demande-de-devis",
+      icon: FileText,
+      cta: t.professionals.quoteCta,
+    },
+    {
+      title: t.professionals.media,
+      description: t.professionals.mediaDesc,
+      href: "/professionnels/photos-hd",
+      icon: Image,
+      cta: t.professionals.mediaCta,
+    },
+  ];
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
       {/* Titre */}
       <h1 className="text-center text-4xl font-bold font-[family-name:var(--font-oswald)] text-white md:text-5xl">
-        Espace Professionnels
+        {t.professionals.title}
       </h1>
       <p className="mx-auto mt-4 max-w-xl text-center text-lg text-white/70">
-        Tout pour organiser votre événement avec Ricoune
+        {t.professionals.subtitle}
       </p>
 
       {/* Cartes */}

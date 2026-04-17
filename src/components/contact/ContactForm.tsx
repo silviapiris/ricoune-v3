@@ -6,17 +6,10 @@ import { Loader2, CheckCircle, XCircle, Send } from "lucide-react";
 import { contactSchema } from "@/lib/validations/contact";
 import type { ContactFormData } from "@/lib/validations/contact";
 import { SelectField } from "@/components/ui/SelectField";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const INPUT_CLASS =
   "w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:border-rc-yellow focus:outline-none transition-colors";
-
-const EVENT_TYPES = [
-  "Fête votive / Feria",
-  "Festival",
-  "Soirée privée",
-  "Événement d'entreprise",
-  "Autre",
-] as const;
 
 interface ContactFormProps {
   className?: string;
@@ -25,6 +18,7 @@ interface ContactFormProps {
 export default function ContactForm({
   className = "",
 }: ContactFormProps): React.ReactElement {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState<ContactFormData>({
     nom: "",
     prenom: "",
@@ -105,7 +99,7 @@ export default function ContactForm({
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
             <label htmlFor="nom" className="mb-1.5 block text-sm text-white/80">
-              Nom <span className="text-red-400">*</span>
+              {t.contact.form.nom} <span className="text-red-400">*</span>
             </label>
             <input
               id="nom"
@@ -114,7 +108,7 @@ export default function ContactForm({
               value={formData.nom}
               onChange={(e) => updateField("nom", e.target.value)}
               className={INPUT_CLASS}
-              placeholder="Votre nom"
+              placeholder={t.contact.form.nomPlaceholder}
             />
             {errors.nom && (
               <p className="mt-1 text-xs text-red-400">{errors.nom}</p>
@@ -122,7 +116,7 @@ export default function ContactForm({
           </div>
           <div>
             <label htmlFor="prenom" className="mb-1.5 block text-sm text-white/80">
-              Prénom <span className="text-red-400">*</span>
+              {t.contact.form.prenom} <span className="text-red-400">*</span>
             </label>
             <input
               id="prenom"
@@ -131,7 +125,7 @@ export default function ContactForm({
               value={formData.prenom}
               onChange={(e) => updateField("prenom", e.target.value)}
               className={INPUT_CLASS}
-              placeholder="Votre prénom"
+              placeholder={t.contact.form.prenomPlaceholder}
             />
             {errors.prenom && (
               <p className="mt-1 text-xs text-red-400">{errors.prenom}</p>
@@ -143,7 +137,7 @@ export default function ContactForm({
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
             <label htmlFor="email" className="mb-1.5 block text-sm text-white/80">
-              Email <span className="text-red-400">*</span>
+              {t.contact.form.email} <span className="text-red-400">*</span>
             </label>
             <input
               id="email"
@@ -160,7 +154,7 @@ export default function ContactForm({
           </div>
           <div>
             <label htmlFor="telephone" className="mb-1.5 block text-sm text-white/80">
-              Téléphone
+              {t.contact.form.telephone}
             </label>
             <input
               id="telephone"
@@ -168,7 +162,7 @@ export default function ContactForm({
               value={formData.telephone}
               onChange={(e) => updateField("telephone", e.target.value)}
               className={INPUT_CLASS}
-              placeholder="06 00 00 00 00"
+              placeholder={t.contact.form.telephonePlaceholder}
             />
           </div>
         </div>
@@ -179,12 +173,12 @@ export default function ContactForm({
             id="type_evenement-label"
             className="mb-1.5 block text-sm text-white/80"
           >
-            Type d&apos;événement
+            {t.contact.form.eventType}
           </label>
           <SelectField
             value={formData.type_evenement}
             onChange={(value) => updateField("type_evenement", value)}
-            options={EVENT_TYPES}
+            options={t.devis.eventTypes}
             allowEmpty
             aria-labelledby="type_evenement-label"
           />
@@ -197,7 +191,7 @@ export default function ContactForm({
               htmlFor="date_souhaitee"
               className="mb-1.5 block text-sm text-white/80"
             >
-              Date souhaitée
+              {t.contact.form.date}
             </label>
             <input
               id="date_souhaitee"
@@ -209,7 +203,7 @@ export default function ContactForm({
           </div>
           <div>
             <label htmlFor="ville" className="mb-1.5 block text-sm text-white/80">
-              Ville / Lieu
+              {t.contact.form.city}
             </label>
             <input
               id="ville"
@@ -217,7 +211,7 @@ export default function ContactForm({
               value={formData.ville}
               onChange={(e) => updateField("ville", e.target.value)}
               className={INPUT_CLASS}
-              placeholder="Montpellier, Nimes..."
+              placeholder={t.contact.form.cityPlaceholder}
             />
           </div>
         </div>
@@ -225,7 +219,7 @@ export default function ContactForm({
         {/* Ligne 5 : Message */}
         <div>
           <label htmlFor="message" className="mb-1.5 block text-sm text-white/80">
-            Message <span className="text-red-400">*</span>
+            {t.contact.form.message} <span className="text-red-400">*</span>
           </label>
           <textarea
             id="message"
@@ -234,7 +228,7 @@ export default function ContactForm({
             value={formData.message}
             onChange={(e) => updateField("message", e.target.value)}
             className={`${INPUT_CLASS} resize-none`}
-            placeholder="Décrivez votre projet ou posez vos questions..."
+            placeholder={t.contact.form.messagePlaceholder}
           />
           {errors.message && (
             <p className="mt-1 text-xs text-red-400">{errors.message}</p>
@@ -243,8 +237,7 @@ export default function ContactForm({
 
         {/* RGPD */}
         <p className="text-xs text-white/50">
-          Les informations envoyées via ce site sont utilisées uniquement pour
-          répondre à votre demande.
+          {t.contact.form.rgpd}
         </p>
 
         {/* Submit */}
@@ -252,12 +245,12 @@ export default function ContactForm({
           {loading ? (
             <>
               <Loader2 size={20} className="animate-spin" />
-              Envoi en cours...
+              {t.contact.form.sending}
             </>
           ) : (
             <>
               <Send size={20} />
-              ENVOYER LA DEMANDE
+              {t.contact.form.submit}
             </>
           )}
         </button>
@@ -268,19 +261,19 @@ export default function ContactForm({
             <div className="flex items-center gap-2">
               <CheckCircle size={20} />
               <span>
-                Message envoyé avec succès ! Nous vous répondrons rapidement.
+                {t.contact.form.successMsg}
               </span>
             </div>
             <div className="mt-4 flex gap-4 justify-center">
-              <Link href="/" className="rc-btn-outline text-sm">Retour a l&apos;accueil</Link>
-              <Link href="/concerts" className="rc-btn-outline text-sm">Voir les concerts</Link>
+              <Link href="/" className="rc-btn-outline text-sm">{t.contact.form.backHome}</Link>
+              <Link href="/concerts" className="rc-btn-outline text-sm">{t.contact.form.viewConcerts}</Link>
             </div>
           </div>
         )}
         {status === "error" && (
           <div className="flex items-center gap-2 rounded-xl bg-red-900/30 p-4 text-red-400">
             <XCircle size={20} />
-            <span>Une erreur est survenue. Veuillez réessayer.</span>
+            <span>{t.contact.form.errorMsg}</span>
           </div>
         )}
       </form>

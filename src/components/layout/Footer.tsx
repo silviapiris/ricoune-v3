@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Facebook, Instagram, Youtube } from "lucide-react";
 import { socialLinks } from "@/data/social-links";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface SvgIconProps {
   className?: string;
@@ -43,16 +44,6 @@ interface FooterNavLink {
   href: string;
 }
 
-const FOOTER_NAV_LINKS: FooterNavLink[] = [
-  { label: "Concerts", href: "/concerts" },
-  { label: "Albums", href: "/albums" },
-  { label: "Vidéos", href: "/videos" },
-  { label: "Photos", href: "/photos" },
-  { label: "Biographie", href: "/biographie" },
-  { label: "Professionnels", href: "/professionnels" },
-  { label: "Contact", href: "/contact" },
-];
-
 interface SocialLink {
   label: string;
   href: string;
@@ -88,6 +79,8 @@ const SOCIAL_LINKS: SocialLink[] = [
 ];
 
 function FooterBranding() {
+  const { t } = useLanguage();
+  const [line1, line2] = t.footer.tagline.split("\n");
   return (
     <div className="text-center md:text-left">
       <Link href="/" className="inline-block group">
@@ -97,18 +90,28 @@ function FooterBranding() {
       </Link>
       <div className="mt-3 mb-5 h-px w-12 bg-gradient-to-r from-rc-yellow to-rc-yellow/40 mx-auto md:mx-0" />
       <p className="font-[family-name:var(--font-raleway)] text-sm text-white/70 leading-relaxed max-w-[200px] mx-auto md:mx-0">
-        La musique du Sud,<br />partout en France.
+        {line1}<br />{line2}
       </p>
     </div>
   );
 }
 
 function FooterNavigation() {
+  const { t } = useLanguage();
+  const navLinks: FooterNavLink[] = [
+    { label: t.nav.concerts, href: "/concerts" },
+    { label: t.nav.albums, href: "/albums" },
+    { label: t.nav.videos, href: "/videos" },
+    { label: t.nav.photos, href: "/photos" },
+    { label: t.nav.biography, href: "/biographie" },
+    { label: t.nav.professionals, href: "/professionnels" },
+    { label: t.nav.contact, href: "/contact" },
+  ];
   return (
     <div className="text-center md:text-left">
-      <p className="rc-section-label mb-4">Navigation</p>
-      <ul className="space-y-2.5">
-        {FOOTER_NAV_LINKS.map((link) => (
+      <p className="rc-section-label mb-4">{t.footer.navLabel}</p>
+      <ul className="grid grid-cols-2 gap-x-5 gap-y-2.5 justify-items-center md:justify-items-start">
+        {navLinks.map((link) => (
           <li key={link.href}>
             <Link
               href={link.href}
@@ -125,9 +128,10 @@ function FooterNavigation() {
 }
 
 function FooterSocial() {
+  const { t } = useLanguage();
   return (
     <div className="text-center md:text-left">
-      <p className="rc-section-label mb-4">Suivez Ricoune</p>
+      <p className="rc-section-label mb-4">{t.footer.followLabel}</p>
       <div className="flex items-center justify-center md:justify-start flex-wrap gap-3">
         {SOCIAL_LINKS.map((social) => (
           <a
@@ -143,34 +147,35 @@ function FooterSocial() {
         ))}
       </div>
       <p className="mt-4 text-xs text-white/55 font-[family-name:var(--font-raleway)]">
-        Concerts · Clips · Actualités
+        {t.footer.mediaLabel}
       </p>
     </div>
   );
 }
 
 function FooterBottom() {
+  const { t } = useLanguage();
   return (
     <div className="mt-10 pt-6 border-t border-white/10">
       <div className="flex flex-col items-center gap-2 text-center text-xs text-white/60 sm:flex-row sm:justify-between sm:text-left">
         <p className="font-[family-name:var(--font-raleway)]">
-          &copy; 2026 Ricoune — Tous droits réservés
+          {t.footer.copyright}
         </p>
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
           <Link
             href="/mentions-legales"
             className="transition-colors duration-200 hover:text-white"
           >
-            Mentions légales
+            {t.footer.legal}
           </Link>
           <Link
             href="/politique-confidentialite"
             className="transition-colors duration-200 hover:text-white"
           >
-            Politique de confidentialité
+            {t.footer.privacy}
           </Link>
           <span>
-            Site par{" "}
+            {t.footer.madeBy}{" "}
             <a
               href="https://custom-digital-services.fr"
               target="_blank"

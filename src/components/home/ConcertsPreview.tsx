@@ -5,11 +5,13 @@ import { MapPin, CalendarPlus } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import { concerts } from "@/data/concerts";
 import type { Concert } from "@/data/concerts";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-function formatMonth(dateStr: string): string {
+function formatMonth(dateStr: string, lang: "fr" | "en"): string {
+  const locale = lang === "fr" ? "fr-FR" : "en-US";
   const date = new Date(dateStr);
   return date
-    .toLocaleDateString("fr-FR", { month: "short" })
+    .toLocaleDateString(locale, { month: "short" })
     .toUpperCase()
     .replace(".", "");
 }
@@ -59,6 +61,7 @@ function buildGoogleCalendarUrl(concert: Concert): string {
 }
 
 export default function ConcertsPreview(): React.ReactElement {
+  const { t, lang } = useLanguage();
   const upcoming = getUpcomingConcerts(3);
 
   return (
@@ -66,7 +69,7 @@ export default function ConcertsPreview(): React.ReactElement {
       <div className="mx-auto max-w-6xl px-4">
         <AnimatedSection className="mb-10">
           <h2 className="font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
-            Prochains concerts
+            {t.concerts.title}
           </h2>
         </AnimatedSection>
 
@@ -80,7 +83,7 @@ export default function ConcertsPreview(): React.ReactElement {
                     {formatDay(concert.date)}
                   </span>
                   <span className="text-sm font-semibold uppercase text-rc-yellow">
-                    {formatMonth(concert.date)}
+                    {formatMonth(concert.date, lang)}
                   </span>
                 </div>
 
@@ -119,7 +122,7 @@ export default function ConcertsPreview(): React.ReactElement {
                       aria-hidden="true"
                     />
                     <span className="underline-offset-2 group-hover:underline">
-                      Ajouter à Google Calendar
+                      {t.concerts.addCalendar}
                     </span>
                   </a>
                 </div>
@@ -134,7 +137,7 @@ export default function ConcertsPreview(): React.ReactElement {
                         : "bg-rc-blue/20 text-rc-blue-mid"
                     }`}
                   >
-                    {concert.type === "solo" ? "En Solo" : "En Groupe"}
+                    {concert.type === "solo" ? t.concerts.solo : t.concerts.group}
                   </span>
                 </div>
               </div>
@@ -144,7 +147,7 @@ export default function ConcertsPreview(): React.ReactElement {
 
         <AnimatedSection className="mt-10 text-center">
           <Link href="/concerts" className="rc-btn">
-            Voir toutes les dates
+            {t.concerts.viewAll}
           </Link>
         </AnimatedSection>
       </div>

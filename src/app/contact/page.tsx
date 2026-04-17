@@ -3,19 +3,20 @@
 import AnimatedSection from "@/components/AnimatedSection";
 import ContactForm from "@/components/contact/ContactForm";
 import ContactSidebar from "@/components/contact/ContactSidebar";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function ContactPage(): React.ReactElement {
+  const { t } = useLanguage();
   return (
     <>
       {/* Hero */}
       <section className="relative flex min-h-[30vh] items-center justify-center bg-gradient-to-b from-rc-dark/80 to-transparent py-16">
         <div className="relative text-center">
           <h1 className="font-[family-name:var(--font-oswald)] text-4xl font-bold text-white md:text-5xl">
-            Contact
+            {t.contact.title}
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-white/70">
-            Besoin d&apos;informations ou d&apos;organiser un événement ? Nous
-            vous répondons dans les plus brefs délais.
+            {t.contact.subtitle}
           </p>
         </div>
       </section>

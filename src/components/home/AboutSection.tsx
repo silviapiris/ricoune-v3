@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import AnimatedSection from "@/components/AnimatedSection";
 import { socialLinks } from "@/data/social-links";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface SocialIcon {
   name: string;
@@ -60,6 +61,7 @@ const SOCIAL_ICONS: SocialIcon[] = [
 ];
 
 export default function AboutSection(): React.ReactElement {
+  const { t } = useLanguage();
   return (
     <section className="py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-4">
@@ -78,24 +80,15 @@ export default function AboutSection(): React.ReactElement {
 
           <AnimatedSection delay={0.2}>
             <h2 className="mb-6 font-[family-name:var(--font-oswald)] text-3xl font-bold text-white md:text-4xl">
-              &Agrave; propos de Ricoune
+              {t.about.title}
             </h2>
-            <p className="mb-4 leading-relaxed text-white/90">
-              L&apos;univers de Ricoune, c&apos;est avant tout la f&ecirc;te et la bonne humeur.
-            </p>
-            <p className="mb-4 leading-relaxed text-white/90">
-              Artiste embl&eacute;matique du Sud de la France, il enflamme les sc&egrave;nes avec
-              ses chansons festives, populaires et entra&icirc;nantes.
-            </p>
-            <p className="mb-8 leading-relaxed text-white/90">
-              &Agrave; travers ses concerts, Ricoune partage une &eacute;nergie communicative et
-              rassemble toutes les g&eacute;n&eacute;rations autour d&apos;un m&ecirc;me esprit de
-              convivialit&eacute;.
-            </p>
+            <p className="mb-4 leading-relaxed text-white/90">{t.about.p1}</p>
+            <p className="mb-4 leading-relaxed text-white/90">{t.about.p2}</p>
+            <p className="mb-8 leading-relaxed text-white/90">{t.about.p3}</p>
 
             <div className="mb-6">
               <Link href="/biographie" className="rc-btn-outline">
-                En savoir plus
+                {t.about.learnMore}
               </Link>
             </div>
 
@@ -106,7 +99,7 @@ export default function AboutSection(): React.ReactElement {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`Suivre Ricoune sur ${social.name}`}
+                  aria-label={`${t.about.followOn} ${social.name}`}
                   className="transition-opacity hover:opacity-80"
                 >
                   {social.icon}
