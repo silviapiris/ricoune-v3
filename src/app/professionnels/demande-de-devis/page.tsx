@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { SelectField } from "@/components/ui/SelectField";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { devisSchema } from "@/lib/validations/devis";
 
 const INPUT_CLASSES =
   "w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-white/40 outline-none transition-colors focus:border-rc-yellow focus:outline-none";
@@ -16,6 +17,8 @@ export default function DemandeDevisPage(): React.JSX.Element {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [honeypot, setHoneypot] = useState("");
   const [formData, setFormData] = useState({
     nom: "",
     prenom: "",
@@ -32,19 +35,40 @@ export default function DemandeDevisPage(): React.JSX.Element {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setErrors((prev) => { const next = { ...prev }; delete next[e.target.name]; return next; });
   }
 
   function handleEventTypeChange(value: string): void {
     setFormData((prev) => ({ ...prev, typeEvenement: value }));
+    setErrors((prev) => { const next = { ...prev }; delete next.type_evenement; return next; });
   }
 
   async function handleSubmit(e: FormEvent): Promise<void> {
     e.preventDefault();
+    setErrors({});
     setLoading(true);
     setError(false);
 
-    if (!formData.typeEvenement) {
-      setError(true);
+    const payload = {
+      nom: formData.nom,
+      prenom: formData.prenom,
+      email: formData.email,
+      telephone: formData.telephone,
+      type_evenement: formData.typeEvenement,
+      date_souhaitee: formData.date || undefined,
+      lieu: formData.lieu,
+      formule: formData.formule,
+      message: formData.message,
+    };
+
+    const result = devisSchema.safeParse(payload);
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      for (const issue of result.error.issues) {
+        const key = issue.path[0];
+        if (typeof key === "string") fieldErrors[key] = issue.message;
+      }
+      setErrors(fieldErrors);
       setLoading(false);
       return;
     }
@@ -53,17 +77,7 @@ export default function DemandeDevisPage(): React.JSX.Element {
       const res = await fetch("/api/devis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nom: formData.nom,
-          prenom: formData.prenom,
-          email: formData.email,
-          telephone: formData.telephone,
-          type_evenement: formData.typeEvenement,
-          date_souhaitee: formData.date || null,
-          lieu: formData.lieu,
-          formule: formData.formule,
-          message: formData.message,
-        }),
+        body: JSON.stringify({ ...result.data, website: honeypot }),
       });
       if (!res.ok) throw new Error("Request failed");
       setSuccess(true);
@@ -111,6 +125,18 @@ export default function DemandeDevisPage(): React.JSX.Element {
       {/* Formulaire */}
       <div className="rounded-2xl p-8 bg-[#1F2F4A]">
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Honeypot anti-spam — invisible aux humains */}
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            aria-hidden="true"
+            autoComplete="off"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+            style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
+          />
+
           {/* Ligne 1 : Nom / Prénom */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
@@ -126,7 +152,9 @@ export default function DemandeDevisPage(): React.JSX.Element {
                 onChange={handleChange}
                 className={INPUT_CLASSES}
                 placeholder={t.devis.nomPlaceholder}
+                aria-invalid={!!errors.nom}
               />
+              {errors.nom && <p className="mt-1 text-xs text-red-400">{errors.nom}</p>}
             </div>
             <div>
               <label htmlFor="prenom" className="mb-1 block text-sm font-medium text-white/80">
@@ -141,7 +169,9 @@ export default function DemandeDevisPage(): React.JSX.Element {
                 onChange={handleChange}
                 className={INPUT_CLASSES}
                 placeholder={t.devis.prenomPlaceholder}
+                aria-invalid={!!errors.prenom}
               />
+              {errors.prenom && <p className="mt-1 text-xs text-red-400">{errors.prenom}</p>}
             </div>
           </div>
 
@@ -160,7 +190,9 @@ export default function DemandeDevisPage(): React.JSX.Element {
                 onChange={handleChange}
                 className={INPUT_CLASSES}
                 placeholder={t.devis.emailPlaceholder}
+                aria-invalid={!!errors.email}
               />
+              {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email}</p>}
             </div>
             <div>
               <label htmlFor="telephone" className="mb-1 block text-sm font-medium text-white/80">
@@ -193,6 +225,9 @@ export default function DemandeDevisPage(): React.JSX.Element {
               placeholder={t.devis.selectPlaceholder}
               aria-labelledby="typeEvenement-label"
             />
+            {errors.type_evenement && (
+              <p className="mt-1 text-xs text-red-400">{errors.type_evenement}</p>
+            )}
           </div>
 
           {/* Ligne 4 : Date / Lieu */}
@@ -253,6 +288,7 @@ export default function DemandeDevisPage(): React.JSX.Element {
               ))}
             </div>
           </fieldset>
+          {errors.formule && <p className="mt-1 text-xs text-red-400">{errors.formule}</p>}
 
           {/* Ligne 6 : Message */}
           <div>
@@ -268,7 +304,9 @@ export default function DemandeDevisPage(): React.JSX.Element {
               onChange={handleChange}
               className={INPUT_CLASSES}
               placeholder={t.devis.messagePlaceholder}
+              aria-invalid={!!errors.message}
             />
+            {errors.message && <p className="mt-1 text-xs text-red-400">{errors.message}</p>}
           </div>
 
           {/* RGPD */}

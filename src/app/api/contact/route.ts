@@ -10,14 +10,20 @@ export async function POST(request: Request): Promise<NextResponse> {
       headersList.get("x-forwarded-for") ||
       headersList.get("x-real-ip") ||
       "unknown";
-    if (!rateLimit(ip)) {
+
+    if (!rateLimit(ip, 3, 3_600_000)) {
       return NextResponse.json(
-        { error: "Trop de requêtes. Réessayez dans une minute." },
+        { error: "Trop de requêtes. Réessayez dans une heure." },
         { status: 429 },
       );
     }
 
-    const body: unknown = await request.json();
+    const body = await request.json() as Record<string, unknown>;
+
+    // Honeypot : si le champ "website" est rempli, c'est un bot
+    if (body.website) {
+      return NextResponse.json({ success: true });
+    }
 
     const result = contactSchema.safeParse(body);
     if (!result.success) {
@@ -39,23 +45,6 @@ export async function POST(request: Request): Promise<NextResponse> {
       message,
     } = result.data;
 
-    const subject = `[Contact] ${nom} ${prenom} - ${type_evenement || "General"}`;
-
-    const emailLines = [
-      "Nouveau message de contact sur ricoune.com",
-      "",
-      `Nom : ${nom} ${prenom}`,
-      `Email : ${email}`,
-    ];
-    if (telephone) emailLines.push(`Telephone : ${telephone}`);
-    if (type_evenement)
-      emailLines.push(`Type d'evenement : ${type_evenement}`);
-    if (date_souhaitee) emailLines.push(`Date souhaitee : ${date_souhaitee}`);
-    if (ville) emailLines.push(`Ville / Lieu : ${ville}`);
-    emailLines.push("", "Message :", message);
-
-    const emailBody = emailLines.join("\n");
-
     if (!process.env.RESEND_API_KEY) {
       console.error("[API /contact] RESEND_API_KEY missing");
       return NextResponse.json(
@@ -64,6 +53,49 @@ export async function POST(request: Request): Promise<NextResponse> {
       );
     }
 
+    const subject = `[Site Ricoune] Nouveau contact — ${prenom} ${nom}`;
+
+    const row = (label: string, value: string) =>
+      `<tr><td style="padding:6px 12px;font-weight:bold;color:#555;white-space:nowrap">${label}</td><td style="padding:6px 12px;color:#222">${value}</td></tr>`;
+
+    const optionalRows = [
+      telephone ? row("Téléphone", telephone) : "",
+      type_evenement ? row("Type d'événement", type_evenement) : "",
+      date_souhaitee ? row("Date souhaitée", date_souhaitee) : "",
+      ville ? row("Ville / Lieu", ville) : "",
+    ].join("");
+
+    const emailHtml = `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><title>${subject}</title></head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,sans-serif">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:32px 0">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)">
+        <tr><td style="background:#111;padding:24px 32px">
+          <h1 style="margin:0;color:#f5c518;font-size:20px;font-family:Arial,sans-serif">Site Ricoune — Nouveau contact</h1>
+        </td></tr>
+        <tr><td style="padding:24px 32px">
+          <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">
+            ${row("Nom", `${prenom} ${nom}`)}
+            ${row("Email", `<a href="mailto:${email}" style="color:#f5c518">${email}</a>`)}
+            ${optionalRows}
+          </table>
+          <hr style="border:none;border-top:1px solid #eee;margin:24px 0">
+          <p style="margin:0 0 8px;font-weight:bold;color:#555">Message :</p>
+          <p style="margin:0;color:#222;white-space:pre-wrap;line-height:1.6">${message}</p>
+        </td></tr>
+        <tr><td style="background:#f9f9f9;padding:16px 32px;font-size:12px;color:#999">
+          Pour répondre, cliquez sur "Répondre" — votre message partira directement à ${email}
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+    const contactEmail = process.env.CONTACT_EMAIL ?? "ricouneofficiel@gmail.com";
+
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -71,10 +103,10 @@ export async function POST(request: Request): Promise<NextResponse> {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Site Ricoune <noreply@ricoune.com>",
-        to: "ricouneofficiel@gmail.com",
+        from: "Site Ricoune <onboarding@resend.dev>",
+        to: contactEmail,
         subject,
-        text: emailBody,
+        html: emailHtml,
         reply_to: email,
       }),
     });
@@ -83,19 +115,16 @@ export async function POST(request: Request): Promise<NextResponse> {
       const errBody = await res.text();
       console.error("[API /contact] Resend error:", res.status, errBody);
       return NextResponse.json(
-        { error: "Erreur d'envoi. Veuillez reessayer." },
+        { error: "Erreur d'envoi. Veuillez réessayer." },
         { status: 502 },
       );
     }
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    console.error(
-      "[API /contact] Unexpected error:",
-      (err as Error).message,
-    );
+    console.error("[API /contact] Unexpected error:", (err as Error).message);
     return NextResponse.json(
-      { error: "Erreur serveur. Veuillez reessayer." },
+      { error: "Erreur serveur. Veuillez réessayer." },
       { status: 500 },
     );
   }

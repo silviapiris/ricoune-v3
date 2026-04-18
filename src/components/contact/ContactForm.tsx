@@ -29,6 +29,7 @@ export default function ContactForm({
     ville: "",
     message: "",
   });
+  const [honeypot, setHoneypot] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -69,7 +70,7 @@ export default function ContactForm({
         const res = await fetch("/api/contact", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(result.data),
+          body: JSON.stringify({ ...result.data, website: honeypot }),
         });
         if (!res.ok) throw new Error("Failed");
         setStatus("success");
@@ -95,6 +96,17 @@ export default function ContactForm({
   return (
     <div className={`rc-card p-6 md:p-8 ${className}`}>
       <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Honeypot anti-spam — invisible aux humains */}
+        <input
+          type="text"
+          name="website"
+          tabIndex={-1}
+          aria-hidden="true"
+          autoComplete="off"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", opacity: 0 }}
+        />
         {/* Ligne 1 : Nom + Prénom */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
@@ -108,6 +120,7 @@ export default function ContactForm({
               value={formData.nom}
               onChange={(e) => updateField("nom", e.target.value)}
               className={INPUT_CLASS}
+              aria-invalid={!!errors.nom}
               placeholder={t.contact.form.nomPlaceholder}
             />
             {errors.nom && (
@@ -125,6 +138,7 @@ export default function ContactForm({
               value={formData.prenom}
               onChange={(e) => updateField("prenom", e.target.value)}
               className={INPUT_CLASS}
+              aria-invalid={!!errors.prenom}
               placeholder={t.contact.form.prenomPlaceholder}
             />
             {errors.prenom && (
@@ -146,6 +160,7 @@ export default function ContactForm({
               value={formData.email}
               onChange={(e) => updateField("email", e.target.value)}
               className={INPUT_CLASS}
+              aria-invalid={!!errors.email}
               placeholder="votre@email.com"
             />
             {errors.email && (
@@ -228,6 +243,7 @@ export default function ContactForm({
             value={formData.message}
             onChange={(e) => updateField("message", e.target.value)}
             className={`${INPUT_CLASS} resize-none`}
+            aria-invalid={!!errors.message}
             placeholder={t.contact.form.messagePlaceholder}
           />
           {errors.message && (
