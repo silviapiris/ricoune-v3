@@ -62,7 +62,7 @@ export default function ConcertCard({
   const isSolo = concert.type === "solo";
 
   return (
-    <div className="rc-card p-5 md:p-6">
+    <div className="rc-card p-5 md:p-6 border border-white/[0.07] shadow-sm shadow-black/15 transition-all duration-[400ms] hover:border-white/[0.13] hover:shadow-md hover:shadow-black/20">
         {/* Desktop : horizontal | Mobile : 2 rows */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
           {/* Row 1 mobile / Left block desktop : date + badge */}

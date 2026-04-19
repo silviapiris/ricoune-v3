@@ -48,7 +48,7 @@ export default function ProfessionnelsPage(): React.JSX.Element {
           return (
             <div
               key={card.href}
-              className="rc-card flex flex-col items-center p-8 text-center transition-transform duration-200 hover:scale-[1.02]"
+              className="rc-card flex flex-col items-center p-8 text-center border border-white/10 shadow-md shadow-black/20 transition-all duration-[400ms] hover:-translate-y-1 hover:border-white/[0.18] hover:shadow-lg hover:shadow-black/25"
             >
               <Icon size={48} className="mb-4 text-rc-yellow" />
               <h2 className="mb-2 text-xl font-bold font-[family-name:var(--font-oswald)] text-white">

@@ -31,7 +31,7 @@ export default function PhotosHDPage(): React.JSX.Element {
       {/* Grille photos */}
       <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
         {photos.map((photo) => (
-          <div key={photo.src} className="rc-card overflow-hidden">
+          <div key={photo.src} className="rc-card overflow-hidden border border-white/10 shadow-md shadow-black/20 transition-all duration-[400ms] hover:-translate-y-1 hover:border-white/[0.18] hover:shadow-lg hover:shadow-black/25">
             {/* Aperçu — object-contain pour ne rien tronquer */}
             <div className="relative h-72 bg-black/20">
               <Image
