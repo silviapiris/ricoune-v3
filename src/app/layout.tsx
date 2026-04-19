@@ -23,11 +23,66 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = {
-  title: "Ricoune — Site Officiel",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://ricoune.com"),
+  title: {
+    default: "Ricoune — Site Officiel",
+    template: "%s | Ricoune",
+  },
   description:
-    "Ricoune, l'artiste incontournable des fetes du Sud de la France. Concerts, albums, videos et demandes de devis.",
+    "Ricoune, l'artiste incontournable des fêtes du Sud de la France. Concerts, albums, vidéos et demandes de devis pour vos fêtes votives, férias et événements.",
+  applicationName: "Ricoune",
+  authors: [{ name: "Ricoune" }],
+  generator: "Next.js",
+  keywords: [
+    "Ricoune",
+    "chanteur sud de la France",
+    "fêtes votives",
+    "férias",
+    "concerts",
+    "animation événement",
+    "musique du Sud",
+    "Provence",
+    "Occitanie",
+  ],
   icons: {
     icon: "/images/logo/ricoune-favicon.ico",
+  },
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://ricoune.com",
+    siteName: "Ricoune",
+    title: "Ricoune — Site Officiel",
+    description:
+      "L'artiste incontournable des fêtes du Sud de la France. Concerts, albums, vidéos et demandes de devis pour vos événements.",
+    images: [
+      {
+        url: "/images/hero/hero-concert-hd.webp",
+        width: 1200,
+        height: 630,
+        alt: "Ricoune en concert",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ricoune — Site Officiel",
+    description:
+      "L'artiste incontournable des fêtes du Sud de la France.",
+    images: ["/images/hero/hero-concert-hd.webp"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_SITE_URL ?? "https://ricoune.com",
   },
 };
 
