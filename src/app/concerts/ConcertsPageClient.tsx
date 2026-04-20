@@ -2,12 +2,20 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { Disclosure, Transition } from "@headlessui/react";
+import { ChevronDown } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import { concerts } from "@/data/concerts";
 import ConcertCard from "@/components/concerts/ConcertCard";
 import { useLanguage } from "@/contexts/LanguageContext";
+import type { Concert } from "@/data/concerts";
 
 type Filter = "tous" | "solo" | "groupe";
+
+interface MonthGroup {
+  monthLabel: string;
+  concerts: Concert[];
+}
 
 function isPast(dateStr: string): boolean {
   const today = new Date();
@@ -15,10 +23,34 @@ function isPast(dateStr: string): boolean {
   return new Date(dateStr + "T00:00:00") < today;
 }
 
+function getMonthKey(dateStr: string): string {
+  return dateStr.slice(0, 7); // "2026-04"
+}
+
+function groupByMonth(list: Concert[], order: "asc" | "desc"): MonthGroup[] {
+  const fmt = new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric" });
+
+  const map = new Map<string, Concert[]>();
+  for (const concert of list) {
+    const key = getMonthKey(concert.date);
+    if (!map.has(key)) map.set(key, []);
+    map.get(key)!.push(concert);
+  }
+
+  const keys = [...map.keys()].sort((a, b) =>
+    order === "asc" ? a.localeCompare(b) : b.localeCompare(a)
+  );
+
+  return keys.map((key) => {
+    const [year, month] = key.split("-").map(Number);
+    const label = fmt.format(new Date(year, month - 1, 1)).toUpperCase();
+    return { monthLabel: label, concerts: map.get(key)! };
+  });
+}
+
 export default function ConcertsPageClient(): React.ReactElement {
   const { t } = useLanguage();
   const [filter, setFilter] = useState<Filter>("tous");
-  const [showPast, setShowPast] = useState(false);
 
   const FILTERS: { key: Filter; label: string }[] = [
     { key: "tous", label: t.concerts.all },
@@ -26,11 +58,9 @@ export default function ConcertsPageClient(): React.ReactElement {
     { key: "groupe", label: t.concerts.group },
   ];
 
-  const { upcoming, past } = useMemo(() => {
+  const { upcomingGroups, pastGroups, pastCount } = useMemo(() => {
     const filtered =
-      filter === "tous"
-        ? concerts
-        : concerts.filter((c) => c.type === filter);
+      filter === "tous" ? concerts : concerts.filter((c) => c.type === filter);
 
     const sorted = [...filtered].sort((a, b) => {
       const aTs = new Date(`${a.date}T${a.time}:00`).getTime();
@@ -38,15 +68,20 @@ export default function ConcertsPageClient(): React.ReactElement {
       return aTs - bTs;
     });
 
+    const upcoming = sorted.filter((c) => !isPast(c.date));
+    const past = sorted.filter((c) => isPast(c.date));
+
     return {
-      upcoming: sorted.filter((c) => !isPast(c.date)),
-      past: sorted.filter((c) => isPast(c.date)),
+      upcomingGroups: groupByMonth(upcoming, "asc"),
+      pastGroups: groupByMonth(past, "desc"),
+      pastCount: past.length,
     };
   }, [filter]);
 
   return (
     <section className="pt-20 pb-16 md:py-24">
       <div className="mx-auto max-w-4xl px-4">
+
         {/* 1. Titre */}
         <AnimatedSection className="mb-10 text-center">
           <h1 className="font-[family-name:var(--font-oswald)] text-4xl font-bold text-white md:text-5xl">
@@ -67,57 +102,75 @@ export default function ConcertsPageClient(): React.ReactElement {
           ))}
         </AnimatedSection>
 
-        {/* 3. Liste concerts a venir */}
-        {upcoming.length === 0 ? (
+        {/* 3. Concerts à venir groupés par mois */}
+        {upcomingGroups.length === 0 ? (
           <AnimatedSection>
             <div className="rc-card px-6 py-12 text-center">
-              <p className="text-white/70">
-                {t.concerts.noneScheduled}
-              </p>
+              <p className="text-white/70">{t.concerts.noneScheduled}</p>
             </div>
           </AnimatedSection>
         ) : (
-          <div className="flex flex-col gap-4">
-            {upcoming.map((concert, index) => (
-              <AnimatedSection key={concert.id} delay={index * 0.05}>
-                <ConcertCard concert={concert} />
-              </AnimatedSection>
+          <div className="flex flex-col gap-8">
+            {upcomingGroups.map((group) => (
+              <div key={group.monthLabel}>
+                <h2 className="font-[family-name:var(--font-oswald)] mb-4 text-lg font-bold tracking-wider text-rc-yellow">
+                  {group.monthLabel}
+                </h2>
+                <div className="flex flex-col gap-4">
+                  {group.concerts.map((concert, index) => (
+                    <AnimatedSection key={concert.id} delay={index * 0.05}>
+                      <ConcertCard concert={concert} />
+                    </AnimatedSection>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         )}
 
-        {/* 4. Concerts passés (collapsable) */}
-        {past.length > 0 && (
+        {/* 4. Archives (Disclosure Headless UI) */}
+        {pastCount > 0 && (
           <div className="mt-12">
-            <button
-              onClick={() => setShowPast((prev) => !prev)}
-              className="rc-btn-outline mx-auto mb-6 flex items-center gap-2"
-            >
-              <span>{t.concerts.pastConcerts} ({past.length})</span>
-              <svg
-                className={`h-4 w-4 transition-transform ${showPast ? "rotate-180" : ""}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
+            <Disclosure>
+              {({ open }) => (
+                <>
+                  <Disclosure.Button className="rc-btn-outline mx-auto mb-6 flex items-center gap-2">
+                    <span>
+                      {t.concerts.pastConcerts} ({pastCount})
+                    </span>
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+                    />
+                  </Disclosure.Button>
 
-            {showPast && (
-              <div className="flex flex-col gap-4 opacity-60">
-                {past.map((concert, index) => (
-                  <AnimatedSection key={concert.id} delay={index * 0.05}>
-                    <ConcertCard concert={concert} />
-                  </AnimatedSection>
-                ))}
-              </div>
-            )}
+                  <Transition
+                    enter="transition duration-300 ease-out"
+                    enterFrom="transform opacity-0 -translate-y-2"
+                    enterTo="transform opacity-100 translate-y-0"
+                    leave="transition duration-200 ease-in"
+                    leaveFrom="transform opacity-100 translate-y-0"
+                    leaveTo="transform opacity-0 -translate-y-2"
+                  >
+                    <Disclosure.Panel className="flex flex-col gap-8 opacity-60">
+                      {pastGroups.map((group) => (
+                        <div key={group.monthLabel}>
+                          <h2 className="font-[family-name:var(--font-oswald)] mb-4 text-lg font-bold tracking-wider text-rc-yellow">
+                            {group.monthLabel}
+                          </h2>
+                          <div className="flex flex-col gap-4">
+                            {group.concerts.map((concert, index) => (
+                              <AnimatedSection key={concert.id} delay={index * 0.05}>
+                                <ConcertCard concert={concert} />
+                              </AnimatedSection>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </Disclosure.Panel>
+                  </Transition>
+                </>
+              )}
+            </Disclosure>
           </div>
         )}
 
@@ -132,6 +185,7 @@ export default function ConcertsPageClient(): React.ReactElement {
             </Link>
           </div>
         </AnimatedSection>
+
       </div>
     </section>
   );
