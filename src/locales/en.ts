@@ -27,6 +27,9 @@ export const en: Translations = {
     pastConcerts: "Past concerts",
     privatize: "Want to book Ricoune privately?",
     requestQuote: "Request a quote",
+    specialInfo: "Special info",
+    archivesTitle: "Past concerts archive",
+    archivesCount: "{{count}} past concerts",
   },
   about: {
     title: "About Ricoune",

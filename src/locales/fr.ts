@@ -6,7 +6,7 @@ export type ContentItem =
 export interface Translations {
   nav: { home: string; concerts: string; albums: string; videos: string; photos: string; biography: string; professionals: string; contact: string };
   hero: { tagline: string; listenSpotify: string; bookDate: string };
-  concerts: { title: string; viewAll: string; addCalendar: string; solo: string; group: string; all: string; noneScheduled: string; pastConcerts: string; privatize: string; requestQuote: string };
+  concerts: { title: string; viewAll: string; addCalendar: string; solo: string; group: string; all: string; noneScheduled: string; pastConcerts: string; privatize: string; requestQuote: string; specialInfo: string; archivesTitle: string; archivesCount: string };
   about: { title: string; p1: string; p2: string; p3: string; learnMore: string; followOn: string };
   album: { label: string; description: string; listenSpotify: string; followSpotify: string };
   artist: { soulLabel: string; title: string; p1: string; p2: string; discoverBio: string };
@@ -112,6 +112,9 @@ export const fr: Translations = {
     pastConcerts: "Concerts passés",
     privatize: "Vous souhaitez privatiser Ricoune ?",
     requestQuote: "Demander un devis",
+    specialInfo: "Infos spéciales",
+    archivesTitle: "Archives des concerts passés",
+    archivesCount: "{{count}} concerts passés",
   },
   about: {
     title: "À propos de Ricoune",

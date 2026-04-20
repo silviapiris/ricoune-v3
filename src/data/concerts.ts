@@ -9,6 +9,7 @@ export interface Concert {
   time: string;
   type: "solo" | "groupe";
   allAges: boolean;
+  infos_speciales?: string;
 }
 
 export const concerts: Concert[] = [
@@ -38,6 +39,7 @@ export const concerts: Concert[] = [
     time: "19:00",
     type: "solo",
     allAges: true,
+    infos_speciales: "Dress code : rouge et blanc. Réservation obligatoire. Pas de restauration sur place.",
   },
   {
     id: 3,
@@ -51,6 +53,7 @@ export const concerts: Concert[] = [
     time: "23:00",
     type: "solo",
     allAges: true,
+    infos_speciales: "Entrée libre. Parking limité, covoiturage conseillé.",
   },
   {
     id: 4,
