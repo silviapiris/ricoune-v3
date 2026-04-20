@@ -70,7 +70,7 @@ export const albums: Album[] = [
     title: "C\u2019est l\u2019\u00e9t\u00e9",
     year: 2015,
     description: "CD Collector",
-    coverUrl: "https://www.ricoune.com/wp-content/uploads/2015/06/Jaquette-CLT-400x400.jpg",
+    coverUrl: "/images/albums/Jaquette-CLT-400x400.jpg",
     tracklist: [
       "Un ricard tube",
       "Mon petit village",

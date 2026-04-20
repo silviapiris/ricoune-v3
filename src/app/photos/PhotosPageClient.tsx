@@ -8,7 +8,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const Lightbox = dynamic(() => import("@/components/Lightbox"), { ssr: false });
 
-const BASE = "https://www.ricoune.com/wp-content/uploads/2023/09";
+const BASE = "/images/photos";
 
 const photos: { id: string; src: string; alt: string; pos?: string; contain?: boolean }[] = [
   // Photos locales (concerts indoor)
