@@ -30,6 +30,8 @@ export const en: Translations = {
     specialInfo: "Special info",
     archivesTitle: "Past concerts archive",
     archivesCount: "{{count}} past concerts",
+    cancelled: "Cancelled",
+    cancellationNoteLabel: "Information",
   },
   about: {
     title: "About Ricoune",

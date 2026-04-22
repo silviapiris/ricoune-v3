@@ -10,8 +10,12 @@ export interface Concert {
   type: "solo" | "groupe";
   allAges: boolean;
   infos_speciales?: string;
+  cancelled?: boolean;
+  cancellationNote?: string;
 }
 
+// Les entrées passées sont conservées intentionnellement :
+// elles serviront à l'auto-complétion des lieux dans le futur back-office.
 export const concerts: Concert[] = [
   {
     id: 1,
@@ -288,6 +292,7 @@ export const concerts: Concert[] = [
     time: "23:00",
     type: "solo",
     allAges: true,
+    cancelled: true,
   },
   {
     id: 22,

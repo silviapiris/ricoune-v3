@@ -6,6 +6,7 @@ import AnimatedSection from "@/components/AnimatedSection";
 import { concerts } from "@/data/concerts";
 import type { Concert } from "@/data/concerts";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { isConcertVisible } from "@/lib/concerts";
 
 function formatMonth(dateStr: string, lang: "fr" | "en"): string {
   const locale = lang === "fr" ? "fr-FR" : "en-US";
@@ -21,12 +22,9 @@ function formatDay(dateStr: string): string {
 }
 
 function getUpcomingConcerts(count: number): Concert[] {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
   return concerts
-    .filter((concert) => new Date(concert.date) > today)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .filter((c) => isConcertVisible(c) && !c.cancelled)
+    .sort((a, b) => new Date(`${a.date}T${a.time}:00`).getTime() - new Date(`${b.date}T${b.time}:00`).getTime())
     .slice(0, count);
 }
 

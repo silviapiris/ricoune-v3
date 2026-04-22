@@ -2,25 +2,18 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Disclosure, Transition } from "@headlessui/react";
-import { ChevronDown } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
 import { concerts } from "@/data/concerts";
 import ConcertCard from "@/components/concerts/ConcertCard";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Concert } from "@/data/concerts";
+import { isConcertVisible } from "@/lib/concerts";
 
 type Filter = "tous" | "solo" | "groupe";
 
 interface MonthGroup {
   monthLabel: string;
   concerts: Concert[];
-}
-
-function isPast(dateStr: string): boolean {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return new Date(dateStr + "T00:00:00") < today;
 }
 
 function getMonthKey(dateStr: string): string {
@@ -58,7 +51,7 @@ export default function ConcertsPageClient(): React.ReactElement {
     { key: "groupe", label: t.concerts.group },
   ];
 
-  const { upcomingGroups, pastGroups, pastCount } = useMemo(() => {
+  const upcomingGroups = useMemo(() => {
     const filtered =
       filter === "tous" ? concerts : concerts.filter((c) => c.type === filter);
 
@@ -68,14 +61,7 @@ export default function ConcertsPageClient(): React.ReactElement {
       return aTs - bTs;
     });
 
-    const upcoming = sorted.filter((c) => !isPast(c.date));
-    const past = sorted.filter((c) => isPast(c.date));
-
-    return {
-      upcomingGroups: groupByMonth(upcoming, "asc"),
-      pastGroups: groupByMonth(past, "desc"),
-      pastCount: past.length,
-    };
+    return groupByMonth(sorted.filter(isConcertVisible), "asc");
   }, [filter]);
 
   return (
@@ -128,53 +114,7 @@ export default function ConcertsPageClient(): React.ReactElement {
           </div>
         )}
 
-        {/* 4. Archives (Disclosure Headless UI) */}
-        {pastCount > 0 && (
-          <div className="mt-12">
-            <Disclosure>
-              {({ open }) => (
-                <>
-                  <Disclosure.Button className="rc-btn-outline mx-auto mb-6 flex items-center gap-2">
-                    <span>
-                      {t.concerts.pastConcerts} ({pastCount})
-                    </span>
-                    <ChevronDown
-                      className={`h-4 w-4 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
-                    />
-                  </Disclosure.Button>
-
-                  <Transition
-                    enter="transition duration-300 ease-out"
-                    enterFrom="transform opacity-0 -translate-y-2"
-                    enterTo="transform opacity-100 translate-y-0"
-                    leave="transition duration-200 ease-in"
-                    leaveFrom="transform opacity-100 translate-y-0"
-                    leaveTo="transform opacity-0 -translate-y-2"
-                  >
-                    <Disclosure.Panel className="flex flex-col gap-8 opacity-60">
-                      {pastGroups.map((group) => (
-                        <div key={group.monthLabel}>
-                          <h2 className="font-[family-name:var(--font-oswald)] mb-4 text-lg font-bold tracking-wider text-rc-yellow">
-                            {group.monthLabel}
-                          </h2>
-                          <div className="flex flex-col gap-4">
-                            {group.concerts.map((concert, index) => (
-                              <AnimatedSection key={concert.id} delay={index * 0.05}>
-                                <ConcertCard concert={concert} />
-                              </AnimatedSection>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </Disclosure.Panel>
-                  </Transition>
-                </>
-              )}
-            </Disclosure>
-          </div>
-        )}
-
-        {/* 5. CTA */}
+        {/* 4. CTA */}
         <AnimatedSection className="mt-16">
           <div className="rc-card px-6 py-12 text-center md:px-12 md:py-16">
             <p className="mb-8 text-xl text-white/90 md:text-2xl">

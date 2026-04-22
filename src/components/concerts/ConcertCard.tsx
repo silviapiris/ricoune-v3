@@ -62,7 +62,12 @@ export default function ConcertCard({
   const isSolo = concert.type === "solo";
 
   return (
-    <div className="rc-card p-5 md:p-6 border border-white/10 shadow-sm shadow-black/15 transition-all duration-300 hover:border-white/20 hover:shadow-md hover:shadow-black/20">
+    <div className="relative rc-card p-5 md:p-6 border border-white/10 shadow-sm shadow-black/15 transition-all duration-300 hover:border-white/20 hover:shadow-md hover:shadow-black/20">
+      {concert.cancelled && (
+        <span className="absolute top-3 right-3 rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold uppercase tracking-wider text-white">
+          {t.concerts.cancelled}
+        </span>
+      )}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
 
         {/* Date block — always left on desktop, first on mobile */}
@@ -99,6 +104,11 @@ export default function ConcertCard({
               {concert.venue}
             </span>
           </a>
+
+          {/* Note d'annulation — conditionnel */}
+          {concert.cancellationNote && (
+            <p className="mt-1 text-sm italic text-red-400">{concert.cancellationNote}</p>
+          )}
 
           {/* Encadré infos spéciales — conditionnel */}
           {concert.infos_speciales && (
