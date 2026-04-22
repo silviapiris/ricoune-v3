@@ -157,6 +157,17 @@ function FooterBottom() {
   const { t } = useLanguage();
   return (
     <div className="mt-10 pt-6 border-t border-white/10">
+      <p className="mb-3 text-center text-xs text-white/35 font-[family-name:var(--font-raleway)]">
+        Illustration saxophone :{" "}
+        <a
+          href="https://fr.pngtree.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline-offset-2 hover:underline hover:text-white/55 transition-colors"
+        >
+          Pngtree
+        </a>
+      </p>
       <div className="flex flex-col items-center gap-2 text-center text-xs text-white/60 sm:flex-row sm:justify-between sm:text-left">
         <p className="font-[family-name:var(--font-raleway)]">
           {t.footer.copyright}

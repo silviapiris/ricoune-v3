@@ -26,16 +26,15 @@ export default function HeroSection(): React.ReactElement {
       <div className="pointer-events-none absolute left-0 right-0 top-0 h-[160px] bg-gradient-to-b from-black/70 via-black/40 to-transparent" />
 
       {/* Mobile layout — absolute SVH-based positioning */}
-      <AnimatedSection className="absolute left-1/2 top-[8svh] z-10 w-[55vw] max-w-[300px] -translate-x-1/2 md:top-auto md:w-auto md:max-w-none md:hidden">
-        <Image
-          src="/images/hero/ricoune-logo-hero.png"
-          alt="Ricoune"
-          width={520}
-          height={260}
-          priority
-          className="w-full object-contain"
-        />
-      </AnimatedSection>
+      <div className="absolute left-1/2 top-[8svh] z-10 w-[55vw] max-w-[300px] -translate-x-1/2 md:hidden">
+        <div className="ricoune-hero">
+          <div className="ricoune-hero__glow" />
+          <picture className="ricoune-hero__logo">
+            <source srcSet="/images/hero/ricoune-logo-hero.webp" type="image/webp" />
+            <img src="/images/hero/ricoune-logo-hero.png" alt="Ricoune — La tournée qui fait bronzer" />
+          </picture>
+        </div>
+      </div>
 
       <AnimatedSection delay={0.2} className="absolute left-1/2 top-[50svh] w-[84vw] -translate-x-1/2 text-center md:hidden">
         <p className="font-[family-name:var(--font-raleway)] text-xl text-white/80">
@@ -84,16 +83,19 @@ export default function HeroSection(): React.ReactElement {
 
       {/* Desktop layout */}
       <div className="hidden md:block relative z-10 w-full max-w-2xl md:pt-0 text-left md:px-16 md:pb-8 lg:px-20 lg:pb-8">
-        <AnimatedSection>
-          <Image
-            src="/images/hero/ricoune-logo-hero.png"
-            alt="Ricoune"
-            width={520}
-            height={260}
-            priority
-            className="object-contain md:translate-y-14 md:mx-0 md:w-[420px] md:max-w-none md:mb-4"
-          />
-        </AnimatedSection>
+        <div className="ricoune-hero md:translate-y-14 md:mb-4 md:w-[420px]">
+          <div className="ricoune-hero__glow" />
+          <div className="ricoune-hero__sax" />
+          <div className="ricoune-hero__song ricoune-hero__song--1">La Vache</div>
+          <div className="ricoune-hero__song ricoune-hero__song--2">La Coupo Santo</div>
+          <div className="ricoune-hero__song ricoune-hero__song--3">C&apos;est l&apos;été</div>
+          <div className="ricoune-hero__song ricoune-hero__song--4">Dans un verre à ballon</div>
+          <div className="ricoune-hero__song ricoune-hero__song--5">Mon petit village</div>
+          <picture className="ricoune-hero__logo">
+            <source srcSet="/images/hero/ricoune-logo-hero.webp" type="image/webp" />
+            <img src="/images/hero/ricoune-logo-hero.png" alt="Ricoune — La tournée qui fait bronzer" />
+          </picture>
+        </div>
 
         <AnimatedSection delay={0.2}>
           <p className="mb-10 font-[family-name:var(--font-raleway)] text-2xl text-white/80">

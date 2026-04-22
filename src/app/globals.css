@@ -1,3 +1,11 @@
+@font-face {
+  font-display: swap;
+  font-family: 'Pacifico';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/pacifico-v23-latin-regular.woff2') format('woff2');
+}
+
 @import "tailwindcss";
 
 @theme inline {
@@ -132,4 +140,129 @@ h1, h2, h3, h4, h5, h6 {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #F2C918;
+}
+
+/* ── Animation Hero "Zoom Solo" (Ricoune) ── */
+
+.ricoune-hero {
+  position: relative;
+  width: 100%;
+}
+
+/* Glow — explosion dorée centrée sur le logo */
+.ricoune-hero__glow {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 240px; height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(247,192,74,.5) 0%, rgba(247,192,74,0) 70%);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9;
+  animation: rhGlow 6s ease-out 1.5s both;
+}
+@keyframes rhGlow {
+  0%   { opacity: 0; transform: translate(-50%,-50%) scale(.3); }
+  25%  { opacity: .8; transform: translate(-50%,-50%) scale(1.5); }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(4); }
+}
+
+/* Saxophone — zoom depuis le centre, envol vers la gauche */
+.ricoune-hero__sax {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 220px; height: auto;
+  aspect-ratio: 628 / 1424;
+  background: url('/images/hero/saxophone.png') center / contain no-repeat;
+  transform: translate(-50%, -50%) scale(3);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 15;
+  filter: drop-shadow(0 14px 28px rgba(0,0,0,.7)) saturate(1.15) blur(8px);
+  animation: rhSax 7s cubic-bezier(.5,0,.2,1) .2s both;
+}
+@keyframes rhSax {
+  0%   { opacity: 0;  transform: translate(-50%,-50%) scale(3) rotate(0);      filter: drop-shadow(0 14px 28px rgba(0,0,0,.7)) saturate(1.15) blur(14px); }
+  10%  { opacity: 1; }
+  30%  { opacity: 1;  transform: translate(-50%,-50%) scale(2.3) rotate(-3deg); filter: drop-shadow(0 14px 28px rgba(0,0,0,.7)) saturate(1.15) blur(4px); }
+  55%  { opacity: 1;  transform: translate(-90%,-40%) scale(1.1) rotate(-10deg); filter: drop-shadow(0 14px 28px rgba(0,0,0,.7)) saturate(1.15) blur(1px); }
+  80%  { opacity: .6; transform: translate(-130%,-20%) scale(.6) rotate(-20deg); filter: drop-shadow(0 14px 28px rgba(0,0,0,.7)) saturate(1.15) blur(4px); }
+  100% { opacity: 0;  transform: translate(-170%,-10%) scale(.3) rotate(-35deg); filter: drop-shadow(0 0 30px rgba(247,192,74,.6)) saturate(1.15) blur(10px); }
+}
+
+/* Titres de chansons — jaillissement depuis le centre */
+.ricoune-hero__song {
+  position: absolute;
+  left: 50%; top: 50%;
+  font-family: 'Pacifico', 'Brush Script MT', cursive;
+  font-size: 38px;
+  color: #fff4c2;
+  text-shadow: 0 0 8px rgba(247,192,74,.9), 0 0 20px rgba(247,192,74,.6), 0 2px 6px rgba(0,0,0,.6);
+  white-space: nowrap;
+  letter-spacing: .01em;
+  transform-origin: left center;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 14;
+}
+.ricoune-hero__song--1 { animation: rhSong 3s cubic-bezier(.22,1,.36,1) 1.2s both; --rh-x: 80px;  --rh-y: -140px; }
+.ricoune-hero__song--2 { animation: rhSong 3s cubic-bezier(.22,1,.36,1) 1.6s both; --rh-x: -40px; --rh-y: -180px; --rh-r: -6deg; }
+.ricoune-hero__song--3 { animation: rhSong 3s cubic-bezier(.22,1,.36,1) 2.0s both; --rh-x: 120px; --rh-y: -40px;  --rh-r: 4deg; }
+.ricoune-hero__song--4 { animation: rhSong 3s cubic-bezier(.22,1,.36,1) 2.4s both; --rh-x: -20px; --rh-y: -100px; }
+.ricoune-hero__song--5 { animation: rhSong 3s cubic-bezier(.22,1,.36,1) 2.8s both; --rh-x: 60px;  --rh-y: -220px; --rh-r: 5deg; }
+@keyframes rhSong {
+  0%   { opacity: 0; transform: translate(0, 0) scale(.4) rotate(0); filter: blur(8px); }
+  25%  { opacity: 1; filter: blur(0); }
+  60%  { opacity: 1; transform: translate(var(--rh-x, 60px), var(--rh-y, -100px)) scale(1) rotate(var(--rh-r, 0)); }
+  100% { opacity: 0; transform: translate(calc(var(--rh-x, 60px) * 1.6), calc(var(--rh-y, -100px) * 1.6)) scale(1.15) rotate(var(--rh-r, 0)); filter: blur(4px); }
+}
+
+/* Logo — focus-in progressif + respiration */
+.ricoune-hero__logo {
+  display: block;
+  width: 100%;
+}
+.ricoune-hero__logo img {
+  display: block;
+  width: 100%; height: auto;
+  opacity: 0;
+  transform: scale(.92);
+  filter: drop-shadow(0 12px 40px rgba(0,0,0,.55)) drop-shadow(0 0 28px rgba(247,192,74,.35)) blur(6px);
+  animation:
+    rhLogoFocus   5s cubic-bezier(.22,1,.36,1) 2.2s both,
+    rhLogoBreathe 6s ease-in-out 7.2s infinite;
+}
+@keyframes rhLogoFocus {
+  0%   { opacity: 0; transform: scale(.92); filter: drop-shadow(0 12px 40px rgba(0,0,0,.55)) drop-shadow(0 0 28px rgba(247,192,74,.35)) blur(6px); }
+  30%  { opacity: .6; }
+  100% { opacity: 1; transform: scale(1);   filter: drop-shadow(0 12px 40px rgba(0,0,0,.55)) drop-shadow(0 0 28px rgba(247,192,74,.35)) blur(0); }
+}
+@keyframes rhLogoBreathe {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.012) translateY(-3px); }
+}
+
+/* Mobile — logo + glow uniquement */
+@media (max-width: 767px) {
+  .ricoune-hero__sax,
+  .ricoune-hero__song { display: none; }
+  .ricoune-hero__logo img {
+    animation:
+      rhLogoFocus   3s cubic-bezier(.22,1,.36,1) .4s both,
+      rhLogoBreathe 6s ease-in-out 3.4s infinite;
+  }
+}
+
+/* Reduced motion — fallback statique */
+@media (prefers-reduced-motion: reduce) {
+  .ricoune-hero * { animation: none !important; transition: none !important; }
+  .ricoune-hero__logo img {
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 12px 40px rgba(0,0,0,.55)) drop-shadow(0 0 28px rgba(247,192,74,.35));
+  }
+  .ricoune-hero__sax,
+  .ricoune-hero__song,
+  .ricoune-hero__glow { display: none; }
 }
