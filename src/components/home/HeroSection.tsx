@@ -83,7 +83,7 @@ export default function HeroSection(): React.ReactElement {
 
       {/* Desktop layout */}
       <div className="hidden md:block relative z-10 w-full max-w-2xl md:pt-0 text-left md:px-16 md:pb-8 lg:px-20 lg:pb-8">
-        <div className="ricoune-hero md:translate-y-14 md:mb-4 md:w-[420px]">
+        <div className="ricoune-hero md:mb-4 md:w-[320px]">
           <div className="ricoune-hero__glow" />
           <div className="ricoune-hero__sax" />
           <div className="ricoune-hero__song ricoune-hero__song--1">La Vache</div>
