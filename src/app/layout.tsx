@@ -3,7 +3,6 @@ import { Inter, Oswald, Raleway } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import CookieBanner from "@/components/CookieBanner";
 import ScrollToTop from "@/components/ScrollToTop";
 import Providers from "@/components/layout/Providers";
 
@@ -100,7 +99,6 @@ export default function RootLayout({
           <Navbar />
           <main className="pt-20 md:pt-24">{children}</main>
           <Footer />
-          <CookieBanner />
           <ScrollToTop />
         </Providers>
       </body>

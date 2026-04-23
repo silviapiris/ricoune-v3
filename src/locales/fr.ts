@@ -342,46 +342,181 @@ export const fr: Translations = {
     title: "Politique de confidentialité",
     sections: [
       {
-        title: "Collecte des données",
-        content: ["Les données sont collectées via les formulaires."],
-      },
-      {
-        title: "Données collectées",
-        content: ["Nom, prénom, email, téléphone, message."],
-      },
-      {
-        title: "Finalité",
-        content: ["Répondre aux demandes et établir un contact."],
-      },
-      {
-        title: "Conservation",
-        content: ["Les données sont conservées le temps nécessaire."],
-      },
-      {
-        title: "Destinataires",
-        content: ["Exclusivement Ricoune."],
-      },
-      {
-        title: "Sécurité",
-        content: ["Mesures de protection mises en place."],
-      },
-      {
-        title: "Vos droits",
+        title: "1. Préambule",
         content: [
-          { text: "Accès, rectification, suppression :", link: { href: "mailto:ricouneofficiel@gmail.com", label: "ricouneofficiel@gmail.com" } },
+          "La présente politique de confidentialité a pour objet d'informer les utilisateurs du site ricoune.com sur la manière dont leurs données personnelles sont collectées, utilisées et protégées, conformément au Règlement Général sur la Protection des Données (RGPD — UE 2016/679) et à la loi française Informatique et Libertés modifiée.",
         ],
       },
       {
-        title: "Cookies",
-        content: ["Utilisation à des fins de fonctionnement et statistiques."],
+        title: "2. Responsable du traitement",
+        content: [
+          "Le responsable du traitement des données personnelles collectées sur ce site est :",
+          {
+            list: {
+              label: "Identification :",
+              items: [
+                "Association LA VACHACADEMY",
+                "Association déclarée — SIREN 491030300",
+                "Siège social : 6B Rue de la Bouvine, 34160 Saint-Drézéry, France",
+                "Représentée par Henri ROMAN",
+              ],
+            },
+          },
+          "Pour toute question concernant le traitement de vos données, vous pouvez nous contacter via le formulaire de contact du site en précisant « Demande RGPD » en objet.",
+        ],
       },
       {
-        title: "Gestion des cookies",
+        title: "3. Données collectées et finalités",
         content: [
-          "Ce site utilise des cookies pour améliorer l'expérience utilisateur.",
-          { list: { label: "Types de cookies :", items: ["techniques", "mesure d'audience"] } },
-          "Vous pouvez accepter, refuser ou configurer vos choix via votre navigateur.",
-          "Aucune donnée n'est vendue ou utilisée à des fins publicitaires.",
+          "Nous collectons uniquement les données que vous nous transmettez volontairement via nos formulaires.",
+          {
+            list: {
+              label: "Formulaire de contact :",
+              items: [
+                "Données collectées : nom, prénom, adresse email, numéro de téléphone (optionnel), type d'événement (optionnel), date souhaitée (optionnelle), ville (optionnelle), message.",
+                "Finalité : répondre à votre demande de contact.",
+                "Base légale : intérêt légitime (répondre aux sollicitations adressées à l'artiste).",
+              ],
+            },
+          },
+          {
+            list: {
+              label: "Formulaire de demande de devis professionnel :",
+              items: [
+                "Données collectées : nom, prénom, adresse email, numéro de téléphone, type d'événement, date souhaitée, ville, formule choisie, message.",
+                "Finalité : traiter votre demande de devis pour une prestation artistique.",
+                "Base légale : mesures précontractuelles prises à la demande de la personne concernée.",
+              ],
+            },
+          },
+          {
+            list: {
+              label: "Données techniques :",
+              items: [
+                "Données collectées : adresse IP (utilisée temporairement pour la protection anti-spam des formulaires).",
+                "Finalité : sécurité du site et prévention des abus.",
+                "Base légale : intérêt légitime (sécurité).",
+              ],
+            },
+          },
+        ],
+      },
+      {
+        title: "4. Destinataires des données",
+        content: [
+          "Vos données sont exclusivement destinées à :",
+          {
+            list: {
+              label: "Destinataires :",
+              items: [
+                "L'association LA VACHACADEMY (responsable du traitement)",
+                "Henri ROMAN (destinataire final des demandes)",
+              ],
+            },
+          },
+          "Vos données ne sont jamais revendues, cédées ou transmises à des tiers à des fins commerciales ou publicitaires.",
+        ],
+      },
+      {
+        title: "5. Sous-traitants techniques",
+        content: [
+          "Pour assurer le fonctionnement du site, nous faisons appel aux prestataires techniques suivants, qui agissent en qualité de sous-traitants au sens du RGPD :",
+          {
+            list: {
+              label: "Sous-traitants :",
+              items: [
+                "Vercel Inc. — Hébergement du site (États-Unis, cadre : Data Privacy Framework UE-USA)",
+                "Resend — Acheminement des emails des formulaires (États-Unis, cadre : Data Privacy Framework UE-USA)",
+              ],
+            },
+          },
+          "Ces sous-traitants présentent des garanties suffisantes quant à la protection des données personnelles, conformément aux articles 28 et 44 à 50 du RGPD.",
+        ],
+      },
+      {
+        title: "6. Durées de conservation",
+        content: [
+          "Les données sont conservées pour les durées suivantes :",
+          {
+            list: {
+              label: "Durées :",
+              items: [
+                "Messages du formulaire de contact : 3 ans à compter du dernier échange.",
+                "Demandes de devis : 3 ans à compter de la dernière interaction commerciale.",
+                "Adresses IP (protection anti-spam) : 12 mois maximum.",
+              ],
+            },
+          },
+          "À l'issue de ces durées, les données sont supprimées ou anonymisées.",
+        ],
+      },
+      {
+        title: "7. Vos droits",
+        content: [
+          "Conformément aux articles 15 à 22 du RGPD, vous disposez des droits suivants sur vos données personnelles :",
+          {
+            list: {
+              label: "Droits RGPD :",
+              items: [
+                "Droit d'accès : obtenir la confirmation que des données vous concernant sont traitées et en recevoir une copie.",
+                "Droit de rectification : demander la correction de données inexactes ou incomplètes.",
+                "Droit à l'effacement (« droit à l'oubli ») : demander la suppression de vos données.",
+                "Droit à la limitation du traitement : demander la suspension temporaire du traitement de vos données.",
+                "Droit d'opposition : vous opposer au traitement de vos données pour des motifs légitimes.",
+                "Droit à la portabilité : recevoir vos données dans un format structuré et lisible par machine.",
+              ],
+            },
+          },
+          "Pour exercer ces droits, adressez votre demande via le formulaire de contact du site en précisant « Demande RGPD » en objet. Une réponse vous sera apportée dans un délai maximum d'un mois.",
+          {
+            text: "Vous disposez également du droit d'introduire une réclamation auprès de la Commission Nationale de l'Informatique et des Libertés (CNIL) :",
+            link: {
+              href: "https://www.cnil.fr",
+              label: "www.cnil.fr",
+            },
+          },
+        ],
+      },
+      {
+        title: "8. Sécurité des données",
+        content: [
+          "Nous mettons en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données personnelles, notamment :",
+          {
+            list: {
+              label: "Mesures de sécurité :",
+              items: [
+                "Chiffrement des communications (HTTPS/TLS)",
+                "Protection des formulaires contre le spam (honeypot, limitation de débit)",
+                "Accès restreint aux données aux seules personnes autorisées",
+              ],
+            },
+          },
+        ],
+      },
+      {
+        title: "9. Cookies",
+        content: [
+          "Le site ricoune.com n'utilise aucun cookie de traçage, d'analyse d'audience ou de publicité.",
+          "Seuls des cookies strictement nécessaires au fonctionnement technique du site peuvent être déposés par votre navigateur (par exemple pour mémoriser votre préférence de langue). Ces cookies ne nécessitent pas votre consentement préalable conformément à la réglementation en vigueur.",
+        ],
+      },
+      {
+        title: "10. Liens vers des sites tiers",
+        content: [
+          "Ce site contient des liens vers des services tiers (Google Maps, Google Calendar, plateformes de streaming musical, réseaux sociaux). Lorsque vous cliquez sur ces liens, vous êtes redirigé vers ces services qui disposent de leurs propres politiques de confidentialité, que nous vous invitons à consulter.",
+        ],
+      },
+      {
+        title: "11. Modifications de la politique",
+        content: [
+          "Cette politique de confidentialité peut être modifiée à tout moment pour refléter les évolutions législatives ou techniques. La date de dernière mise à jour figure en bas de cette page.",
+        ],
+      },
+      {
+        title: "12. Contact",
+        content: [
+          "Pour toute question relative à cette politique de confidentialité, utilisez le formulaire de contact du site.",
+          "Dernière mise à jour : 23 avril 2026.",
         ],
       },
     ],

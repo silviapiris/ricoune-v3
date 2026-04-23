@@ -257,46 +257,181 @@ export const en: Translations = {
     title: "Privacy Policy",
     sections: [
       {
-        title: "Data collection",
-        content: ["Data is collected via forms."],
-      },
-      {
-        title: "Data collected",
-        content: ["Last name, first name, email, phone, message."],
-      },
-      {
-        title: "Purpose",
-        content: ["To respond to requests and establish contact."],
-      },
-      {
-        title: "Retention",
-        content: ["Data is kept for as long as necessary."],
-      },
-      {
-        title: "Recipients",
-        content: ["Exclusively Ricoune."],
-      },
-      {
-        title: "Security",
-        content: ["Protection measures are in place."],
-      },
-      {
-        title: "Your rights",
+        title: "1. Preamble",
         content: [
-          { text: "Access, correction, deletion:", link: { href: "mailto:ricouneofficiel@gmail.com", label: "ricouneofficiel@gmail.com" } },
+          "This privacy policy informs users of ricoune.com about how their personal data is collected, used and protected, in accordance with the General Data Protection Regulation (GDPR — EU 2016/679) and applicable French data protection law.",
         ],
       },
       {
-        title: "Cookies",
-        content: ["Used for functional and analytical purposes."],
+        title: "2. Data controller",
+        content: [
+          "The controller responsible for processing personal data collected on this website is:",
+          {
+            list: {
+              label: "Identification:",
+              items: [
+                "LA VACHACADEMY Association",
+                "Registered non-profit association — SIREN 491030300",
+                "Registered office: 6B Rue de la Bouvine, 34160 Saint-Drézéry, France",
+                "Represented by Henri ROMAN",
+              ],
+            },
+          },
+          "For any question regarding the processing of your data, you may contact us through the website's contact form by indicating \"GDPR Request\" as the subject.",
+        ],
       },
       {
-        title: "Cookie management",
+        title: "3. Data collected and purposes",
         content: [
-          "This site uses cookies to improve the user experience.",
-          { list: { label: "Cookie types:", items: ["technical", "audience measurement"] } },
-          "You can accept, decline or configure your preferences via your browser.",
-          "No data is sold or used for advertising purposes.",
+          "We only collect data that you voluntarily provide through our forms.",
+          {
+            list: {
+              label: "Contact form:",
+              items: [
+                "Data collected: last name, first name, email address, phone number (optional), event type (optional), desired date (optional), city (optional), message.",
+                "Purpose: respond to your contact request.",
+                "Legal basis: legitimate interest (responding to requests addressed to the artist).",
+              ],
+            },
+          },
+          {
+            list: {
+              label: "Professional quote request form:",
+              items: [
+                "Data collected: last name, first name, email address, phone number, event type, desired date, city, selected package, message.",
+                "Purpose: process your quote request for an artistic performance.",
+                "Legal basis: pre-contractual measures taken at the request of the data subject.",
+              ],
+            },
+          },
+          {
+            list: {
+              label: "Technical data:",
+              items: [
+                "Data collected: IP address (temporarily used for form anti-spam protection).",
+                "Purpose: website security and abuse prevention.",
+                "Legal basis: legitimate interest (security).",
+              ],
+            },
+          },
+        ],
+      },
+      {
+        title: "4. Recipients of the data",
+        content: [
+          "Your data is exclusively intended for:",
+          {
+            list: {
+              label: "Recipients:",
+              items: [
+                "LA VACHACADEMY Association (data controller)",
+                "Henri ROMAN (final recipient of requests)",
+              ],
+            },
+          },
+          "Your data is never sold, transferred or shared with third parties for commercial or advertising purposes.",
+        ],
+      },
+      {
+        title: "5. Technical processors",
+        content: [
+          "To ensure the operation of the website, we use the following technical service providers, acting as data processors under the GDPR:",
+          {
+            list: {
+              label: "Processors:",
+              items: [
+                "Vercel Inc. — Website hosting (United States, framework: EU-US Data Privacy Framework)",
+                "Resend — Form email delivery (United States, framework: EU-US Data Privacy Framework)",
+              ],
+            },
+          },
+          "These processors provide sufficient safeguards regarding the protection of personal data, in compliance with Articles 28 and 44 to 50 of the GDPR.",
+        ],
+      },
+      {
+        title: "6. Retention periods",
+        content: [
+          "Data is retained for the following periods:",
+          {
+            list: {
+              label: "Periods:",
+              items: [
+                "Contact form messages: 3 years from the last exchange.",
+                "Quote requests: 3 years from the last commercial interaction.",
+                "IP addresses (anti-spam protection): 12 months maximum.",
+              ],
+            },
+          },
+          "At the end of these periods, data is deleted or anonymised.",
+        ],
+      },
+      {
+        title: "7. Your rights",
+        content: [
+          "In accordance with Articles 15 to 22 of the GDPR, you have the following rights regarding your personal data:",
+          {
+            list: {
+              label: "GDPR rights:",
+              items: [
+                "Right of access: obtain confirmation that data concerning you is being processed and receive a copy.",
+                "Right to rectification: request the correction of inaccurate or incomplete data.",
+                "Right to erasure (\"right to be forgotten\"): request the deletion of your data.",
+                "Right to restriction of processing: request the temporary suspension of the processing of your data.",
+                "Right to object: object to the processing of your data for legitimate reasons.",
+                "Right to data portability: receive your data in a structured, machine-readable format.",
+              ],
+            },
+          },
+          "To exercise these rights, send your request through the website's contact form, indicating \"GDPR Request\" as the subject. A response will be provided within a maximum of one month.",
+          {
+            text: "You also have the right to lodge a complaint with the French Data Protection Authority (CNIL):",
+            link: {
+              href: "https://www.cnil.fr",
+              label: "www.cnil.fr",
+            },
+          },
+        ],
+      },
+      {
+        title: "8. Data security",
+        content: [
+          "We implement appropriate technical and organisational measures to protect your personal data, including:",
+          {
+            list: {
+              label: "Security measures:",
+              items: [
+                "Encryption of communications (HTTPS/TLS)",
+                "Form protection against spam (honeypot, rate limiting)",
+                "Restricted access to data for authorised personnel only",
+              ],
+            },
+          },
+        ],
+      },
+      {
+        title: "9. Cookies",
+        content: [
+          "The ricoune.com website does not use any tracking, analytics or advertising cookies.",
+          "Only strictly necessary technical cookies may be placed by your browser (for example to remember your language preference). These cookies do not require your prior consent under applicable regulations.",
+        ],
+      },
+      {
+        title: "10. Third-party links",
+        content: [
+          "This website contains links to third-party services (Google Maps, Google Calendar, music streaming platforms, social networks). When you click these links, you are redirected to these services, which have their own privacy policies that we invite you to consult.",
+        ],
+      },
+      {
+        title: "11. Changes to this policy",
+        content: [
+          "This privacy policy may be modified at any time to reflect legislative or technical developments. The last update date appears at the bottom of this page.",
+        ],
+      },
+      {
+        title: "12. Contact",
+        content: [
+          "For any question regarding this privacy policy, please use the website's contact form.",
+          "Last updated: 23 April 2026.",
         ],
       },
     ],
