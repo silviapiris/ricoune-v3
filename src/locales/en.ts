@@ -517,6 +517,14 @@ export const en: Translations = {
     ctaTitle: "Organize your event with Ricoune",
     ctaDesc: "Town halls, festival committees, individuals: call on the South's unmissable artist.",
     ctaBtn: "Request a quote",
-    photoNames: ["Glass balloon poster", "Ricoune in concert poster"],
+    photoNames: [
+      "Glass balloon poster",
+      "Ricoune in concert poster",
+      "Ricoune in concert (microphone)",
+      "White shirt portrait",
+      "Ricoune on stage",
+    ],
+    affichesTitle: "Posters",
+    portraitsTitle: "Portraits",
   },
 };

@@ -82,6 +82,8 @@ export interface Translations {
     ctaDesc: string;
     ctaBtn: string;
     photoNames: readonly string[];
+    affichesTitle: string;
+    portraitsTitle: string;
   };
 }
 
@@ -602,6 +604,14 @@ export const fr: Translations = {
     ctaTitle: "Organisez votre événement avec Ricoune",
     ctaDesc: "Mairies, comités des fêtes, particuliers : faites appel à l'artiste incontournable du Sud.",
     ctaBtn: "Demander un devis",
-    photoNames: ["Affiche verre à ballon", "Affiche Ricoune en concert"],
+    photoNames: [
+      "Affiche verre à ballon",
+      "Affiche Ricoune en concert",
+      "Ricoune en concert (micro)",
+      "Portrait chemise blanche",
+      "Ricoune sur scène",
+    ],
+    affichesTitle: "Affiches",
+    portraitsTitle: "Portraits",
   },
 };
