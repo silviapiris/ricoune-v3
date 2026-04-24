@@ -219,37 +219,101 @@ export const en: Translations = {
     ],
   },
   legal: {
-    title: "Legal Notice",
+    title: "Legal notice",
     sections: [
       {
-        title: "Site editor",
+        title: "1. Site publisher",
         content: [
-          "Ricoune",
-          { text: "Email:", link: { href: "mailto:ricouneofficiel@gmail.com", label: "ricouneofficiel@gmail.com" } },
+          "This site is published by:",
+          {
+            list: {
+              label: "Publisher details",
+              items: [
+                "LA VACHACADEMY (registered association)",
+                "SIREN: 491 030 300",
+                "Registered office: 6B Rue de la Bouvine, 34160 Saint-Drézéry, France",
+              ],
+            },
+          },
         ],
       },
       {
-        title: "Publication manager",
-        content: ["Ricoune"],
-      },
-      {
-        title: "Hosting & technologies",
+        title: "2. Publication manager",
         content: [
-          "Site built with Next.js / React and hosted on Vercel.",
-          { text: "Vercel Inc. — 340 S Lemon Ave #4133, Walnut, CA 91789, United States —", link: { href: "https://vercel.com", label: "vercel.com" }, className: "mt-1" },
+          "Henri ROMAN, artist performing under the stage name \"Ricoune\".",
         ],
       },
       {
-        title: "Intellectual property",
-        content: ["All content on this site is protected by intellectual property law."],
+        title: "3. Hosting provider",
+        content: [
+          "The site is hosted by:",
+          {
+            list: {
+              label: "Host details",
+              items: [
+                "Vercel Inc.",
+                "440 N Barranca Ave #4133, Covina, CA 91723, USA",
+                "Website: vercel.com",
+                "Deployment servers: Europe (Paris region)",
+              ],
+            },
+          },
+        ],
       },
       {
-        title: "Liability",
-        content: ["The site editor cannot be held responsible for errors or omissions."],
+        title: "4. Design, development and maintenance",
+        content: [
+          "The site was designed, developed and is maintained by:",
+          {
+            text: "Custom Digital Services — Website: ",
+            link: {
+              href: "https://www.custom-digital-services.com/",
+              label: "custom-digital-services.com",
+            },
+          },
+          {
+            text: "Contact: ",
+            link: {
+              href: "mailto:sylvia.piris@custom-digital-services.com",
+              label: "sylvia.piris@custom-digital-services.com",
+            },
+          },
+        ],
       },
       {
-        title: "External links",
-        content: ["The editor cannot be held responsible for the content of external sites."],
+        title: "5. Intellectual property",
+        content: [
+          "All content on this site (texts, images, photographs, videos, logos, trademarks, graphic elements, sounds, site architecture) is protected by copyright and trademark law. They are the exclusive property of Henri ROMAN and/or their respective authors.",
+          "Any reproduction, representation, modification, publication, transmission, or distortion, in whole or in part, of the site or its content, by any means and on any medium, is prohibited without the prior written authorization of the publisher.",
+          "Any unauthorized use of the site or its content may constitute infringement punishable under articles L.335-2 and following of the French Intellectual Property Code.",
+        ],
+      },
+      {
+        title: "6. Photo credits",
+        content: [
+          "Photographs taken by professional photographers are signed by their authors directly on the visuals.",
+          "Other visuals are from the artist's personal collection. All rights reserved.",
+        ],
+      },
+      {
+        title: "7. Hypertext links",
+        content: [
+          "The site may contain hypertext links to other websites. The publisher has no control over these sites and disclaims any responsibility regarding their content, terms of use, or personal data protection practices.",
+          "The creation of hypertext links pointing to this site is authorized, provided they do not harm the publisher's image and are not used for commercial or advertising purposes without prior agreement.",
+        ],
+      },
+      {
+        title: "8. Applicable law and jurisdiction",
+        content: [
+          "These legal notices are subject to French law.",
+          "In the event of a dispute regarding the interpretation or execution of these terms, and in the absence of amicable resolution, the French courts shall have exclusive jurisdiction.",
+        ],
+      },
+      {
+        title: "9. Contact",
+        content: [
+          "For any question regarding these legal notices, you can contact us via the site's contact form with the subject \"Legal notice\".",
+        ],
       },
     ],
   },

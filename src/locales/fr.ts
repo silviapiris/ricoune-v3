@@ -307,34 +307,98 @@ export const fr: Translations = {
     title: "Mentions légales",
     sections: [
       {
-        title: "Éditeur du site",
+        title: "1. Éditeur du site",
         content: [
-          "Ricoune",
-          { text: "Email :", link: { href: "mailto:ricouneofficiel@gmail.com", label: "ricouneofficiel@gmail.com" } },
+          "Le présent site est édité par :",
+          {
+            list: {
+              label: "Coordonnées de l'éditeur",
+              items: [
+                "LA VACHACADEMY (association déclarée)",
+                "SIREN : 491 030 300",
+                "Siège social : 6B Rue de la Bouvine, 34160 Saint-Drézéry, France",
+              ],
+            },
+          },
         ],
       },
       {
-        title: "Responsable de la publication",
-        content: ["Ricoune"],
-      },
-      {
-        title: "Hébergement & technologies",
+        title: "2. Responsable de la publication",
         content: [
-          "Site développé avec Next.js / React et hébergé sur Vercel.",
-          { text: "Vercel Inc. — 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis —", link: { href: "https://vercel.com", label: "vercel.com" }, className: "mt-1" },
+          "Henri ROMAN, artiste connu sous le nom de scène « Ricoune ».",
         ],
       },
       {
-        title: "Propriété intellectuelle",
-        content: ["L'ensemble des contenus présents sur ce site est protégé par le droit de la propriété intellectuelle."],
+        title: "3. Hébergeur",
+        content: [
+          "Le site est hébergé par :",
+          {
+            list: {
+              label: "Coordonnées de l'hébergeur",
+              items: [
+                "Vercel Inc.",
+                "440 N Barranca Ave #4133, Covina, CA 91723, USA",
+                "Site web : vercel.com",
+                "Serveurs de déploiement : Europe (région Paris)",
+              ],
+            },
+          },
+        ],
       },
       {
-        title: "Responsabilité",
-        content: ["L'éditeur du site ne saurait être tenu responsable des erreurs ou omissions."],
+        title: "4. Conception, réalisation et maintenance",
+        content: [
+          "Le site a été conçu, réalisé et est maintenu par :",
+          {
+            text: "Custom Digital Services — Site web : ",
+            link: {
+              href: "https://www.custom-digital-services.com/",
+              label: "custom-digital-services.com",
+            },
+          },
+          {
+            text: "Contact : ",
+            link: {
+              href: "mailto:sylvia.piris@custom-digital-services.com",
+              label: "sylvia.piris@custom-digital-services.com",
+            },
+          },
+        ],
       },
       {
-        title: "Liens externes",
-        content: ["L'éditeur ne peut être tenu responsable du contenu des sites externes."],
+        title: "5. Propriété intellectuelle",
+        content: [
+          "L'ensemble des contenus présents sur le site (textes, images, photographies, vidéos, logos, marques, éléments graphiques, sons, architecture du site) est protégé par le droit d'auteur et le droit des marques. Ils sont la propriété exclusive de Henri ROMAN et/ou de leurs auteurs respectifs.",
+          "Toute reproduction, représentation, modification, publication, transmission, dénaturation, totale ou partielle du site ou de son contenu, par quelque procédé que ce soit et sur quelque support que ce soit, est interdite sans l'autorisation écrite préalable de l'éditeur.",
+          "Toute exploitation non autorisée du site ou de ses contenus est susceptible de constituer une contrefaçon sanctionnée par les articles L.335-2 et suivants du Code de la propriété intellectuelle.",
+        ],
+      },
+      {
+        title: "6. Crédits photos",
+        content: [
+          "Les photographies réalisées par des photographes professionnels sont signées par leurs auteurs directement sur les visuels.",
+          "Les autres visuels sont issus de la collection personnelle de l'artiste. Tous droits réservés.",
+        ],
+      },
+      {
+        title: "7. Liens hypertextes",
+        content: [
+          "Le site peut contenir des liens hypertextes vers d'autres sites internet. L'éditeur n'exerce aucun contrôle sur ces sites et décline toute responsabilité quant à leur contenu, leurs conditions d'utilisation ou leurs pratiques en matière de protection des données personnelles.",
+          "La création de liens hypertextes pointant vers le présent site est autorisée, à condition qu'ils ne portent pas atteinte à l'image de l'éditeur et ne soient pas utilisés à des fins commerciales ou publicitaires sans accord préalable.",
+        ],
+      },
+      {
+        title: "8. Droit applicable et juridiction",
+        content: [
+          "Les présentes mentions légales sont soumises au droit français.",
+          "En cas de litige relatif à l'interprétation ou à l'exécution des présentes, et à défaut de résolution amiable, les tribunaux français seront seuls compétents.",
+        ],
+      },
+      {
+        title: "9. Contact",
+        content: [
+          "Pour toute question concernant les présentes mentions légales, vous pouvez nous contacter via le formulaire de contact du site avec pour objet « Mentions légales ».",
+        ],
       },
     ],
   },

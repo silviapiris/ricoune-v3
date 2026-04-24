@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import Providers from "@/components/layout/Providers";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -100,6 +101,7 @@ export default function RootLayout({
           <main className="pt-20 md:pt-24">{children}</main>
           <Footer />
           <ScrollToTop />
+          <Analytics />
         </Providers>
       </body>
     </html>
