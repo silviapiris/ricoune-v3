@@ -52,7 +52,7 @@ export default function VideosPageClient() {
                 aria-label={`Lire : ${FEATURED_TITLE}`}
               >
                 <Image
-                  src={`https://img.youtube.com/vi/${FEATURED_YOUTUBE_ID}/maxresdefault.jpg`}
+                  src={`https://img.youtube.com/vi/${FEATURED_YOUTUBE_ID}/hqdefault.jpg`}
                   alt={FEATURED_TITLE}
                   fill
                   className="object-cover"
