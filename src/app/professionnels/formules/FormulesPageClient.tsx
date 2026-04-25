@@ -33,7 +33,7 @@ export default function FormulesPageClient(): React.JSX.Element {
       {/* Background image + overlay */}
       <div className="fixed inset-0 -z-10">
         <Image
-          src="/images/hero/home-concert-scene.webp"
+          src="/images/bio/home-concert-scene.jpg"
           alt=""
           fill
           className="object-cover"

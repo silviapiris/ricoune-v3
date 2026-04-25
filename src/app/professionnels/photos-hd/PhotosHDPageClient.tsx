@@ -137,7 +137,7 @@ export default function PhotosHDPageClient(): React.JSX.Element {
       {/* CTA bas de page */}
       <div className="relative mt-16 overflow-hidden rounded-2xl">
         <Image
-          src="/images/hero/home-concert-scene.webp"
+          src="/images/bio/home-concert-scene.jpg"
           alt=""
           fill
           className="object-cover"
