@@ -64,7 +64,7 @@ export default function BiographiePageClient(): React.ReactElement {
               <div className="mx-auto w-full max-w-[280px] md:max-w-none">
                 <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-rc-yellow/20 shadow-xl">
                   <Image
-                    src="/images/bio/home-bio-portrait.webp"
+                    src="/images/bio/ricoune-bio.webp"
                     alt={t.biography.bioPortraitAlt}
                     fill
                     className="object-cover object-top"
