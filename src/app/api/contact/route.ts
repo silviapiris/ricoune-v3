@@ -103,7 +103,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "Site Ricoune <onboarding@resend.dev>",
+        from: "Site Ricoune <contact@ricoune.com>",
         to: contactEmail,
         subject,
         html: emailHtml,
