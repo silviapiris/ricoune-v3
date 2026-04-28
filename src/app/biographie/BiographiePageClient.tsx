@@ -60,13 +60,26 @@ export default function BiographiePageClient(): React.ReactElement {
           </AnimatedSection>
 
           <AnimatedSection>
-            <div className="grid gap-8 md:grid-cols-2">
-              <p className="leading-relaxed text-white/85">
-                {t.biography.historyP1}
-              </p>
-              <p className="leading-relaxed text-white/85">
-                {t.biography.historyP2}
-              </p>
+            <div className="grid items-start gap-8 md:grid-cols-[1fr_2fr]">
+              <div className="mx-auto w-full max-w-[280px] md:max-w-none">
+                <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-rc-yellow/20 shadow-xl">
+                  <Image
+                    src="/images/bio/home-bio-portrait.webp"
+                    alt={t.biography.bioPortraitAlt}
+                    fill
+                    className="object-cover object-top"
+                    sizes="(max-width: 768px) 280px, 33vw"
+                  />
+                </div>
+              </div>
+              <div className="space-y-4">
+                <p className="leading-relaxed text-white/85">
+                  {t.biography.historyP1}
+                </p>
+                <p className="leading-relaxed text-white/85">
+                  {t.biography.historyP2}
+                </p>
+              </div>
             </div>
           </AnimatedSection>
         </div>
@@ -82,6 +95,45 @@ export default function BiographiePageClient(): React.ReactElement {
           </AnimatedSection>
 
           <BioTimeline events={t.biography.timeline} />
+        </div>
+      </section>
+
+      {/* ===== 4b. PHOTO STRIP ===== */}
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-6xl px-4">
+          <AnimatedSection className="mb-10">
+            <span className="rc-section-label">{t.biography.stripLabel}</span>
+            <h2 className="mt-3 font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
+              {t.biography.stripTitle}
+            </h2>
+          </AnimatedSection>
+
+          <AnimatedSection>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              {[
+                "/images/photos/3O8A8773-800x453.jpg",
+                "/images/photos/3O8A5701-800x523.jpg",
+                "/images/photos/3O8A8845-800x453.jpg",
+              ].map((src, i) => (
+                <Link href="/photos" key={src} className="group block overflow-hidden rounded-xl">
+                  <div className="relative aspect-[4/3] w-full overflow-hidden">
+                    <Image
+                      src={src}
+                      alt={`Ricoune en scène ${i + 1}`}
+                      fill
+                      className="object-cover transition-all duration-300 group-hover:scale-[1.03] group-hover:saturate-150"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <Link href="/photos" className="rc-btn-outline">
+                {t.biography.stripCta}
+              </Link>
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 

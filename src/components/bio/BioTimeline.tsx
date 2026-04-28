@@ -63,7 +63,7 @@ export default function BioTimeline({ events }: BioTimelineProps): React.ReactEl
       {/* Vertical yellow line */}
       <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-rc-yellow md:left-4" />
 
-      <div className="space-y-10">
+      <div className="space-y-6">
         {events.map((event, i) => (
           <TimelineItem key={event.year} event={event} delay={i * 100} />
         ))}

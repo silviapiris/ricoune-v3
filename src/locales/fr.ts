@@ -33,6 +33,7 @@ export interface Translations {
   biography: {
     subtitle: string; quote: string; historyTitle: string; historyP1: string; historyP2: string;
     keyMomentsTitle: string; philosophy: string; ctaText: string; viewDates: string; requestQuote: string;
+    bioPortraitAlt: string; stripLabel: string; stripTitle: string; stripCta: string;
     timeline: { year: string; description: string }[];
   };
   professionals: {
@@ -225,6 +226,10 @@ export const fr: Translations = {
     ctaText: "Envie de vivre l'expérience Ricoune en live ?",
     viewDates: "Voir les prochaines dates",
     requestQuote: "Demander un devis",
+    bioPortraitAlt: "Portrait de Ricoune, artiste auteur-compositeur",
+    stripLabel: "EN SCÈNE",
+    stripTitle: "Toujours là où ça vibre",
+    stripCta: "Voir toute la galerie",
     timeline: [
       { year: "1963", description: "Naissance à Saint-Drézéry (près de Montpellier)" },
       { year: "1983", description: "Fonde son premier groupe \"Génération 83\"" },

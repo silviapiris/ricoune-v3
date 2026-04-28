@@ -138,6 +138,10 @@ export const en: Translations = {
     ctaText: "Want to experience Ricoune live?",
     viewDates: "View upcoming dates",
     requestQuote: "Request a quote",
+    bioPortraitAlt: "Portrait of Ricoune, singer-songwriter artist",
+    stripLabel: "ON STAGE",
+    stripTitle: "Always where the energy is",
+    stripCta: "See full gallery",
     timeline: [
       { year: "1963", description: "Born in Saint-Drézéry (near Montpellier)" },
       { year: "1983", description: "Founds his first band \"Génération 83\"" },
