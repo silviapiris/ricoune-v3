@@ -82,9 +82,9 @@ export default function AboutSection(): React.ReactElement {
             <h2 className="mb-6 font-[family-name:var(--font-oswald)] text-3xl font-bold text-white md:text-4xl">
               {t.about.title}
             </h2>
-            <p className="mb-4 leading-relaxed text-white/90">{t.about.p1}</p>
-            <p className="mb-4 leading-relaxed text-white/90">{t.about.p2}</p>
-            <p className="mb-8 leading-relaxed text-white/90">{t.about.p3}</p>
+            <p className="mb-4 leading-relaxed text-white/90 md:text-justify">{t.about.p1}</p>
+            <p className="mb-4 leading-relaxed text-white/90 md:text-justify">{t.about.p2}</p>
+            <p className="mb-8 leading-relaxed text-white/90 md:text-justify">{t.about.p3}</p>
 
             <div className="mb-6">
               <Link href="/biographie" className="rc-btn-outline">

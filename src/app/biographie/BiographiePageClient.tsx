@@ -60,7 +60,7 @@ export default function BiographiePageClient(): React.ReactElement {
           </AnimatedSection>
 
           <AnimatedSection>
-            <div className="grid items-start gap-8 md:grid-cols-[1fr_2fr]">
+            <div className="grid items-start md:items-center gap-8 md:grid-cols-[1fr_2fr]">
               <div className="mx-auto w-full max-w-[280px] md:max-w-none">
                 <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-rc-yellow/20 shadow-xl">
                   <Image
@@ -72,7 +72,7 @@ export default function BiographiePageClient(): React.ReactElement {
                   />
                 </div>
               </div>
-              <div className="space-y-4">
+              <div className="space-y-4 md:text-justify">
                 <p className="leading-relaxed text-white/85">
                   {t.biography.historyP1}
                 </p>
