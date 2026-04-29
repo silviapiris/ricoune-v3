@@ -32,7 +32,23 @@ export async function updateSession(request: NextRequest) {
 
   // Ne pas ajouter de logique entre createServerClient et getUser()
   // pour éviter de rendre les tokens de session inutilisables.
-  await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  // Protection des routes /admin/*
+  // Exception : /admin/login est accessible sans authentification
+  const pathname = request.nextUrl.pathname
+
+  if (
+    pathname.startsWith('/admin') &&
+    pathname !== '/admin/login' &&
+    !user
+  ) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/admin/login'
+    return NextResponse.redirect(url)
+  }
 
   return supabaseResponse
 }
