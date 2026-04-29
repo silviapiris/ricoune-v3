@@ -98,3 +98,28 @@ CREATE POLICY "Public read photos" ON photos FOR SELECT USING (true);
 CREATE POLICY "Public insert contact" ON contact_messages FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public insert devis" ON devis_requests FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public insert newsletter" ON newsletter_subscribers FOR INSERT WITH CHECK (true);
+
+-- Admin policies : accès complet pour utilisateurs authentifiés (back-office)
+-- Note : seuls les comptes Supabase Auth créés manuellement auront ce rôle.
+-- Si l'inscription publique est ouverte un jour, raffiner avec auth.uid() IN (admin_uids).
+
+CREATE POLICY "Admin full access albums" ON albums
+  FOR ALL USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Admin full access concerts" ON concerts
+  FOR ALL USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Admin full access videos" ON videos
+  FOR ALL USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Admin full access photos" ON photos
+  FOR ALL USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Admin full access contact_messages" ON contact_messages
+  FOR ALL USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Admin full access devis_requests" ON devis_requests
+  FOR ALL USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Admin full access newsletter_subscribers" ON newsletter_subscribers
+  FOR ALL USING (auth.role() = 'authenticated');
