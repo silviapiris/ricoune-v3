@@ -44,9 +44,6 @@ export const metadata: Metadata = {
     "Provence",
     "Occitanie",
   ],
-  icons: {
-    icon: "/images/logo/ricoune-favicon.ico",
-  },
   openGraph: {
     type: "website",
     locale: "fr_FR",
