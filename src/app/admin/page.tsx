@@ -1,5 +1,6 @@
 import { Oswald, Raleway } from 'next/font/google'
 import { createClient } from '@/lib/supabase/server'
+import { signOut } from './actions'
 
 const oswald = Oswald({
   subsets: ['latin'],
@@ -54,12 +55,22 @@ export default async function AdminDashboardPage() {
         </div>
 
         <p
-          className="text-center text-xs text-zinc-500"
+          className="mb-8 text-center text-xs text-zinc-500"
           style={{ fontFamily: 'var(--font-raleway)' }}
         >
           Le tableau de bord complet (gestion des concerts, photos, albums…)
           arrive prochainement.
         </p>
+
+        <form action={signOut} className="flex justify-center">
+          <button
+            type="submit"
+            className="rounded border border-zinc-700 bg-zinc-800 px-6 py-2.5 text-sm font-medium uppercase tracking-wider text-zinc-300 transition hover:bg-zinc-700 hover:text-zinc-100"
+            style={{ fontFamily: 'var(--font-raleway)' }}
+          >
+            Se déconnecter
+          </button>
+        </form>
       </div>
     </div>
   )
