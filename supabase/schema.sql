@@ -15,15 +15,20 @@ CREATE TABLE albums (
 
 -- Concerts
 CREATE TABLE concerts (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  date DATE NOT NULL,
-  city TEXT NOT NULL,
-  department TEXT,
-  venue TEXT NOT NULL,
-  time TEXT NOT NULL,
-  type TEXT CHECK (type IN ('solo', 'groupe')) NOT NULL,
-  all_ages BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+    id                UUID        DEFAULT gen_random_uuid() PRIMARY KEY,
+    date              DATE        NOT NULL,
+    city              TEXT        NOT NULL,
+    department        TEXT,
+    postal_code       TEXT,
+    venue             TEXT        NOT NULL,
+    maps_url          TEXT,
+    time              TEXT        NOT NULL,
+    type              TEXT        CHECK (type IN ('solo', 'groupe')) NOT NULL,
+    all_ages          BOOLEAN     DEFAULT TRUE,
+    infos_speciales   TEXT,
+    cancelled         BOOLEAN     DEFAULT FALSE NOT NULL,
+    cancellation_note TEXT,
+    created_at        TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Videos
