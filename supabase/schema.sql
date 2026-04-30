@@ -41,13 +41,22 @@ CREATE TABLE videos (
 );
 
 -- Photos
-CREATE TABLE photos (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  url TEXT NOT NULL,
+-- Table mise a jour le 30/04/2026 : metadonnees photos (les fichiers sont dans Supabase Storage bucket 'photos')
+CREATE TABLE IF NOT EXISTS photos (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  storage_path TEXT NOT NULL,
   alt_text TEXT,
-  category TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  caption TEXT,
+  sort_order INTEGER DEFAULT 0,
+  width INTEGER,
+  height INTEGER,
+  size_bytes INTEGER,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+CREATE INDEX IF NOT EXISTS idx_photos_sort_order ON photos(sort_order);
+CREATE INDEX IF NOT EXISTS idx_photos_created_at ON photos(created_at DESC);
 
 -- Contact Messages
 -- Table mise a jour le 30/04/2026 pour matcher les champs du formulaire public
