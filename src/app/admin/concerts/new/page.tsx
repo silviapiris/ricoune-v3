@@ -1,9 +1,21 @@
 import Link from 'next/link'
 import { LogOut } from 'lucide-react'
 import { signOut } from '../../actions'
+import { getConcertById } from '../actions'
 import ConcertForm from '../ConcertForm'
 
-export default async function NewConcertPage() {
+export default async function NewConcertPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ fromId?: string }>
+}) {
+  const { fromId } = await searchParams
+  const sourceConcert = fromId ? await getConcertById(fromId) : null
+
+  const template = sourceConcert
+    ? { ...sourceConcert, date: '', cancelled: false, cancellation_note: null }
+    : undefined
+
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-[#0a0a0a]">
       <div className="mx-auto max-w-4xl px-6 py-8">
@@ -34,7 +46,13 @@ export default async function NewConcertPage() {
           </h1>
         </header>
 
-        <ConcertForm mode="create" />
+        {sourceConcert && (
+          <div className="mb-4 rounded border border-[#f5c518]/30 bg-[#f5c518]/10 px-4 py-2.5 text-sm text-zinc-300">
+            Pré-remplissage depuis : {sourceConcert.city} — {sourceConcert.venue}. La date est vide à remplir.
+          </div>
+        )}
+
+        <ConcertForm mode="create" concert={template} />
 
       </div>
     </div>

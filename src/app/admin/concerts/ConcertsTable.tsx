@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Pencil, MapPin, Clock, AlertTriangle } from 'lucide-react'
+import { Pencil, MapPin, Clock, AlertTriangle, CalendarPlus } from 'lucide-react'
 import type { Concert } from './actions'
 import DeleteButton from './DeleteButton'
 
@@ -104,7 +104,16 @@ export default function ConcertsTable({ concerts, variant }: Props) {
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-3">
-                    {/* TODO C4.5 : ajouter un bouton "Reprogrammer" pour variant === 'past' qui pre-remplira le form de creation */}
+                    {variant === 'past' && (
+                      <Link
+                        href={`/admin/concerts/new?fromId=${concert.id}`}
+                        className="inline-flex items-center gap-1.5 text-sm text-zinc-400 transition-colors hover:text-[#f5c518]"
+                        aria-label={`Reprogrammer un concert similaire à ${concert.city}`}
+                      >
+                        <CalendarPlus size={14} />
+                        Reprogrammer
+                      </Link>
+                    )}
                     <Link
                       href={`/admin/concerts/${concert.id}`}
                       className="inline-flex items-center gap-1.5 text-sm text-zinc-400 transition-colors hover:text-zinc-100"
@@ -180,7 +189,16 @@ export default function ConcertsTable({ concerts, variant }: Props) {
               </div>
             )}
             <div className="mt-3 flex items-center gap-4 border-t border-zinc-800 pt-3">
-              {/* TODO C4.5 : ajouter un bouton "Reprogrammer" pour variant === 'past' qui pre-remplira le form de creation */}
+              {variant === 'past' && (
+                <Link
+                  href={`/admin/concerts/new?fromId=${concert.id}`}
+                  className="inline-flex items-center gap-1.5 text-sm text-zinc-400 transition-colors hover:text-[#f5c518]"
+                  aria-label={`Reprogrammer un concert similaire à ${concert.city}`}
+                >
+                  <CalendarPlus size={14} />
+                  Reprogrammer
+                </Link>
+              )}
               <Link
                 href={`/admin/concerts/${concert.id}`}
                 className="inline-flex items-center gap-1.5 text-sm text-zinc-400 transition-colors hover:text-zinc-100"

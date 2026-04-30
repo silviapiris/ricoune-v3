@@ -32,7 +32,11 @@ export default function ConcertForm({ mode, concert }: Props) {
         className="mb-6 text-2xl font-semibold uppercase tracking-wider text-[#f5c518]"
         style={{ fontFamily: 'var(--font-oswald)' }}
       >
-        {mode === 'create' ? 'Nouveau concert' : 'Modifier le concert'}
+        {mode === 'create' && concert
+          ? 'Reprogrammer un concert'
+          : mode === 'create'
+            ? 'Nouveau concert'
+            : 'Modifier le concert'}
       </h2>
 
       <form action={formAction} className="space-y-5">
