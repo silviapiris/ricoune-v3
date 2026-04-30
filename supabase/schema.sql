@@ -77,13 +77,6 @@ CREATE TABLE devis_requests (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Newsletter Subscribers
-CREATE TABLE newsletter_subscribers (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  email TEXT UNIQUE NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
 -- Row Level Security
 ALTER TABLE albums ENABLE ROW LEVEL SECURITY;
 ALTER TABLE concerts ENABLE ROW LEVEL SECURITY;
@@ -91,7 +84,6 @@ ALTER TABLE videos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE photos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE devis_requests ENABLE ROW LEVEL SECURITY;
-ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 
 -- Public read policies
 CREATE POLICY "Public read albums" ON albums FOR SELECT USING (true);
@@ -102,7 +94,6 @@ CREATE POLICY "Public read photos" ON photos FOR SELECT USING (true);
 -- Public insert policies (for forms)
 CREATE POLICY "Public insert contact" ON contact_messages FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public insert devis" ON devis_requests FOR INSERT WITH CHECK (true);
-CREATE POLICY "Public insert newsletter" ON newsletter_subscribers FOR INSERT WITH CHECK (true);
 
 -- Admin policies : accès complet pour utilisateurs authentifiés (back-office)
 -- Note : seuls les comptes Supabase Auth créés manuellement auront ce rôle.
@@ -126,5 +117,24 @@ CREATE POLICY "Admin full access contact_messages" ON contact_messages
 CREATE POLICY "Admin full access devis_requests" ON devis_requests
   FOR ALL USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Admin full access newsletter_subscribers" ON newsletter_subscribers
-  FOR ALL USING (auth.role() = 'authenticated');
+-- ===========================================================================
+-- Postgres GRANTs : prerequis pour PostgREST
+-- ===========================================================================
+-- Sans ces GRANTs, le service_role recoit "permission denied" (code 42501)
+-- sur toute operation CRUD via l'API REST de Supabase, MEME SI les RLS
+-- policies l'autorisent. RLS et GRANTs sont deux couches independantes.
+--
+-- Note : pour anon et authenticated, les RLS policies suffisent (cf. les
+-- "Public insert policies" et "Admin policies" plus haut). Mais service_role
+-- necessite explicitement les GRANTs Postgres.
+--
+-- Incident a l'origine de cet ajout : 2026-04-30, sprint Concerts C1.4 -
+-- migration impossible avec 42501 sur la table concerts.
+-- ===========================================================================
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.albums           TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.concerts         TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.contact_messages TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.devis_requests   TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.photos           TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.videos           TO service_role;
