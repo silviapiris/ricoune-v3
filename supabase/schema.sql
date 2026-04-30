@@ -138,3 +138,16 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON public.contact_messages TO service_role;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.devis_requests   TO service_role;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.photos           TO service_role;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.videos           TO service_role;
+
+-- Note : RLS policies + GRANTs Postgres sont 2 couches independantes.
+-- Sans ces GRANTs explicites, le role authenticated recoit "permission denied"
+-- (code 42501) meme si les RLS policies l'autorisent.
+-- Incident detecte le 30/04/2026 14h en production : page /admin/concerts
+-- affichait 0 concerts car getConcerts() recevait une erreur 42501.
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.albums           TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.concerts         TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.contact_messages TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.devis_requests   TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.photos           TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.videos           TO authenticated;
