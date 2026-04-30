@@ -8,8 +8,9 @@ import LatestAlbum from "@/components/home/LatestAlbum";
 import ArtistSection from "@/components/home/ArtistSection";
 import UniversSection from "@/components/home/UniversSection";
 import CtaSection from "@/components/home/CtaSection";
+import type { Concert } from "@/data/concerts";
 
-export default function HomePageClient(): React.ReactElement {
+export default function HomePageClient({ upcomingConcerts }: { upcomingConcerts: Concert[] }): React.ReactElement {
   return (
     <>
       {/* 1. Hero plein ecran */}
@@ -19,7 +20,7 @@ export default function HomePageClient(): React.ReactElement {
       <SocialBar />
 
       {/* 3. Prochains concerts */}
-      <ConcertsPreview />
+      <ConcertsPreview concerts={upcomingConcerts} />
 
       {/* 4. A propos de Ricoune */}
       <AboutSection />

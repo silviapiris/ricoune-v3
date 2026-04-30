@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getPublicConcerts } from "@/lib/concerts";
 import ConcertsPageClient from "./ConcertsPageClient";
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ConcertsPage() {
-  return <ConcertsPageClient />;
+export default async function ConcertsPage() {
+  const concerts = await getPublicConcerts();
+  return <ConcertsPageClient concerts={concerts} />;
 }

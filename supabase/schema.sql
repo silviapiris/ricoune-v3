@@ -151,3 +151,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON public.contact_messages TO authenticated
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.devis_requests   TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.photos           TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.videos           TO authenticated;
+
+-- Accès public (anon) en lecture seule sur les concerts
+-- Nécessaire pour que la page publique /concerts puisse lire via la clé anon (PUBLISHABLE_KEY).
+-- À exécuter manuellement dans le SQL Editor Supabase.
+GRANT SELECT ON public.concerts TO anon;

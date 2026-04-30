@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import AnimatedSection from "@/components/AnimatedSection";
-import { concerts } from "@/data/concerts";
 import ConcertCard from "@/components/concerts/ConcertCard";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Concert } from "@/data/concerts";
@@ -41,7 +40,7 @@ function groupByMonth(list: Concert[], order: "asc" | "desc"): MonthGroup[] {
   });
 }
 
-export default function ConcertsPageClient(): React.ReactElement {
+export default function ConcertsPageClient({ concerts }: { concerts: Concert[] }): React.ReactElement {
   const { t } = useLanguage();
   const [filter, setFilter] = useState<Filter>("tous");
 
@@ -62,7 +61,7 @@ export default function ConcertsPageClient(): React.ReactElement {
     });
 
     return groupByMonth(sorted.filter(isConcertVisible), "asc");
-  }, [filter]);
+  }, [filter, concerts]);
 
   return (
     <section className="pt-20 pb-16 md:py-24">

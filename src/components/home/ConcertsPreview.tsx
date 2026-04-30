@@ -3,10 +3,8 @@
 import Link from "next/link";
 import { MapPin, CalendarPlus } from "lucide-react";
 import AnimatedSection from "@/components/AnimatedSection";
-import { concerts } from "@/data/concerts";
 import type { Concert } from "@/data/concerts";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { isConcertVisible } from "@/lib/concerts";
 
 function formatMonth(dateStr: string, lang: "fr" | "en"): string {
   const locale = lang === "fr" ? "fr-FR" : "en-US";
@@ -21,12 +19,6 @@ function formatDay(dateStr: string): string {
   return new Date(dateStr).getDate().toString().padStart(2, "0");
 }
 
-function getUpcomingConcerts(count: number): Concert[] {
-  return concerts
-    .filter((c) => isConcertVisible(c) && !c.cancelled)
-    .sort((a, b) => new Date(`${a.date}T${a.time}:00`).getTime() - new Date(`${b.date}T${b.time}:00`).getTime())
-    .slice(0, count);
-}
 
 function buildGoogleCalendarUrl(concert: Concert): string {
   const [y, mo, day] = concert.date.split("-").map(Number);
@@ -58,9 +50,9 @@ function buildGoogleCalendarUrl(concert: Concert): string {
   return `https://www.google.com/calendar/render?${params.toString()}`;
 }
 
-export default function ConcertsPreview(): React.ReactElement {
+export default function ConcertsPreview({ concerts }: { concerts: Concert[] }): React.ReactElement {
   const { t, lang } = useLanguage();
-  const upcoming = getUpcomingConcerts(3);
+  const upcoming = concerts;
 
   return (
     <section className="py-16 md:py-24">
