@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ArrowLeft, LogOut, Upload, Image as ImageIcon } from 'lucide-react'
-import { getPhotos, getPublicUrl } from './actions'
+import { getPhotos } from './actions'
+import { getPublicUrl } from '@/lib/photos'
 import { signOut } from '../actions'
 
 export default async function AdminPhotosPage() {

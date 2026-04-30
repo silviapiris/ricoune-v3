@@ -32,8 +32,3 @@ export async function getPhotos(): Promise<{ photos: Photo[]; count: number }> {
   const photos = (data ?? []) as Photo[]
   return { photos, count: photos.length }
 }
-
-export function getPublicUrl(storagePath: string): string {
-  const baseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-  return `${baseUrl}/storage/v1/object/public/photos/${storagePath}`
-}
