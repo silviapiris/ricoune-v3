@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { rateLimit } from "@/lib/rate-limit";
 import { contactSchema } from "@/lib/validations/contact";
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
@@ -44,6 +45,25 @@ export async function POST(request: Request): Promise<NextResponse> {
       ville,
       message,
     } = result.data;
+
+    const supabase = await createClient()
+    const { error: insertError } = await supabase
+      .from('contact_messages')
+      .insert({
+        nom: nom,
+        prenom: prenom,
+        email: email,
+        telephone: telephone || null,
+        type_evenement: type_evenement || null,
+        date_souhaitee: date_souhaitee || null,
+        ville: ville || null,
+        message: message,
+      })
+
+    if (insertError) {
+      console.error('[contact] Supabase insert error:', insertError.message)
+      // On continue quand même pour ne pas bloquer le mail Resend
+    }
 
     if (!process.env.RESEND_API_KEY) {
       console.error("[API /contact] RESEND_API_KEY missing");

@@ -50,11 +50,17 @@ CREATE TABLE photos (
 );
 
 -- Contact Messages
-CREATE TABLE contact_messages (
-  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  name TEXT NOT NULL,
+-- Table mise a jour le 30/04/2026 pour matcher les champs du formulaire public
+-- (nom + prenom separes, telephone, type_evenement, date_souhaitee, ville)
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  nom TEXT NOT NULL,
+  prenom TEXT NOT NULL,
   email TEXT NOT NULL,
-  subject TEXT NOT NULL,
+  telephone TEXT,
+  type_evenement TEXT,
+  date_souhaitee DATE,
+  ville TEXT,
   message TEXT NOT NULL,
   read BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
