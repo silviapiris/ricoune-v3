@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { getPublicConcerts, isConcertVisible } from "@/lib/concerts";
+import { getPublicConcerts } from "@/lib/concerts-server";
+import { isConcertVisible } from "@/lib/concerts";
 import HomePageClient from "./HomePageClient";
 
 export const metadata: Metadata = {

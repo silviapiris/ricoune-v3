@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getPublicConcerts } from "@/lib/concerts";
+import { getPublicConcerts } from "@/lib/concerts-server";
 import ConcertsPageClient from "./ConcertsPageClient";
 
 export const metadata: Metadata = {
