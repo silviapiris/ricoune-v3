@@ -2,8 +2,7 @@ import Link from 'next/link'
 import { Plus, LogOut } from 'lucide-react'
 import { getConcerts } from './actions'
 import { signOut } from '../actions'
-import ConcertsTable from './ConcertsTable'
-import PastConcertsSection from './PastConcertsSection'
+import ConcertsListClient from './ConcertsListClient'
 
 export default async function AdminConcertsPage() {
   const { upcoming, past } = await getConcerts()
@@ -56,30 +55,7 @@ export default async function AdminConcertsPage() {
           </div>
         </header>
 
-        <main className="space-y-12">
-          <section>
-            <h2
-              className="mb-4 text-xl font-semibold text-zinc-100"
-              style={{ fontFamily: 'var(--font-oswald)' }}
-            >
-              Concerts à venir{' '}
-              <span className="text-base font-normal text-zinc-500">
-                ({upcoming.length})
-              </span>
-            </h2>
-            {upcoming.length === 0 ? (
-              <div className="rounded-lg border border-zinc-800 bg-zinc-900 p-8 text-center text-zinc-500">
-                Aucun concert prévu pour le moment.
-              </div>
-            ) : (
-              <ConcertsTable concerts={upcoming} variant="upcoming" />
-            )}
-          </section>
-
-          <PastConcertsSection count={past.length}>
-            <ConcertsTable concerts={past} variant="past" />
-          </PastConcertsSection>
-        </main>
+        <ConcertsListClient upcoming={upcoming} past={past} />
 
       </div>
     </div>
