@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import PhotosPageClient from "./PhotosPageClient";
+import { getPublicPhotos } from "@/lib/photos-public";
 
 export const metadata: Metadata = {
   title: "Photos",
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function PhotosPage() {
-  return <PhotosPageClient />;
+export default async function PhotosPage() {
+  const photos = await getPublicPhotos();
+  return <PhotosPageClient photos={photos} />;
 }
