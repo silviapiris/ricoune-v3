@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { albums } from "@/data/albums";
+import type { Album } from "@/lib/albums-server";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-export default function AlbumsPageClient() {
+type Props = { albums: Album[] }
+
+export default function AlbumsPageClient({ albums }: Props) {
   const { t } = useLanguage();
 
   return (

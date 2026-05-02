@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
-import type { Album } from "@/data/albums";
+import type { Album } from "@/lib/albums-server";
 
 const streamingPlatforms = [
   {

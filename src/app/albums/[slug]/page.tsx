@@ -1,10 +1,6 @@
 import { notFound } from "next/navigation";
-import { albums, getAlbumBySlug } from "@/data/albums";
+import { getAlbums, getAlbumBySlug } from "@/lib/albums-server";
 import AlbumDetailClient from "./AlbumDetailClient";
-
-export function generateStaticParams() {
-  return albums.map((album) => ({ slug: album.slug }));
-}
 
 export async function generateMetadata({
   params,
@@ -12,7 +8,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const album = getAlbumBySlug(slug);
+  const album = await getAlbumBySlug(slug);
   if (!album) return { title: "Album introuvable" };
   return {
     title: `${album.title} - Ricoune`,
@@ -26,13 +22,16 @@ export default async function AlbumPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const album = getAlbumBySlug(slug);
+  const [album, allAlbums] = await Promise.all([
+    getAlbumBySlug(slug),
+    getAlbums(),
+  ]);
   if (!album) notFound();
 
-  const currentIndex = albums.findIndex((a) => a.slug === slug);
-  const prev = currentIndex > 0 ? albums[currentIndex - 1] : null;
+  const currentIndex = allAlbums.findIndex((a) => a.slug === slug);
+  const prev = currentIndex > 0 ? allAlbums[currentIndex - 1] : null;
   const next =
-    currentIndex < albums.length - 1 ? albums[currentIndex + 1] : null;
+    currentIndex < allAlbums.length - 1 ? allAlbums[currentIndex + 1] : null;
 
   return <AlbumDetailClient album={album} prev={prev} next={next} />;
 }

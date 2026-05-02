@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getAlbums } from "@/lib/albums-server";
 import AlbumsPageClient from "./AlbumsPageClient";
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AlbumsPage() {
-  return <AlbumsPageClient />;
+export default async function AlbumsPage() {
+  const albums = await getAlbums();
+  return <AlbumsPageClient albums={albums} />;
 }
