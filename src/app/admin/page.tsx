@@ -7,6 +7,7 @@ import { getConcerts } from './concerts/actions'
 import { getMessages } from './messages/actions'
 import { getPhotos } from './photos/actions'
 import { getVideos } from './videos/actions'
+import { getAlbums } from './albums/actions'
 
 const oswald = Oswald({
   subsets: ['latin'],
@@ -29,6 +30,7 @@ export default async function AdminDashboardPage() {
   const { unreadCount } = await getMessages()
   const { count: photoCount } = await getPhotos()
   const { count: videoCount } = await getVideos()
+  const { count: albumCount } = await getAlbums()
 
   return (
     <div
@@ -181,9 +183,28 @@ export default async function AdminDashboardPage() {
                 </p>
               </Link>
 
+              {/* Carte ACTIVE Albums */}
+              <Link
+                href="/admin/albums"
+                className="group flex flex-col gap-2 rounded-lg border border-zinc-700 bg-zinc-800/50 p-5 transition-all hover:border-[#f5c518]/50 hover:bg-zinc-800"
+              >
+                <div className="flex items-center justify-between">
+                  <Disc3 size={22} className="text-[#f5c518]" />
+                  <span className="text-xs text-zinc-500">{albumCount} album{albumCount > 1 ? 's' : ''}</span>
+                </div>
+                <div
+                  className="text-base font-semibold uppercase tracking-wider text-[#f5c518]"
+                  style={{ fontFamily: 'var(--font-oswald)' }}
+                >
+                  Albums
+                </div>
+                <p className="text-xs text-zinc-400" style={{ fontFamily: 'var(--font-raleway)' }}>
+                  Gérer les albums et tracklist
+                </p>
+              </Link>
+
               {/* Cartes GRISÉES (placeholder) */}
               {[
-                { Icon: Disc3, label: 'Albums' },
                 { Icon: FileText, label: 'Devis' },
               ].map(({ Icon, label }) => (
                 <div
