@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getPublicVideos } from "@/lib/videos-server";
 import VideosPageClient from "./VideosPageClient";
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function VideosPage() {
-  return <VideosPageClient />;
+export default async function VideosPage() {
+  const { featured, clips, lives } = await getPublicVideos();
+  return <VideosPageClient featured={featured} clips={clips} lives={lives} />;
 }
