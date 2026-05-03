@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getPublicConcerts } from "@/lib/concerts-server";
 import { isConcertVisible } from "@/lib/concerts";
+import { getAlbums } from "@/lib/albums-server";
 import HomePageClient from "./HomePageClient";
 
 export const metadata: Metadata = {
@@ -20,7 +21,11 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const allConcerts = await getPublicConcerts();
+  const [allConcerts, albums] = await Promise.all([
+    getPublicConcerts(),
+    getAlbums(),
+  ]);
   const upcoming3 = allConcerts.filter(isConcertVisible).slice(0, 3);
-  return <HomePageClient upcomingConcerts={upcoming3} />;
+  const latestAlbum = albums[0] ?? null;
+  return <HomePageClient upcomingConcerts={upcoming3} latestAlbum={latestAlbum} />;
 }

@@ -9,8 +9,14 @@ import ArtistSection from "@/components/home/ArtistSection";
 import UniversSection from "@/components/home/UniversSection";
 import CtaSection from "@/components/home/CtaSection";
 import type { Concert } from "@/data/concerts";
+import type { Album } from "@/lib/albums-server";
 
-export default function HomePageClient({ upcomingConcerts }: { upcomingConcerts: Concert[] }): React.ReactElement {
+type Props = {
+  upcomingConcerts: Concert[]
+  latestAlbum: Album | null
+}
+
+export default function HomePageClient({ upcomingConcerts, latestAlbum }: Props): React.ReactElement {
   return (
     <>
       {/* 1. Hero plein ecran */}
@@ -26,7 +32,7 @@ export default function HomePageClient({ upcomingConcerts }: { upcomingConcerts:
       <AboutSection />
 
       {/* 5. Dernier album */}
-      <LatestAlbum />
+      <LatestAlbum album={latestAlbum} />
 
       {/* 6. Section artiste */}
       <ArtistSection />
