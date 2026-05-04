@@ -1,13 +1,15 @@
 'use client'
 
-import { useState, useActionState } from 'react'
+import { useState, useActionState, useTransition } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, LogOut, Loader2, CheckCircle } from 'lucide-react'
 import { signOut } from '../actions'
 import { updateBioContent } from './actions'
 import type { BioTextState } from './actions'
+import { createTimelineEvent, reorderTimelineEvents } from './timelineActions'
 import type { BioContent, BioTimelineEvent } from '@/lib/bio'
 import BioImageUpload from './BioImageUpload'
+import TimelineCard from './TimelineCard'
 
 interface Props {
   bio: BioContent | null
@@ -60,6 +62,7 @@ function SaveRow({
 }
 
 export default function BioAdminClient({ bio, timeline }: Props) {
+  // ── Text card states (B3.2) ───────────────────────────────────────────────
   const [heroState, heroAction, heroPending] = useActionState<
     BioTextState | undefined,
     FormData
@@ -85,6 +88,7 @@ export default function BioAdminClient({ bio, timeline }: Props) {
     FormData
   >(updateBioContent, undefined)
 
+  // ── Image DB status (B3.3) ────────────────────────────────────────────────
   const [imgDbStatus, setImgDbStatus] = useState<
     Record<string, 'saved' | 'error' | null>
   >({})
@@ -127,6 +131,43 @@ export default function BioAdminClient({ bio, timeline }: Props) {
       label: 'Photo 3',
     },
   ]
+
+  // ── Timeline CRUD (B4) ────────────────────────────────────────────────────
+  const [newYear, setNewYear] = useState('')
+  const [newDesc, setNewDesc] = useState('')
+  const [createError, setCreateError] = useState<string | null>(null)
+  const [isCreating, startCreateTransition] = useTransition()
+
+  function handleAddSubmit(e: { preventDefault(): void }) {
+    e.preventDefault()
+    setCreateError(null)
+    const fd = new FormData()
+    fd.append('year', newYear.trim())
+    fd.append('description', newDesc.trim())
+    startCreateTransition(async () => {
+      const result = await createTimelineEvent(undefined, fd)
+      if (result?.error) {
+        setCreateError(result.error)
+      } else {
+        setNewYear('')
+        setNewDesc('')
+      }
+    })
+  }
+
+  async function handleMoveUp(idx: number) {
+    if (idx === 0) return
+    const newOrder = [...timeline]
+    ;[newOrder[idx - 1], newOrder[idx]] = [newOrder[idx], newOrder[idx - 1]]
+    await reorderTimelineEvents(newOrder.map((e) => e.id))
+  }
+
+  async function handleMoveDown(idx: number) {
+    if (idx === timeline.length - 1) return
+    const newOrder = [...timeline]
+    ;[newOrder[idx], newOrder[idx + 1]] = [newOrder[idx + 1], newOrder[idx]]
+    await reorderTimelineEvents(newOrder.map((e) => e.id))
+  }
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-[#0a0a0a]">
@@ -342,7 +383,104 @@ export default function BioAdminClient({ bio, timeline }: Props) {
             </form>
           </section>
 
-          {/* ── Carte 4 : Photo Strip ── */}
+          {/* ── Carte 4 : Frise chronologique ── */}
+          <section className="rounded-lg border border-zinc-800 bg-zinc-900 p-6">
+            <h2
+              className="mb-2 text-sm font-semibold uppercase tracking-wider text-zinc-300"
+              style={{ fontFamily: 'var(--font-oswald)' }}
+            >
+              Frise chronologique
+            </h2>
+            <p
+              className="mb-6 text-sm text-zinc-400"
+              style={{ fontFamily: 'var(--font-raleway)' }}
+            >
+              Les événements clés de la carrière de Ricoune. Utilise les flèches pour
+              réordonner. Le premier événement apparaît en haut de la frise sur la page
+              publique.
+            </p>
+
+            {/* Liste des événements existants */}
+            <div className="space-y-3">
+              {timeline.map((event, idx) => (
+                <TimelineCard
+                  key={event.id}
+                  event={event}
+                  onMoveUp={() => handleMoveUp(idx)}
+                  onMoveDown={() => handleMoveDown(idx)}
+                  isFirst={idx === 0}
+                  isLast={idx === timeline.length - 1}
+                />
+              ))}
+              {timeline.length === 0 && (
+                <p className="text-sm italic text-zinc-600">
+                  Aucun événement pour l&apos;instant.
+                </p>
+              )}
+            </div>
+
+            {/* Formulaire d'ajout */}
+            <div className="mt-6 border-t border-zinc-800 pt-6">
+              <h3
+                className="mb-4 text-xs font-semibold uppercase tracking-wider text-zinc-400"
+                style={{ fontFamily: 'var(--font-oswald)' }}
+              >
+                Ajouter un événement
+              </h3>
+              <form onSubmit={handleAddSubmit} className="space-y-3">
+                <div>
+                  <label htmlFor="new_year" className={LABEL}>
+                    Année <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    id="new_year"
+                    type="text"
+                    value={newYear}
+                    onChange={(e) => setNewYear(e.target.value)}
+                    maxLength={20}
+                    placeholder="Ex : 2026"
+                    disabled={isCreating}
+                    className={INPUT}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="new_description" className={LABEL}>
+                    Description <span className="text-red-400">*</span>
+                  </label>
+                  <textarea
+                    id="new_description"
+                    value={newDesc}
+                    onChange={(e) => setNewDesc(e.target.value)}
+                    rows={3}
+                    maxLength={500}
+                    placeholder="Décris l'événement…"
+                    disabled={isCreating}
+                    className={TEXTAREA}
+                  />
+                  <p
+                    className={`mt-1 text-right text-xs ${
+                      newDesc.length > 300 ? 'text-amber-400' : 'text-zinc-600'
+                    }`}
+                  >
+                    {newDesc.length} / 300
+                  </p>
+                </div>
+                {createError && (
+                  <p className="text-xs text-red-400">{createError}</p>
+                )}
+                <button
+                  type="submit"
+                  disabled={isCreating || !newYear.trim() || !newDesc.trim()}
+                  className="flex items-center gap-2 rounded bg-[#f5c518] px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[#0a0a0a] transition-opacity hover:opacity-90 disabled:opacity-50"
+                >
+                  {isCreating && <Loader2 size={12} className="animate-spin" />}
+                  {isCreating ? 'Ajout…' : 'Ajouter'}
+                </button>
+              </form>
+            </div>
+          </section>
+
+          {/* ── Carte 5 : Photo Strip ── */}
           <section className="rounded-lg border border-zinc-800 bg-zinc-900 p-6">
             <h2
               className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-300"
@@ -386,7 +524,7 @@ export default function BioAdminClient({ bio, timeline }: Props) {
             </p>
           </section>
 
-          {/* ── Carte 5 : Philosophie ── */}
+          {/* ── Carte 6 : Philosophie ── */}
           <section className="rounded-lg border border-zinc-800 bg-zinc-900 p-6">
             <h2
               className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-300"
@@ -412,7 +550,7 @@ export default function BioAdminClient({ bio, timeline }: Props) {
             </form>
           </section>
 
-          {/* ── Carte 6 : CTA ── */}
+          {/* ── Carte 7 : CTA ── */}
           <section className="rounded-lg border border-zinc-800 bg-zinc-900 p-6">
             <h2
               className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-300"
