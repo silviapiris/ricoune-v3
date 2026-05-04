@@ -30,12 +30,6 @@ export interface Translations {
   photos: {
     title: string; subtitle: string; ctaText: string; requestQuote: string;
   };
-  biography: {
-    subtitle: string; quote: string; historyTitle: string; historyP1: string; historyP2: string;
-    keyMomentsTitle: string; philosophy: string; ctaText: string; viewDates: string; requestQuote: string;
-    bioPortraitAlt: string; stripLabel: string; stripTitle: string; stripCta: string;
-    timeline: { year: string; description: string }[];
-  };
   professionals: {
     title: string; subtitle: string;
     offers: string; offersDesc: string; offersCta: string;
@@ -214,35 +208,6 @@ export const fr: Translations = {
     subtitle: "Ricoune en images",
     ctaText: "Vous souhaitez programmer Ricoune ?",
     requestQuote: "Demander un devis",
-  },
-  biography: {
-    subtitle: "L'artiste incontournable des scènes festives",
-    quote: "La musique, c'est le partage. Je chante pour les gens, avec les gens.",
-    historyTitle: "De Montpellier aux scènes festives",
-    historyP1: "Né à Montpellier en 1963, Ricoune grandit bercé par la musique populaire du Sud. Très tôt, il découvre sa passion pour la scène et le contact avec le public. En 1983, il forme son premier groupe et commence à écumer les fêtes de village, les bodegas et les férias qui font vibrer l'Occitanie.",
-    historyP2: "Au fil des années, Ricoune affine son style unique : un mélange de chansons festives, de reprises populaires et de compositions originales qui mettent tout le monde d'accord. Son authenticité et son énergie sur scène en font rapidement une figure incontournable du circuit festif du Sud de la France.",
-    keyMomentsTitle: "Moments clés",
-    philosophy: "Pour Ricoune, la musique n'est pas un métier, c'est un art de vivre. Libre, authentique, sans artifice. Sur scène, il n'y a pas de barrière entre l'artiste et son public. Chaque concert est un moment de partage, une célébration collective où tout le monde chante, danse et oublie le quotidien.",
-    ctaText: "Envie de vivre l'expérience Ricoune en live ?",
-    viewDates: "Voir les prochaines dates",
-    requestQuote: "Demander un devis",
-    bioPortraitAlt: "Portrait de Ricoune, artiste auteur-compositeur",
-    stripLabel: "EN SCÈNE",
-    stripTitle: "Toujours là où ça vibre",
-    stripCta: "Voir toute la galerie",
-    timeline: [
-      { year: "1963", description: "Naissance à Saint-Drézéry (près de Montpellier)" },
-      { year: "1983", description: "Fonde son premier groupe \"Génération 83\"" },
-      { year: "1993", description: "Le groupe devient \"Ricoune et les Counass\"" },
-      { year: "1994", description: "Premier album \"Le Chat de Jourdan\"" },
-      { year: "2001", description: "Naissance du nom de scène \"Ricoune\" + album \"Sans interdits\"" },
-      { year: "2013", description: "Album \"Accent du Sud\" + tube \"Dans un verre à ballon\"" },
-      { year: "2016", description: "\"Le Best Of, 20 ans\" (anniversaire de carrière)" },
-      { year: "2021", description: "Album \"Quand un fainéant se rebelle\"" },
-      { year: "2023", description: "Single \"Las Terrenas\"" },
-      { year: "2024", description: "Single \"La Belle Partouze\"" },
-      { year: "2025", description: "Tournée des ferias (Béziers + villages)" },
-    ],
   },
   professionals: {
     title: "Espace Professionnels",
