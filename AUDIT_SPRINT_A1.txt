@@ -1,0 +1,247 @@
+═══════════════════════════════════════════════════════════
+AUDIT SPRINT A1 — Module Albums
+Date : 2026-05-02
+═══════════════════════════════════════════════════════════
+
+
+── 1. ARBORESCENCE ─────────────────────────────────────────
+
+src/app/albums/
+├── page.tsx                    (Server Component — ne consomme PAS albums.ts)
+├── AlbumsPageClient.tsx        ('use client' — importe albums[] de @/data/albums)
+└── [slug]/
+    ├── page.tsx                (Server Component — importe albums + getAlbumBySlug de @/data/albums)
+    └── AlbumDetailClient.tsx   ('use client' — importe type Album de @/data/albums)
+
+src/data/albums.ts              ← PRÉSENT (source à migrer)
+src/components/albums/         ← N'EXISTE PAS
+
+
+── 2. IMPORTS @/data/albums ────────────────────────────────
+
+3 fichiers importent depuis @/data/albums :
+
+  src/app/albums/AlbumsPageClient.tsx:5
+    import { albums } from "@/data/albums"
+    → consomme le tableau pour le rendu de la grille
+
+  src/app/albums/[slug]/page.tsx:2
+    import { albums, getAlbumBySlug } from "@/data/albums"
+    → albums : pour generateStaticParams()
+    → getAlbumBySlug : pour récupérer l'album courant + prev/next
+
+  src/app/albums/[slug]/AlbumDetailClient.tsx:6
+    import type { Album } from "@/data/albums"
+    → type only, pour typer les props (album, prev, next)
+
+
+── 3. TYPE Album (albums.ts) ───────────────────────────────
+
+export interface Album {
+  slug: string;
+  title: string;
+  year: number;
+  description?: string;       // optionnel — ex : "CD Collector"
+  coverUrl: string;            // chemin local "/images/albums/..."
+  tracklist: string[];         // tableau de strings simples (pas d'objets)
+  streaming: {
+    spotify?: string;
+    apple?: string;
+    amazon?: string;           // présent dans l'interface mais AUCUN album ne l'utilise
+    youtube?: string;
+  };
+}
+
+NOTES IMPORTANTES :
+  - tracklist = string[] (pas { number, title }) → le numéro est calculé
+    côté template avec index + 1
+  - coverUrl = chemin statique local ("/images/albums/XXX.webp")
+  - Pas de sort_order explicite — l'ordre est celui du tableau (2021→2015)
+  - Pas de champ is_published ni is_featured dans le modèle actuel
+  - amazon présent dans le type mais 0 album l'utilise en production
+
+
+── 4. LES 8 ALBUMS (inventaire exhaustif) ──────────────────
+
+┌─────┬────────────────────────────────────┬────────────────────────────┬──────┬──────────────────────────────────────┬────────┬─────────┬───────┬──────────┐
+│  #  │ slug                               │ title                      │ year │ cover file                           │ tracks │ Spotify │ Apple │ YouTube  │
+├─────┼────────────────────────────────────┼────────────────────────────┼──────┼──────────────────────────────────────┼────────┼─────────┼───────┼──────────┤
+│  1  │ quand-un-faineant-se-rebelle       │ Quand un fainéant se       │ 2021 │ quand-un-faineant-se-rebelle.webp    │   0    │    ✓    │   ✓   │ chaîne   │
+│     │                                    │ rebelle                    │      │                                      │        │         │       │          │
+│  2  │ face-b                             │ Face B                     │ 2017 │ ricoune-recto.webp                   │  10    │    ✓    │   ✓   │ chaîne   │
+│  3  │ y-faut-etre-gentil                 │ Y faut être gentil !       │ 2016 │ y-faut-etre-gentil.webp              │   0    │    —    │   —   │ chaîne   │
+│  4  │ cest-lete                          │ C'est l'été                │ 2015 │ Jaquette-CLT-400x400.jpg             │  12    │    —    │   —   │ chaîne   │
+│  5  │ le-kukela                          │ Le Kukela                  │ 2015 │ kukela.webp                          │   9    │    —    │   —   │ chaîne   │
+│  6  │ le-best-of                         │ Le Best Of                 │ 2015 │ bestof.webp                          │  12    │    ✓    │   ✓   │ chaîne   │
+│  7  │ mets-tes-lunettes                  │ Mets tes lunettes          │ 2015 │ mets-tes-lunettes.webp               │  10    │    —    │   —   │ chaîne   │
+│  8  │ ricoune-20-ans                     │ Ricoune 20 Ans!            │ 2015 │ 20-ans.webp                          │  10    │    ✓    │   ✓   │ chaîne   │
+└─────┴────────────────────────────────────┴────────────────────────────┴──────┴──────────────────────────────────────┴────────┴─────────┴───────┴──────────┘
+
+Lien YouTube partagé (tous les albums) :
+  https://www.youtube.com/@Ricouneofficiel
+  (const channelLinks dans albums.ts — ce n'est pas un lien spécifique à un album)
+
+Tracklists :
+  quand-un-faineant-se-rebelle : [] (vide)
+  face-b (10) : On a le web à la maison / A 60 à l'heure sur mon tracteur /
+                La goutte de trop / Je passerai demain / Le thym ou la catin /
+                Face B / Ho fache de con / Tous les amis de moi que j'ai /
+                Sauvons les glacons / Le temps s'est arrêté
+  y-faut-etre-gentil : [] (vide)
+  cest-lete (12) : Un ricard tube / Mon petit village / Ribeiro /
+                   On a le web / Taureaux cariclots / Les voeux du Maire /
+                   Quand une femme s'en va / Nue t'es la sur la plage /
+                   Jean-Pierre (Nouvelle version) / L'homme qui remontait le temps /
+                   C'est l'été / La crapola
+  le-kukela (9) : Le Kukéla / Es tout Pagat / Montpellier la surdouée /
+                  Jean Pierre / On avais tous 20 ans / Les Bagarres /
+                  Les Langues de Peilles / L'histoire de ma vie / Babou
+  le-best-of (12) : Dans un verre à Ballon / Le Couscoussier /
+                    J'mapelle Pascal Carion / Le Berger / Hé Jacques /
+                    La Vache / Nicollin / Les patates / Maryse / Parisien /
+                    La Féria de Nîmes / Aquilou
+  mets-tes-lunettes (10) : Le reggae Marseillais / Jacques à dit / Le Roi Arthur /
+                            La ska'ac / Est-ce ta fête / Ta katie t'a quittée /
+                            La féria c'est sacré / Allez zizou / A Marseille /
+                            Champion de la chaise longue
+  ricoune-20-ans (10) : La Coupo Santo / La loi du silence /
+                         Toro de combat, toro de Royale / Le roi Arthur m'a dit !!! /
+                         Parisiens / Le Gardian / Les langues de peilles /
+                         Histoire de ma vie / Le rap des villes le rap des champs /
+                         La Saint-Louis
+
+
+── 5. FICHIERS COVERS (public/images/albums/) ──────────────
+
+Taille totale : 1.3 MB
+11 fichiers au total :
+
+  Fichier                                Taille    Utilisé par
+  ─────────────────────────────────────────────────────────────
+  quand-un-faineant-se-rebelle.webp      133 KB    album #1
+  ricoune-recto.webp                     221 KB    album #2 (Face B)
+  y-faut-etre-gentil.webp                 56 KB    album #3
+  Jaquette-CLT-400x400.jpg               45 KB    album #4 (cest-lete) ← .jpg !
+  kukela.webp                            203 KB    album #5
+  bestof.webp                             28 KB    album #6
+  mets-tes-lunettes.webp                 141 KB    album #7
+  20-ans.webp                            133 KB    album #8
+  ─────────────────────────────────────────────────────────────
+  home-album-latest.webp                 141 KB    ⚠️ ORPHELIN (0 référence dans src/)
+  on-y-est.webp                           84 KB    ⚠️ ORPHELIN (0 référence dans src/)
+  chat-de-jourdan.webp                    44 KB    ⚠️ ORPHELIN (0 référence dans src/)
+
+→ 8 covers actives à migrer vers Storage.
+→ 3 fichiers orphelins (home-album-latest, on-y-est, chat-de-jourdan) :
+  décision à prendre séparément (migrer quand même ou ignorer ?).
+→ 1 cover en .jpg (Jaquette-CLT-400x400.jpg) — les 7 autres sont en .webp.
+
+
+── 6. PATTERN STORAGE PHOTOS (référence pour album-covers) ──
+
+Bucket : "photos" (public)
+storage_path : généré par slugifyFilename() → `${timestamp}-${slug}${ext}`
+Upload : supabase.storage.from('photos').upload(storagePath, buffer, { contentType, upsert: false })
+Public URL : `${NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/photos/${storage_path}`
+
+Pour album-covers, le pattern sera identique avec :
+  supabase.storage.from('album-covers').upload(...)
+  `${NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/album-covers/${storage_path}`
+
+
+── 7. next.config.ts — remotePatterns ACTUELS ──────────────
+
+Actuellement défini pour :
+  - https://img.youtube.com/vi/**
+  - https://ulwyypcxocpudwxkgceo.supabase.co/storage/v1/object/public/photos/**
+
+⚠️ À AJOUTER pour les covers albums :
+  { protocol: "https",
+    hostname: "ulwyypcxocpudwxkgceo.supabase.co",
+    pathname: "/storage/v1/object/public/album-covers/**" }
+
+
+── 8. POINTS D'ATTENTION SPRINTS A1→A5 ────────────────────
+
+A. AlbumsPageClient.tsx est 'use client' et utilise useLanguage().
+   → Il ne peut pas devenir Server Component.
+   → Pattern à adopter (comme photos/page.tsx) :
+       page.tsx          : async Server Component → appelle getAlbums() → passe albums en props
+       AlbumsPageClient  : reçoit albums en props, supprime l'import @/data/albums
+       (useLanguage reste — seule la source des données change)
+
+B. [slug]/page.tsx : generateStaticParams() utilise albums[] hardcodé.
+   → Avec Supabase : generateStaticParams() devient async et appelle getAlbums()
+   → Next.js 15+ supporte async generateStaticParams() ✓
+
+C. AlbumDetailClient.tsx : importe type Album de @/data/albums.
+   → Le type Album sera ré-exporté depuis @/lib/albums-server.ts
+     (comme type Video vit dans @/lib/videos-server.ts pour la page publique)
+   → Remplacement : import type { Album } from "@/lib/albums-server"
+
+D. Tracklist — stockage DB :
+   Type actuel : string[] (strings simples)
+   Table DB proposée : album_tracks(id, album_id FK, title, position INTEGER)
+   Parsing textarea admin : split('\n').filter(Boolean).map((title, i) => ({ title, position: i + 1 }))
+   Rendu client inchangé : {String(i + 1).padStart(2, "0")} + {track} (position reconstituée)
+   → Le rendu visuel NE CHANGE PAS.
+
+E. sort_order :
+   albums.ts n'a pas de champ sort_order — l'ordre est celui du tableau.
+   Table DB : colonne sort_order INTEGER, initialisée 0..7 lors de la migration.
+   Ordre initial : 0=quand-un-faineant (2021), 1=face-b (2017), ..., 7=ricoune-20-ans.
+
+F. Schéma DB suggéré :
+   table albums :
+     id            uuid PK default gen_random_uuid()
+     slug          text UNIQUE NOT NULL
+     title         text NOT NULL
+     year          integer NOT NULL
+     description   text
+     cover_url     text NOT NULL   -- URL Supabase Storage (public)
+     sort_order    integer NOT NULL default 0
+     spotify_url   text
+     apple_url     text
+     amazon_url    text
+     youtube_url   text
+     is_published  boolean NOT NULL default true
+     created_at    timestamptz default now()
+     updated_at    timestamptz default now()
+
+   table album_tracks :
+     id         uuid PK default gen_random_uuid()
+     album_id   uuid NOT NULL REFERENCES albums(id) ON DELETE CASCADE
+     title      text NOT NULL
+     position   integer NOT NULL
+     created_at timestamptz default now()
+
+   → ON DELETE CASCADE : suppression album → suppression automatique des tracks
+
+G. amazon_url :
+   Présent dans le type interface actuel mais 0 album l'utilise.
+   Recommandation : garder la colonne dans le schéma (futur) mais null pour tous.
+
+
+── 9. REQUÊTES SQL À EXÉCUTER MANUELLEMENT ─────────────────
+
+Ces requêtes nécessitent un accès direct au Supabase SQL Editor.
+À lancer toi-même dans https://supabase.com/dashboard → SQL Editor :
+
+--- 9a. Vérifier les buckets Storage existants ---
+SELECT name, public, file_size_limit, allowed_mime_types, created_at
+FROM storage.buckets
+ORDER BY created_at;
+
+Attendu : bucket "photos" (public=true). Vérifier si "album-covers" existe déjà.
+
+--- 9b. Vérifier si les tables albums / album_tracks existent déjà ---
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public'
+  AND table_name IN ('albums', 'album_tracks');
+
+Attendu : 0 rangée (les tables n'existent pas encore).
+
+═══════════════════════════════════════════════════════════
+FIN AUDIT A1 — STOP, ATTENDRE VALIDATION DE SILVIA
+═══════════════════════════════════════════════════════════

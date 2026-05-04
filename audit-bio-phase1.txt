@@ -1,0 +1,571 @@
+AUDIT BIO — PHASE 1 : LECTURE SEULE
+Généré le 2026-05-04
+Projet : ricoune-v3
+Branche : main
+═══════════════════════════════════════════════════════════════════════════════
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TÂCHE 1 — CONTENU DES FICHIERS BIO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1A. src/app/biographie/page.tsx
+───────────────────────────────
+Note : C'est un Server Component Next.js "thin wrapper". Il ne contient
+que les métadonnées SEO et délègue l'intégralité du rendu à
+BiographiePageClient.tsx.
+
+```tsx
+// src/app/biographie/page.tsx
+  1  import type { Metadata } from "next";
+  2  import BiographiePageClient from "./BiographiePageClient";
+  3
+  4  export const metadata: Metadata = {
+  5    title: "Biographie",
+  6    description:
+  7      "Découvrez le parcours de Ricoune, chanteur emblématique du Sud de la France. De ses débuts à aujourd'hui : plus de 50 concerts par an dans les fêtes votives et férias.",
+  8    alternates: {
+  9      canonical: "/biographie",
+ 10    },
+ 11    openGraph: {
+ 12      title: "Biographie | Ricoune",
+ 13      description:
+ 14        "Le parcours de Ricoune, chanteur emblématique du Sud de la France.",
+ 15      url: "/biographie",
+ 16      type: "website",
+ 17    },
+ 18  };
+ 19
+ 20  export default function BiographiePage() {
+ 21    return <BiographiePageClient />;
+ 22  }
+```
+
+─────────────────────────────────────────────────────────────────────────────
+
+1B. src/app/biographie/BiographiePageClient.tsx  [FICHIER CLÉ — TOUTE LA PAGE]
+─────────────────────────────────────────────────────────────────────────────
+C'est ici que réside toute la structure de la page. Fichier complet :
+
+```tsx
+// src/app/biographie/BiographiePageClient.tsx
+  1  "use client";
+  2
+  3  import Image from "next/image";
+  4  import Link from "next/link";
+  5  import AnimatedSection from "@/components/AnimatedSection";
+  6  import BioTimeline from "@/components/bio/BioTimeline";
+  7  import { useLanguage } from "@/contexts/LanguageContext";
+  8
+  9  export default function BiographiePageClient(): React.ReactElement {
+ 10    const { t } = useLanguage();
+ 11    return (
+ 12      <>
+ 13        {/* ===== 1. HERO ===== */}
+ 14        <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden">
+ 15          <Image
+ 16            src="/images/bio/bio-hero.webp"
+ 17            alt="Ricoune sur scène"
+ 18            fill
+ 19            priority
+ 20            className="object-cover"
+ 21            sizes="100vw"
+ 22          />
+ 23          <div className="absolute inset-0 bg-black/50" />
+ 24          <div className="relative z-10 text-center">
+ 25            <h1 className="font-[family-name:var(--font-oswald)] text-5xl font-bold uppercase text-white md:text-7xl">
+ 26              RICOUNE
+ 27            </h1>
+ 28            <p className="mt-4 font-[family-name:var(--font-raleway)] text-xl text-white/80">
+ 29              {t.biography.subtitle}
+ 30            </p>
+ 31          </div>
+ 32        </section>
+ 33
+ 34        {/* ===== 2. CITATION ===== */}
+ 35        <section className="py-16 md:py-24">
+ 36          <div className="mx-auto max-w-3xl px-4">
+ 37            <AnimatedSection>
+ 38              <div className="rc-card px-8 py-12 text-center md:px-16 md:py-16">
+ 39                <span className="font-[family-name:var(--font-oswald)] text-6xl leading-none text-rc-yellow">
+ 40                  «
+ 41                </span>
+ 42                <blockquote className="mt-2 font-[family-name:var(--font-raleway)] text-xl italic leading-relaxed text-white md:text-2xl">
+ 43                  {t.biography.quote}
+ 44                </blockquote>
+ 45                <span className="mt-2 inline-block font-[family-name:var(--font-oswald)] text-6xl leading-none text-rc-yellow">
+ 46                  »
+ 47                </span>
+ 48              </div>
+ 49            </AnimatedSection>
+ 50          </div>
+ 51        </section>
+ 52
+ 53        {/* ===== 3. HISTOIRE ===== */}
+ 54        <section className="py-16 md:py-24">
+ 55          <div className="mx-auto max-w-6xl px-4">
+ 56            <AnimatedSection className="mb-10">
+ 57              <h2 className="font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
+ 58                {t.biography.historyTitle}
+ 59              </h2>
+ 60            </AnimatedSection>
+ 61
+ 62            <AnimatedSection>
+ 63              <div className="grid items-start md:items-center gap-8 md:grid-cols-[1fr_2fr]">
+ 64                <div className="mx-auto w-full max-w-[280px] md:max-w-none">
+ 65                  <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-rc-yellow/20 shadow-xl">
+ 66                    <Image
+ 67                      src="/images/bio/ricoune-bio.webp"
+ 68                      alt={t.biography.bioPortraitAlt}
+ 69                      fill
+ 70                      className="object-cover object-top"
+ 71                      sizes="(max-width: 768px) 280px, 33vw"
+ 72                    />
+ 73                  </div>
+ 74                </div>
+ 75                <div className="space-y-4 md:text-justify">
+ 76                  <p className="leading-relaxed text-white/85">{t.biography.historyP1}</p>
+ 77                  <p className="leading-relaxed text-white/85">{t.biography.historyP2}</p>
+ 78                </div>
+ 79              </div>
+ 80            </AnimatedSection>
+ 81          </div>
+ 82        </section>
+ 83
+ 84        {/* ===== 4. MOMENTS CLÉS (Timeline) ===== */}
+ 85        <section className="py-16 md:py-24">
+ 86          <div className="mx-auto max-w-4xl px-4">
+ 87            <AnimatedSection className="mb-10">
+ 88              <h2 className="font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
+ 89                {t.biography.keyMomentsTitle}
+ 90              </h2>
+ 91            </AnimatedSection>
+ 92            <BioTimeline events={t.biography.timeline} />
+ 93          </div>
+ 94        </section>
+ 95
+ 96        {/* ===== 4b. PHOTO STRIP ===== */}
+ 97        <section className="py-16 md:py-24">
+ 98          <div className="mx-auto max-w-6xl px-4">
+ 99            <AnimatedSection className="mb-10">
+ 100              <span className="rc-section-label">{t.biography.stripLabel}</span>
+ 101              <h2 className="mt-3 font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
+ 102                {t.biography.stripTitle}
+ 103              </h2>
+ 104            </AnimatedSection>
+ 105
+ 106            <AnimatedSection>
+ 107              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+ 108                {[
+ 109                  "/images/photos/3O8A8773-800x453.jpg",
+ 110                  "/images/photos/3O8A5701-800x523.jpg",
+ 111                  "/images/photos/3O8A8845-800x453.jpg",
+ 112                ].map((src, i) => (
+ 113                  <Link href="/photos" key={src} className="group block overflow-hidden rounded-xl">
+ 114                    <div className="relative aspect-[4/3] w-full overflow-hidden">
+ 115                      <Image
+ 116                        src={src}
+ 117                        alt={`Ricoune en scène ${i + 1}`}
+ 118                        fill
+ 119                        className="object-cover transition-all duration-300 group-hover:scale-[1.03] group-hover:saturate-150"
+ 120                        sizes="(max-width: 768px) 100vw, 33vw"
+ 121                      />
+ 122                    </div>
+ 123                  </Link>
+ 124                ))}
+ 125              </div>
+ 126              <div className="mt-8 text-center">
+ 127                <Link href="/photos" className="rc-btn-outline">
+ 128                  {t.biography.stripCta}
+ 129                </Link>
+ 130              </div>
+ 131            </AnimatedSection>
+ 132          </div>
+ 133        </section>
+ 134
+ 135        {/* ===== 5. PHILOSOPHIE ===== */}
+ 136        <section className="py-16 md:py-24">
+ 137          <div className="mx-auto max-w-3xl px-4 text-center">
+ 138            <AnimatedSection>
+ 139              <p className="text-lg leading-relaxed text-white/90">
+ 140                {t.biography.philosophy}
+ 141              </p>
+ 142            </AnimatedSection>
+ 143          </div>
+ 144        </section>
+ 145
+ 146        {/* ===== 6. CTA ===== */}
+ 147        <section className="pb-16 md:pb-24">
+ 148          <div className="mx-auto max-w-4xl px-4">
+ 149            <AnimatedSection>
+ 150              <div className="rc-card px-6 py-12 text-center md:px-12 md:py-16">
+ 151                <p className="mb-8 text-xl text-white/90 md:text-2xl">
+ 152                  {t.biography.ctaText}
+ 153                </p>
+ 154                <div className="flex flex-wrap items-center justify-center gap-4">
+ 155                  <Link href="/concerts" className="rc-btn">
+ 156                    {t.biography.viewDates}
+ 157                  </Link>
+ 158                  <Link href="/professionnels/demande-de-devis" className="rc-btn-outline">
+ 159                    {t.biography.requestQuote}
+ 160                  </Link>
+ 161                </div>
+ 162              </div>
+ 163            </AnimatedSection>
+ 164          </div>
+ 165        </section>
+ 166      </>
+ 167    );
+ 168  }
+```
+
+─────────────────────────────────────────────────────────────────────────────
+
+1C. src/components/bio/BioTimeline.tsx
+───────────────────────────────────────
+
+```tsx
+// src/components/bio/BioTimeline.tsx
+  1  "use client";
+  2
+  3  import { useEffect, useRef, useState, useCallback } from "react";
+  4
+  5  interface TimelineEvent {
+  6    year: string;
+  7    description: string;
+  8  }
+  9
+ 10  interface BioTimelineProps {
+ 11    events: TimelineEvent[];
+ 12  }
+ 13
+ 14  function TimelineItem({ event, delay }: { event: TimelineEvent; delay: number }): React.ReactElement {
+ 15    const ref = useRef<HTMLDivElement>(null);
+ 16    const [isVisible, setIsVisible] = useState(false);
+ 17
+ 18    const handleIntersect = useCallback(([entry]: IntersectionObserverEntry[]) => {
+ 19      if (entry.isIntersecting) { setIsVisible(true); }
+ 20    }, []);
+ 21
+ 22    useEffect(() => {
+ 23      const el = ref.current;
+ 24      if (!el) return;
+ 25      const observer = new IntersectionObserver(handleIntersect, { threshold: 0.1 });
+ 26      observer.observe(el);
+ 27      return () => observer.disconnect();
+ 28    }, [handleIntersect]);
+ 29
+ 30    return (
+ 31      <div ref={ref}
+ 32        className={`relative transition-all duration-500 ease-out ${
+ 33          isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-5"
+ 34        }`}
+ 35        style={{ transitionDelay: `${delay}ms` }}
+ 36      >
+ 37        {/* Dot on the line */}
+ 38        <div className="absolute -left-8 top-1 flex h-5 w-5 items-center justify-center md:-left-10">
+ 39          <div className="absolute left-0 h-3.5 w-3.5 rounded-full border-2 border-rc-yellow bg-rc-dark md:left-0" />
+ 40        </div>
+ 41        <span className="font-[family-name:var(--font-oswald)] text-2xl font-bold text-rc-yellow">
+ 42          {event.year}
+ 43        </span>
+ 44        <p className="mt-1 leading-relaxed text-white/90">{event.description}</p>
+ 45      </div>
+ 46    );
+ 47  }
+ 48
+ 49  export default function BioTimeline({ events }: BioTimelineProps): React.ReactElement {
+ 50    return (
+ 51      <div className="relative pl-8 md:pl-10">
+ 52        {/* Vertical yellow line */}
+ 53        <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-rc-yellow md:left-4" />
+ 54        <div className="space-y-6">
+ 55          {events.map((event, i) => (
+ 56            <TimelineItem key={event.year} event={event} delay={i * 100} />
+ 57          ))}
+ 58        </div>
+ 59      </div>
+ 60    );
+ 61  }
+```
+
+─────────────────────────────────────────────────────────────────────────────
+
+1D. Clés biography dans src/locales/fr.ts (lignes 218–246)
+──────────────────────────────────────────────────────────
+
+```ts
+// src/locales/fr.ts — lignes 218–246
+  biography: {
+    subtitle: "L'artiste incontournable des scènes festives",
+    quote: "La musique, c'est le partage. Je chante pour les gens, avec les gens.",
+    historyTitle: "De Montpellier aux scènes festives",
+    historyP1: "Né à Montpellier en 1963, Ricoune grandit bercé par la musique populaire du Sud. Très tôt, il découvre sa passion pour la scène et le contact avec le public. En 1983, il forme son premier groupe et commence à écumer les fêtes de village, les bodegas et les férias qui font vibrer l'Occitanie.",
+    historyP2: "Au fil des années, Ricoune affine son style unique : un mélange de chansons festives, de reprises populaires et de compositions originales qui mettent tout le monde d'accord. Son authenticité et son énergie sur scène en font rapidement une figure incontournable du circuit festif du Sud de la France.",
+    keyMomentsTitle: "Moments clés",
+    philosophy: "Pour Ricoune, la musique n'est pas un métier, c'est un art de vivre. Libre, authentique, sans artifice. Sur scène, il n'y a pas de barrière entre l'artiste et son public. Chaque concert est un moment de partage, une célébration collective où tout le monde chante, danse et oublie le quotidien.",
+    ctaText: "Envie de vivre l'expérience Ricoune en live ?",
+    viewDates: "Voir les prochaines dates",
+    requestQuote: "Demander un devis",
+    bioPortraitAlt: "Portrait de Ricoune, artiste auteur-compositeur",
+    stripLabel: "EN SCÈNE",
+    stripTitle: "Toujours là où ça vibre",
+    stripCta: "Voir toute la galerie",
+    timeline: [
+      { year: "1963", description: "Naissance à Saint-Drézéry (près de Montpellier)" },
+      { year: "1983", description: "Fonde son premier groupe \"Génération 83\"" },
+      { year: "1993", description: "Le groupe devient \"Ricoune et les Counass\"" },
+      { year: "1994", description: "Premier album \"Le Chat de Jourdan\"" },
+      { year: "2001", description: "Naissance du nom de scène \"Ricoune\" + album \"Sans interdits\"" },
+      { year: "2013", description: "Album \"Accent du Sud\" + tube \"Dans un verre à ballon\"" },
+      { year: "2016", description: "\"Le Best Of, 20 ans\" (anniversaire de carrière)" },
+      { year: "2021", description: "Album \"Quand un fainéant se rebelle\"" },
+      { year: "2023", description: "Single \"Las Terrenas\"" },
+      { year: "2024", description: "Single \"La Belle Partouze\"" },
+      { year: "2025", description: "Tournée des ferias (Béziers + villages)" },
+    ],
+  },
+```
+
+Clés biography dans src/locales/en.ts (lignes 130–158) — identiques en structure,
+traduction anglaise. La timeline en.ts contient les mêmes 11 événements traduits.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TÂCHE 2 — MAPPING STRUCTURÉ BLOC PAR BLOC
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Blocs dans l'ordre d'apparition à l'écran :
+
+| #  | Type          | Titre / Identifiant        | Source actuelle (fr.ts)             | Modifiable (admin) |
+|----|---------------|----------------------------|--------------------------------------|--------------------|
+|  1 | hero_image    | Image de fond Bio          | /images/bio/bio-hero.webp (hardcodé) | image              |
+|  2 | titre         | h1 "RICOUNE"               | HARDCODÉ dans JSX                    | texte              |
+|  3 | paragraphe    | Sous-titre hero            | biography.subtitle                   | texte              |
+|  4 | citation      | Quote                      | biography.quote                      | texte riche        |
+|  5 | titre         | h2 Histoire                | biography.historyTitle               | texte              |
+|  6 | image_inline  | Portrait                   | /images/bio/ricoune-bio.webp         | image              |
+|  7 | paragraphe    | Histoire paragraphe 1      | biography.historyP1                  | texte riche        |
+|  8 | paragraphe    | Histoire paragraphe 2      | biography.historyP2                  | texte riche        |
+|  9 | titre         | h2 Moments clés            | biography.keyMomentsTitle            | texte              |
+| 10 | timeline      | Frise (11 événements)      | biography.timeline[]                 | événements         |
+| 11 | separateur    | (section Photo Strip)      | —                                    | —                  |
+| 12 | titre         | Label "EN SCÈNE"           | biography.stripLabel                 | texte              |
+| 13 | titre         | h2 Strip titre             | biography.stripTitle                 | texte              |
+| 14 | image_inline  | Photo strip 1              | /images/photos/3O8A8773 (HARDCODÉ)  | image              |
+| 15 | image_inline  | Photo strip 2              | /images/photos/3O8A5701 (HARDCODÉ)  | image              |
+| 16 | image_inline  | Photo strip 3              | /images/photos/3O8A8845 (HARDCODÉ)  | image              |
+| 17 | cta           | CTA strip "Voir galerie"   | biography.stripCta → href /photos    | texte + lien       |
+| 18 | paragraphe    | Philosophie                | biography.philosophy                 | texte riche        |
+| 19 | paragraphe    | CTA intro text             | biography.ctaText                    | texte              |
+| 20 | cta           | Bouton "Voir les dates"    | biography.viewDates → href /concerts | texte + lien       |
+| 21 | cta           | Bouton "Demander un devis" | biography.requestQuote → href /devis | texte + lien       |
+
+Notes importantes :
+- Le h1 "RICOUNE" (bloc #2) est hardcodé dans le JSX. Il n'existe pas dans fr.ts.
+- Les 3 photos du strip (#14–16) sont hardcodées dans un tableau JSX inline.
+- Le dossier `/public/images/photos/` n'existe PAS — voir Tâche 4.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TÂCHE 3 — DÉTAIL DE LA FRISE CHRONOLOGIQUE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+3.1 Nombre d'événements : 11
+
+3.2 Liste complète des événements (source : fr.ts)
+
+| # | Année | Description                                              | Icône/Image |
+|---|-------|----------------------------------------------------------|-------------|
+| 1 | 1963  | Naissance à Saint-Drézéry (près de Montpellier)          | aucune      |
+| 2 | 1983  | Fonde son premier groupe "Génération 83"                 | aucune      |
+| 3 | 1993  | Le groupe devient "Ricoune et les Counass"               | aucune      |
+| 4 | 1994  | Premier album "Le Chat de Jourdan"                       | aucune      |
+| 5 | 2001  | Naissance du nom de scène "Ricoune" + album "Sans interdits" | aucune  |
+| 6 | 2013  | Album "Accent du Sud" + tube "Dans un verre à ballon"    | aucune      |
+| 7 | 2016  | "Le Best Of, 20 ans" (anniversaire de carrière)          | aucune      |
+| 8 | 2021  | Album "Quand un fainéant se rebelle"                     | aucune      |
+| 9 | 2023  | Single "Las Terrenas"                                    | aucune      |
+|10 | 2024  | Single "La Belle Partouze"                               | aucune      |
+|11 | 2025  | Tournée des ferias (Béziers + villages)                  | aucune      |
+
+3.3 Stockage actuel
+Les données sont stockées dans fr.ts et en.ts sous biography.timeline[].
+Elles ne sont PAS dans une base de données — stockage 100% statique dans
+les fichiers de traduction.
+
+3.4 Interface du composant BioTimeline
+
+```ts
+interface TimelineEvent {
+  year: string;       // ex: "1963"
+  description: string; // ex: "Naissance à Saint-Drézéry..."
+}
+
+interface BioTimelineProps {
+  events: TimelineEvent[]; // tableau d'événements passé depuis le parent
+}
+```
+
+Le composant reçoit un tableau d'événements via props.
+Pas de champ title court — year + description uniquement.
+Pas de champ image/icône.
+
+3.5 Logique d'ordre
+Aucun champ sort_order ni id. L'ordre d'affichage est strictement
+l'ordre du tableau passé en prop. L'animation CSS applique un délai
+progressif : `delay = index * 100ms`.
+
+Conséquence pour l'admin : il faudra prévoir un champ sort_order
+dans la table Supabase pour contrôler l'ordre.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TÂCHE 4 — IMAGES UTILISÉES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Images référencées par BiographiePageClient.tsx :
+
+| # | Chemin dans le code                        | Format | Dimensions déclarées       | Usage              | Présente ? |
+|---|--------------------------------------------|--------|----------------------------|--------------------|------------|
+| 1 | /images/bio/bio-hero.webp                  | .webp  | sizes="100vw" (pas w×h)    | Hero background    | OUI ✓      |
+| 2 | /images/bio/ricoune-bio.webp               | .webp  | aspect-[3/4], max-w-280px  | Portrait histoire  | OUI ✓      |
+| 3 | /images/photos/3O8A8773-800x453.jpg        | .jpg   | 800×453 (dans le nom)      | Photo strip 1      | MANQUANTE ✗|
+| 4 | /images/photos/3O8A5701-800x523.jpg        | .jpg   | 800×523 (dans le nom)      | Photo strip 2      | MANQUANTE ✗|
+| 5 | /images/photos/3O8A8845-800x453.jpg        | .jpg   | 800×453 (dans le nom)      | Photo strip 3      | MANQUANTE ✗|
+
+État du dossier public/images/bio (fichiers EXISTANTS sur disque) :
+  - public/images/bio/bio-hero.webp         ← utilisé ✓
+  - public/images/bio/ricoune-bio.webp      ← utilisé ✓
+  - public/images/bio/home-bio-portrait.webp ← NON utilisé par la page bio
+  - public/images/bio/home-concert-scene.jpg ← NON utilisé par la page bio
+  - public/images/bio/ricoune-micro.jpg      ← NON utilisé par la page bio
+
+⚠️ ANOMALIE DÉTECTÉE : Le dossier public/images/photos/ n'existe pas.
+Les 3 images du photo strip (3O8A*.jpg) seront des images brisées en prod.
+Ce problème est indépendant du sprint Bio — à noter pour résolution séparée.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TÂCHE 5 — i18n
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+5.1 La page utilise-t-elle LanguageContext + locales/fr.ts + locales/en.ts ?
+
+OUI. BiographiePageClient.tsx ligne 7 :
+  import { useLanguage } from "@/contexts/LanguageContext";
+Et ligne 10 :
+  const { t } = useLanguage();
+
+Toutes les chaînes de texte et la timeline passent par `t.biography.*`.
+
+5.2 Stratégie B — Migration vers "FR Supabase only"
+
+Clés biography à migrer de fr.ts vers Supabase :
+
+| Clé fr.ts                     | Type contenu      | Notes                                      |
+|-------------------------------|-------------------|--------------------------------------------|
+| biography.subtitle            | texte court       | Sous-titre hero                            |
+| biography.quote               | texte long        | Citation centrale                          |
+| biography.historyTitle        | texte court       | Titre section histoire                     |
+| biography.historyP1           | texte long        | Paragraphe 1 histoire (~200 mots)          |
+| biography.historyP2           | texte long        | Paragraphe 2 histoire (~60 mots)           |
+| biography.keyMomentsTitle     | texte court       | Titre section frise                        |
+| biography.philosophy          | texte long        | Texte philosophie (~80 mots)               |
+| biography.ctaText             | texte court       | Texte d'intro du bloc CTA final            |
+| biography.viewDates           | texte court       | Libellé bouton CTA 1                       |
+| biography.requestQuote        | texte court       | Libellé bouton CTA 2                       |
+| biography.bioPortraitAlt      | texte court       | Alt text portrait (accessibilité)          |
+| biography.stripLabel          | texte court       | Label "EN SCÈNE" (section photo strip)     |
+| biography.stripTitle          | texte court       | Titre section photo strip                  |
+| biography.stripCta            | texte court       | Libellé bouton galerie                     |
+| biography.timeline[0..10]     | tableau 11 objets | Chaque objet : { year, description }       |
+
+Éléments hardcodés à traiter également :
+  - Le h1 "RICOUNE" (non dans fr.ts) → à décider si éditable ou constant
+  - L'alt "Ricoune sur scène" (hero image, ligne 17) → hardcodé dans JSX
+  - Les 3 paths du photo strip → hardcodés dans tableau JSX inline
+
+En.ts : La migration Stratégie B (FR only) signifie que la version
+anglaise (en.ts biography.*) est abandonnée. Les 14 clés + timeline
+en.ts ne seront plus nécessaires après migration.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TÂCHE 6 — DÉPENDANCES CROISÉES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+6.1 La page /biographie est référencée :
+
+| Fichier                                        | Ligne | Nature                                  |
+|------------------------------------------------|-------|-----------------------------------------|
+| src/app/sitemap.ts                             |  39   | Entrée sitemap XML (SEO)               |
+| src/components/layout/Navbar.tsx               |  19   | Lien navigation principale              |
+| src/components/layout/Footer.tsx               | 106   | Lien footer                             |
+| src/components/home/ArtistSection.tsx          |  34   | CTA "Découvrir la biographie" (accueil) |
+| src/components/home/AboutSection.tsx           |  90   | CTA section about (accueil)             |
+
+5 références externes. Aucune dans les pages /albums, /concerts, /videos,
+/photos, /professionnels (hors nav/footer partagés).
+
+6.2 BioTimeline.tsx est importé :
+
+Un seul import dans tout le codebase :
+  src/app/biographie/BiographiePageClient.tsx:6
+  `import BioTimeline from "@/components/bio/BioTimeline";`
+
+Le composant n'est utilisé nulle part ailleurs.
+
+6.3 Layout spécifique à /biographie :
+
+NON. Il n'existe pas de fichier src/app/biographie/layout.tsx.
+La page utilise le layout global src/app/layout.tsx.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RÉSUMÉ — POINTS D'ATTENTION POUR LA CONCEPTION DU MODULE ADMIN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. STRUCTURE TABLE SUPABASE SUGGÉRÉE (pour information)
+   La page bio est une page unique (pas une liste) → une seule ligne en DB.
+   La timeline doit être une table séparée avec sort_order.
+
+   Table `bio_content` (1 ligne singleton) :
+     subtitle, quote, historyTitle, historyP1, historyP2,
+     keyMomentsTitle, philosophy, ctaText, viewDates, requestQuote,
+     bioPortraitAlt, stripLabel, stripTitle, stripCta,
+     heroImageUrl, portraitImageUrl
+
+   Table `bio_timeline_events` (N lignes) :
+     id, year, description, sort_order
+
+2. ÉLÉMENTS HARDCODÉS À DÉCIDER
+   a) h1 "RICOUNE" — probablement constant (nom d'artiste), inutile d'éditer
+   b) href des boutons CTA (/concerts, /professionnels/demande-de-devis)
+      — probablement constants ; si éditable → ajouter ctaLink1, ctaLink2
+   c) href des 3 photos strip → à lier à la galerie photos ou à des champs
+      séparés dans la DB
+
+3. ANOMALIE IMAGES BRISÉES
+   Les 3 images du photo strip (3O8A*.jpg) pointent vers
+   /images/photos/ qui n'existe PAS sur disque.
+   → Les images sont actuellement brisées en production.
+   → À corriger avant ou pendant le sprint (images manquantes à uploader
+     ou chemins à corriger).
+
+4. COMPOSANT BioTimeline
+   Pour l'admin, le composant actuel n'a PAS de champ title court par
+   événement. Si on veut ajouter un titre optionnel par événement de
+   frise, il faudra étendre le type TimelineEvent :
+     { year, title?, description, sort_order }
+
+5. i18n DÉSACTIVATION
+   Après migration Supabase, les imports useLanguage dans
+   BiographiePageClient.tsx seront supprimés.
+   Les clés biography.* en fr.ts et en.ts seront orphelines → à supprimer
+   du type Translations également.
+
+═══════════════════════════════════════════════════════════════════════════════
+FIN DU RAPPORT — audit-bio-phase1.txt
+Aucune modification de fichier effectuée.
+═══════════════════════════════════════════════════════════════════════════════

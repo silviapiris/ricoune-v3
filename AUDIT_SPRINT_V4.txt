@@ -1,0 +1,279 @@
+═══════════════════════════════════════════════════════════
+AUDIT SPRINT V4 — Admin CRUD Vidéos
+Date : 2026-05-02
+═══════════════════════════════════════════════════════════
+
+
+── 1. ARBORESCENCE ─────────────────────────────────────────
+
+src/app/admin/
+├── page.tsx                    (dashboard — Server Component)
+├── actions.ts                  (signOut)
+├── account/
+│   ├── page.tsx
+│   └── actions.ts
+├── concerts/
+│   ├── page.tsx
+│   ├── actions.ts
+│   ├── ConcertForm.tsx
+│   ├── ConcertsListClient.tsx
+│   ├── ConcertsTable.tsx
+│   ├── DeleteButton.tsx        ← PATTERN SUPPRESSION DE RÉFÉRENCE
+│   ├── PastConcertsSection.tsx
+│   ├── new/
+│   └── [id]/
+├── login/
+│   ├── page.tsx
+│   └── actions.ts
+├── messages/
+│   ├── page.tsx
+│   ├── actions.ts
+│   ├── MessageRow.tsx
+│   └── MessagesListClient.tsx
+└── photos/
+    ├── page.tsx                ← PATTERN PAGE ADMIN DE RÉFÉRENCE
+    ├── actions.ts              ← PATTERN SERVER ACTIONS DE RÉFÉRENCE
+    ├── PhotoCard.tsx           ← PATTERN CARD + DELETE DE RÉFÉRENCE
+    └── PhotosUploader.tsx
+
+IMPORTANT : pas de src/app/admin/layout.tsx — chaque page admin
+est une page standalone (fixed inset-0 bg-[#0a0a0a]).
+
+La carte "Vidéos" est déjà dans le dashboard (admin/page.tsx ligne 166)
+mais grisée avec label "Bientôt". Il faudra l'activer en Sprint V4.
+
+
+── 2. CONTENU DES FICHIERS DE RÉFÉRENCE ────────────────────
+
+--- src/app/admin/photos/page.tsx ---
+
+Server Component async. Pattern :
+  - Appelle getPhotos() → { photos, count }
+  - Header sticky avec ArrowLeft (Retour) + bouton Se déconnecter (form action=signOut)
+  - Titre PHOTOS en Oswald yellow (#f5c518) + sous-titre "Gérer la galerie (N photo(s))"
+  - <PhotosUploader /> (upload drag-and-drop)
+  - Si count === 0 : empty state avec icône
+  - Si count > 0 : grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4
+  - Chaque carte = <PhotoCard key={photo.id} photo={photo} />
+
+--- src/app/admin/photos/actions.ts ---
+
+'use server'
+Imports : revalidatePath, createClient (@/lib/supabase/server)
+Type Photo exporté (id, storage_path, alt_text, caption, sort_order,
+                    width, height, size_bytes, created_at, updated_at)
+Type UploadResult exporté (filename, ok, error?)
+
+Actions :
+  getPhotos()       → { photos: Photo[], count: number }
+                      SELECT * ORDER BY sort_order ASC, created_at DESC
+  uploadPhotos()    → UploadResult[]
+                      slugifyFilename() + upload Storage + INSERT DB + rollback si erreur
+  deletePhoto()     → { error?: string }
+                      DELETE Storage + DELETE DB row + revalidatePath('/admin/photos')
+
+PAS de Zod — validation manuelle (le fichier est simple, peu de champs).
+PAS de revalidatePath('/') — seulement '/admin/photos'.
+
+--- src/app/admin/photos/PhotoCard.tsx ---
+
+'use client'
+Pattern de confirmation inline (double-clic) :
+  useState confirming + useTransition isPending
+  useEffect : timeout 5s pour reset confirming → false (auto-annulation)
+  Premier clic  → confirming = true → bouton devient rouge "Confirmer ?"
+  Second clic   → startTransition(deletePhoto(...))
+  Pendant action → disabled + opacity-60
+  Pas de toast — pas de feedback erreur visible (photos actions.ts ne retourne
+  pas l'erreur au composant)
+
+--- src/app/admin/concerts/DeleteButton.tsx ---
+
+MÊME pattern que PhotoCard mais plus complet :
+  + gestion error state : si result.error → setError(result.error)
+  + affichage inline sous le bouton : <p className="text-xs text-red-400">{error}</p>
+  + Si erreur affichée → premier clic efface l'erreur (reset error state)
+  + Spinner Loader2 pendant isPending
+
+→ C'est DeleteButton.tsx qui est le pattern le plus complet pour Sprint V4.
+
+
+── 3. AUTHENTIFICATION ADMIN ───────────────────────────────
+
+Pas de layout.tsx admin.
+Tout l'auth passe par src/middleware.ts → updateSession (src/lib/supabase/middleware.ts).
+
+Protection :
+  - Toutes les routes /admin/* sont protégées sauf /admin/login
+  - Si !user → redirect vers /admin/login
+  - Auth = Supabase Auth standard (email/password)
+  - Aucune whitelist email ni vérification de rôle côté code
+    (la sécurité repose sur le fait qu'il n'y a qu'un seul compte Supabase Auth)
+  - createClient() dans les Server Components peut appeler supabase.auth.getUser()
+    pour récupérer l'email (utilisé dans admin/page.tsx pour afficher "Bienvenue, email")
+
+
+── 4. PATTERN MODAL / DIALOG ───────────────────────────────
+
+PAS de composant Dialog ou ConfirmDialog dans le projet.
+PAS de Headless UI Dialog.
+PAS de radix-ui/dialog ni autre lib de modal.
+
+Le seul "Modal" du projet = VideoModal.tsx (src/components/videos/) qui
+est un lecteur YouTube — pas un dialog de confirmation.
+
+Pattern de confirmation utilisé PARTOUT = inline double-clic :
+  État 1 (normal)      : bouton gris    "Supprimer"   [icône Trash2]
+  État 2 (confirming)  : bouton rouge   "Confirmer ?"  [icône Trash2]
+  État 3 (pending)     : bouton disabled "..."         [Spinner Loader2]
+  Timeout auto 5s : si pas de second clic → retour état 1
+
+→ Pour Sprint V4, PAS besoin de créer un ConfirmDialog React.
+  Utiliser le même pattern inline double-clic (calqué sur DeleteButton.tsx).
+
+Exception décision V4 : is_featured auto-swap = cas particulier qui
+déplacera l'état "vedette" d'une vidéo à l'autre. Le pattern double-clic
+suffit (pas besoin d'un vrai modal Dialog).
+
+
+── 5. RÉORDONNANCEMENT (↑↓) ───────────────────────────────
+
+ABSENT de l'admin Photos.
+La table photos a bien une colonne sort_order, et getPhotos() ordonne
+par sort_order ASC, mais il n'y a aucun bouton ↑↓ dans l'UI Photos.
+
+Les photos sont ordonnées dans la DB depuis la migration initiale
+(sort_order = 0, 10, 20... assigné à l'upload). Il n'y a pas eu
+besoin de les réordonner depuis.
+
+→ Pour Sprint V4, les boutons ↑↓ sont une NOUVELLE fonctionnalité
+  à créer from scratch. Pattern suggéré :
+
+  Server Action moveVideo(id, direction: 'up' | 'down'):
+    1. SELECT * FROM videos WHERE is_published ORDER BY sort_order
+    2. Trouver l'index de la vidéo ciblée
+    3. Swap sort_order avec la vidéo précédente ou suivante
+    4. UPDATE deux rows (dans une transaction ou deux UPDATE séparés)
+    5. revalidatePath('/admin/videos')
+
+  Côté UI : boutons ↑↓ avec useTransition + disabled aux extrémités.
+
+
+── 6. SERVER ACTIONS PATTERN ──────────────────────────────
+
+Le projet utilise EXCLUSIVEMENT les Server Actions Next.js ('use server').
+Aucune route /api/ n'est utilisée pour l'admin (sauf /api/contact et /api/devis
+qui sont des Route Handlers publics).
+
+Pattern d'un actions.ts admin :
+  - 'use server' en tête
+  - import { revalidatePath } from 'next/cache'
+  - import { createClient } from '@/lib/supabase/server'
+  - Types exportés (utilisés par les Client Components)
+  - Fonctions async exportées directement (pas de wrapper)
+  - revalidatePath() à la fin des mutations
+
+Exemple complet deletePhoto() :
+  export async function deletePhoto(id, storagePath): Promise<{ error?: string }> {
+    const supabase = await createClient()
+    const { error: storageError } = await supabase.storage.from('photos').remove([storagePath])
+    if (storageError) return { error: storageError.message }
+    const { error: dbError } = await supabase.from('photos').delete().eq('id', id)
+    if (dbError) return { error: dbError.message }
+    revalidatePath('/admin/photos')
+    return {}
+  }
+
+
+── 7. VALIDATION CÔTÉ SERVEUR ─────────────────────────────
+
+Zod version : ^4.3.6 (présent dans package.json).
+
+MAIS : ni photos/actions.ts ni concerts/actions.ts n'utilisent Zod.
+La validation dans concerts/actions.ts est 100% manuelle :
+  - getString(formData, 'field') helper maison
+  - if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return { error: '...' }
+
+→ Pour Sprint V4 : choix libre. Zod est disponible mais le projet
+  n'a pas de convention établie. Validation manuelle = cohérence avec l'existant.
+  Si le formulaire vidéos a peu de champs (URL, titre, catégorie, published...)
+  → validation manuelle, pas besoin de Zod.
+
+Validation URL YouTube côté serveur :
+  Regex maison pour extraire l'ID (décision validée Sprint V4) :
+  /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+
+
+── 8. TOAST / FEEDBACK UTILISATEUR ────────────────────────
+
+AUCUNE lib de toast dans le projet (pas de sonner, react-hot-toast, etc.).
+
+Pattern de feedback :
+  - Erreurs → affichées inline sous le bouton concerné
+    (className="mt-1 text-xs text-red-400")
+  - Succès → implicite via revalidatePath + re-render (la liste se met à jour)
+  - Pending → bouton disabled + spinner Loader2 ou opacity-60
+
+→ Pour Sprint V4 : même pattern. Pas de toast à installer.
+  Erreurs inline, succès via revalidation.
+
+
+── 9. SCHÉMA DB TABLE VIDEOS (CONFIRMÉ) ───────────────────
+
+Colonnes récupérées via Supabase OpenAPI :
+
+  id                  | string (uuid, PK)
+  title               | string
+  created_at          | string (timestamptz)
+  youtube_id          | string (11 chars YouTube ID)
+  description         | string | null
+  category            | string ('clip' | 'live')
+  is_featured         | boolean
+  event_date          | string | null (date ISO pour les lives avec date)
+  sort_order          | integer
+  is_published        | boolean
+  custom_thumbnail_url| string | null (V4.5)
+
+Données en prod : 9 vidéos (1 featured + 7 clips + 1 live), toutes is_published=true.
+sort_order : 0 (featured), 1..7 (clips), 8 (live).
+
+is_nullable confirmé absent de l'OpenAPI — à vérifier si contraintes NOT NULL
+nécessaires (youtube_id, title, category devraient être NOT NULL).
+
+
+── 10. POINTS D'ATTENTION SPRINT V4 ───────────────────────
+
+A. is_featured auto-swap :
+   La table n'a pas de contrainte UNIQUE sur is_featured.
+   Pour garantir qu'il n'y a qu'une seule vidéo featured à la fois,
+   il faut soit :
+     Option 1 : deux UPDATE séparés dans la Server Action (risque de race condition minime)
+     Option 2 : RPC Postgres (transaction atomique) — plus propre
+   → Décision validée : transaction Postgres. À implémenter via supabase.rpc('set_featured_video', { video_id })
+   Créer la fonction SQL dans le Supabase SQL Editor avant d'implémenter.
+
+B. Dashboard admin/page.tsx :
+   Ligne 166 : carte "Vidéos" grisée avec label "Bientôt".
+   À activer en Sprint V4 :
+     - Remplacer la div grisée par un <Link href="/admin/videos">
+     - Ajouter getVideos() count dans le dashboard
+     - Importer Video icon (déjà importé : import { ..., Video, ... } from 'lucide-react')
+
+C. Réordonnancement ↑↓ :
+   Fonctionnalité absente des autres modules admin. À créer from scratch.
+   Les boutons doivent être disabled pour la première et dernière vidéo
+   (pas de wrap circulaire).
+
+D. Pas de layout admin partagé :
+   Copier le header (ArrowLeft + SignOut) depuis photos/page.tsx.
+   Le titre sera "VIDÉOS" en Oswald yellow avec sous-titre compteur.
+
+E. Formulaire "Nouvelle vidéo" :
+   7 champs : URL YouTube, titre (pré-rempli via extraction titre ?),
+   description, catégorie (select clip/live), date événement (input date, optionnel),
+   vedette (checkbox), publié (checkbox).
+   Pattern de formulaire de référence : concerts/ConcertForm.tsx.
+
+═══════════════════════════════════════════════════════════
+FIN AUDIT — STOP, ATTENDRE VALIDATION DE SILVIA
+═══════════════════════════════════════════════════════════

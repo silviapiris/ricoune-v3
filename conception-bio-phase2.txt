@@ -1,0 +1,1108 @@
+CONCEPTION BIO — PHASE 2 : SCHÉMA + ADMIN
+Généré le 2026-05-04 — Document de conception UNIQUEMENT (non exécuté)
+Projet : ricoune-v3 | Branche : main
+═══════════════════════════════════════════════════════════════════════════════
+⚠️ Ce document est soumis à validation avant tout démarrage en Phase 3.
+   Aucune migration SQL n'a été exécutée. Aucun fichier modifié.
+═══════════════════════════════════════════════════════════════════════════════
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LIVRABLE 1 — SCHÉMA SUPABASE COMPLET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━
+1.1 — TABLE bio_content
+━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Mapping clé fr.ts → colonne SQL :
+
+| Clé fr.ts                 | Colonne SQL              | Type    | Nullable | Rôle page publique                      |
+|---------------------------|--------------------------|---------|----------|-----------------------------------------|
+| —                         | id                       | uuid    | NOT NULL | PK (gen_random_uuid())                  |
+| —                         | singleton                | boolean | NOT NULL | Verrou singleton (voir contrainte)      |
+| —                         | updated_at               | tstz    | NOT NULL | Timestamp auto-update (trigger)         |
+| biography.subtitle        | hero_subtitle            | text    | YES      | Sous-titre sous le h1 dans le hero      |
+| biography.quote           | quote_text               | text    | YES      | Citation dans le bloc quote             |
+| biography.historyTitle    | history_title            | text    | YES      | h2 "De Montpellier aux scènes festives" |
+| biography.historyP1       | history_paragraph_1      | text    | YES      | §1 bloc Histoire (~200 mots)            |
+| biography.historyP2       | history_paragraph_2      | text    | YES      | §2 bloc Histoire (~60 mots)             |
+| biography.bioPortraitAlt  | portrait_alt             | text    | YES      | Alt text portrait (accessibilité)       |
+| biography.keyMomentsTitle | timeline_title           | text    | YES      | h2 "Moments clés"                       |
+| biography.stripLabel      | strip_label              | text    | YES      | Label "EN SCÈNE" (photo strip)          |
+| biography.stripTitle      | strip_title              | text    | YES      | h2 section photo strip                  |
+| biography.stripCta        | strip_cta_label          | text    | YES      | Libellé bouton galerie                  |
+| biography.philosophy      | philosophy_text          | text    | YES      | Paragraphe philosophie (~80 mots)       |
+| biography.ctaText         | cta_text                 | text    | YES      | Texte intro du bloc CTA final           |
+| biography.viewDates       | cta_button_1_label       | text    | YES      | Libellé bouton "Voir les dates"         |
+| biography.requestQuote    | cta_button_2_label       | text    | YES      | Libellé bouton "Demander un devis"      |
+| (hardcodé JSX)            | hero_image_url           | text    | YES      | URL Storage bucket "bio" image hero     |
+| (hardcodé JSX)            | portrait_image_url       | text    | YES      | URL Storage bucket "bio" portrait       |
+| (hardcodé JSX)            | strip_photo_1_url        | text    | YES      | URL photo strip 1 (était 3O8A8773)      |
+| (hardcodé JSX)            | strip_photo_2_url        | text    | YES      | URL photo strip 2 (était 3O8A5701)      |
+| (hardcodé JSX)            | strip_photo_3_url        | text    | YES      | URL photo strip 3 (était 3O8A8845)      |
+
+Colonnes non mappées (laissées hardcodées, pas de colonne DB) :
+  - h1 "RICOUNE" — nom d'artiste constant, jamais éditable
+  - href CTA 1 (/concerts) — lien interne, constant
+  - href CTA 2 (/professionnels/demande-de-devis) — lien interne, constant
+  - hero_image_alt "Ricoune sur scène" — alt constant, pas prioritaire
+
+Décision alternative proposée sur les noms :
+  - `history_paragraph_1` vs `story_p1` — j'ai choisi le nom long pour
+    la lisibilité dans le dashboard Supabase. Si tu préfères le court,
+    les deux fonctionnent.
+  - `cta_button_1_label` vs `view_dates_label` — j'ai préféré le générique
+    pour éviter un renommage de colonne si le texte du bouton change.
+
+```sql
+-- ⚠️ NE PAS EXÉCUTER — CONCEPTION UNIQUEMENT
+
+CREATE TABLE bio_content (
+  id                    UUID        NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+  singleton             BOOLEAN     NOT NULL DEFAULT TRUE,
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  -- Bloc 1 — Hero
+  hero_subtitle         TEXT,
+  hero_image_url        TEXT,
+
+  -- Bloc 2 — Citation
+  quote_text            TEXT,
+
+  -- Bloc 3 — Histoire
+  history_title         TEXT,
+  history_paragraph_1   TEXT,
+  history_paragraph_2   TEXT,
+  portrait_image_url    TEXT,
+  portrait_alt          TEXT,
+
+  -- Bloc 4 — Frise (titre uniquement — les événements sont dans bio_timeline_events)
+  timeline_title        TEXT,
+
+  -- Bloc 4b — Photo Strip
+  strip_label           TEXT,
+  strip_title           TEXT,
+  strip_photo_1_url     TEXT,
+  strip_photo_2_url     TEXT,
+  strip_photo_3_url     TEXT,
+  strip_cta_label       TEXT,
+
+  -- Bloc 5 — Philosophie
+  philosophy_text       TEXT,
+
+  -- Bloc 6 — CTA double
+  cta_text              TEXT,
+  cta_button_1_label    TEXT,
+  cta_button_2_label    TEXT,
+
+  -- Contrainte singleton : une seule ligne possible dans cette table
+  CONSTRAINT bio_content_one_row        UNIQUE (singleton),
+  CONSTRAINT bio_content_singleton_true CHECK  (singleton = TRUE)
+);
+
+-- Trigger auto-update de updated_at
+CREATE OR REPLACE FUNCTION update_bio_content_timestamp()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER bio_content_updated_at
+  BEFORE UPDATE ON bio_content
+  FOR EACH ROW EXECUTE FUNCTION update_bio_content_timestamp();
+```
+
+Explication du mécanisme singleton :
+  - `singleton BOOLEAN DEFAULT TRUE` + `UNIQUE(singleton)` : la contrainte
+    UNIQUE garantit qu'une seule valeur TRUE peut exister → une seule ligne.
+  - `CHECK(singleton = TRUE)` : interdit d'insérer FALSE, ce qui priverait
+    la contrainte UNIQUE de son effet.
+  - Pour insérer la ligne initiale :
+    `INSERT INTO bio_content DEFAULT VALUES;`
+    ou un seed avec toutes les valeurs (voir B1).
+  - Pour lire : `SELECT * FROM bio_content LIMIT 1;`
+  - Pour mettre à jour : `UPDATE bio_content SET hero_subtitle = '...' WHERE singleton = TRUE;`
+  - Pas de RPC nécessaire pour la mise à jour — un simple UPDATE suffit.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1.2 — TABLE bio_timeline_events
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+```sql
+-- ⚠️ NE PAS EXÉCUTER — CONCEPTION UNIQUEMENT
+
+CREATE TABLE bio_timeline_events (
+  id          UUID        NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+  year        TEXT        NOT NULL,           -- ex: "1963", "Années 90"
+  description TEXT        NOT NULL,
+  sort_order  INTEGER     NOT NULL,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX idx_bio_timeline_sort ON bio_timeline_events(sort_order ASC);
+
+CREATE OR REPLACE FUNCTION update_bio_timeline_timestamp()
+RETURNS TRIGGER LANGUAGE plpgsql AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$;
+
+CREATE TRIGGER bio_timeline_updated_at
+  BEFORE UPDATE ON bio_timeline_events
+  FOR EACH ROW EXECUTE FUNCTION update_bio_timeline_timestamp();
+```
+
+Décision sur UNIQUE(sort_order) :
+
+POUR une contrainte UNIQUE : garantie DB-level d'absence de doublons.
+
+CONTRE une contrainte UNIQUE (choix retenu) :
+  - Lors d'un réordonnancement (ex : swap sort_order 3 ↔ 7), les deux
+    UPDATE ne peuvent pas s'exécuter en séquence simple sans violer
+    transitoirement la contrainte (même dans une transaction, Postgres
+    évalue les contraintes UNIQUE après chaque ligne par défaut).
+  - Solution de contournement possible : DEFERRABLE INITIALLY DEFERRED,
+    mais cela complexifie la RPC et n'apporte rien ici.
+  - Avec la RPC reorder_timeline_events (voir 1.4), tous les sort_orders
+    sont réécrits en une passe → aucun doublon possible si la RPC est
+    correctement écrite.
+
+Décision : PAS de UNIQUE sur sort_order. Intégrité gérée dans la RPC.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1.3 — RLS (ROW LEVEL SECURITY)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+```sql
+-- ⚠️ NE PAS EXÉCUTER — CONCEPTION UNIQUEMENT
+
+-- Activer RLS
+ALTER TABLE bio_content         ENABLE ROW LEVEL SECURITY;
+ALTER TABLE bio_timeline_events ENABLE ROW LEVEL SECURITY;
+
+-- Lecture publique (cohérent avec albums, videos, photos)
+CREATE POLICY "Public read bio_content"
+  ON bio_content FOR SELECT USING (true);
+
+CREATE POLICY "Public read bio_timeline_events"
+  ON bio_timeline_events FOR SELECT USING (true);
+
+-- Écriture : admin authentifié uniquement (cohérent avec le schéma existant)
+CREATE POLICY "Admin full access bio_content"
+  ON bio_content FOR ALL
+  USING (auth.role() = 'authenticated');
+
+CREATE POLICY "Admin full access bio_timeline_events"
+  ON bio_timeline_events FOR ALL
+  USING (auth.role() = 'authenticated');
+
+-- GRANTs Postgres (cf. incident 42501 du 30/04/2026 — obligatoire)
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.bio_content         TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.bio_timeline_events TO authenticated;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.bio_content         TO service_role;
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.bio_timeline_events TO service_role;
+GRANT SELECT ON public.bio_content                                  TO anon;
+GRANT SELECT ON public.bio_timeline_events                          TO anon;
+```
+
+Note : le GRANT SELECT TO anon est nécessaire pour que la page publique
+/biographie puisse lire via la clé NEXT_PUBLIC_SUPABASE_ANON_KEY.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1.4 — RPC reorder_timeline_events
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Contexte : le module vidéos utilise `moveVideo` avec deux UPDATE en
+Promise.all (swap simple). Pour la frise, l'admin permet de déplacer
+un événement de n positions (flèches haut/bas ou drag&drop). Un simple
+swap ne suffit pas pour un déplacement multi-position.
+
+Choix architectural : RPC qui reçoit le tableau ordonné complet des UUIDs
+et réassigne tous les sort_orders en une transaction. C'est atomique, pas
+de collision possible.
+
+```sql
+-- ⚠️ NE PAS EXÉCUTER — CONCEPTION UNIQUEMENT
+
+-- Signature : reorder_timeline_events(event_ids uuid[]) RETURNS void
+-- Appelée depuis une Server Action Next.js avec supabase.rpc(...)
+-- Paramètre : tableau d'UUIDs dans le nouvel ordre voulu
+
+CREATE OR REPLACE FUNCTION reorder_timeline_events(event_ids uuid[])
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  i integer;
+BEGIN
+  FOR i IN 1..array_length(event_ids, 1) LOOP
+    UPDATE bio_timeline_events
+    SET    sort_order = i - 1   -- 0-indexé, cohérent avec sort_order vidéos
+    WHERE  id = event_ids[i];
+  END LOOP;
+END;
+$$;
+
+-- GRANT pour que authenticated puisse l'appeler
+GRANT EXECUTE ON FUNCTION reorder_timeline_events(uuid[]) TO authenticated;
+```
+
+Usage côté Server Action :
+
+```ts
+// (conception — pas d'implémentation ici)
+const { error } = await supabase.rpc('reorder_timeline_events', {
+  event_ids: orderedIds   // string[] des UUIDs dans le nouvel ordre
+})
+```
+
+Note : cette RPC est appelée :
+  - À chaque fin de drag (si @dnd-kit retenu)
+  - Ou à chaque clic flèche (si flèches haut/bas retenues)
+  Dans les deux cas, on passe le tableau complet dans le nouvel ordre.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1.5 — BUCKET STORAGE "bio"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Paramètres :
+  - Nom du bucket : bio
+  - Accès public : OUI (nécessaire pour que les URLs soient lisibles
+    directement dans les balises <Image> sans token)
+  - MIME types autorisés : image/webp, image/jpeg, image/png
+  - Taille max fichier : 5 MB (avant compression client)
+
+Politique d'upload (Storage policies Supabase) :
+  - Lecture (GET) : public — pas de restriction
+  - Écriture (PUT/POST/DELETE) : authenticated uniquement
+
+Convention de nommage des fichiers :
+
+  hero-{timestamp}.webp          ← image fond hero
+  portrait-{timestamp}.webp      ← portrait histoire
+  strip-1-{timestamp}.webp       ← photo strip position 1
+  strip-2-{timestamp}.webp       ← photo strip position 2
+  strip-3-{timestamp}.webp       ← photo strip position 3
+
+Exemples :
+  hero-1746396000000.webp
+  strip-1-1746396001234.webp
+
+Le timestamp évite les collisions de cache si l'image est remplacée
+(nouvelle URL → nouveau cache bust automatique côté CDN Supabase).
+
+Compression client (réutilisation de PhotosUploader) :
+  - Librairie : browser-image-compression (déjà installée)
+  - Config proposée pour les images bio :
+    { maxSizeMB: 1.0, maxWidthOrHeight: 1920, useWebWorker: true }
+  - Hero : 1920px max (image plein écran)
+  - Portrait : 800px max (max-w 33vw)
+  - Strip : 900px max (800px référencés dans les anciens noms de fichier)
+  - Sortie : WebP systématique (forcer outputType: 'webp' dans les options
+    si browser-image-compression le supporte — sinon garder le format
+    d'entrée compressé)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LIVRABLE 2 — STRUCTURE ADMIN (WIREFRAME TEXTUEL)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+URL : /admin/bio
+
+━━━━━━━━━━━━━━━━━━━━━
+2.1 — LAYOUT GÉNÉRAL
+━━━━━━━━━━━━━━━━━━━━━
+
+Cohérent avec les modules existants (videos, albums, photos) :
+  - Pas de sidebar. Page standalone full-screen.
+  - Container : `fixed inset-0 z-50 overflow-y-auto bg-[#0a0a0a]`
+  - Max-width : `max-w-3xl mx-auto px-6 py-8` (plus étroit que vidéos
+    car formulaires mono-colonne, pas de liste de cartes)
+
+Header sticky :
+  ┌─────────────────────────────────────────────────────────────┐
+  │  ← Retour                            [Se déconnecter]       │
+  │  BIOGRAPHIE          (badge "Dernière modif : 04/05/2026")  │
+  │  Modifier le contenu de la page biographie                  │
+  └─────────────────────────────────────────────────────────────┘
+
+Corps : succession de cartes éditables dans l'ordre d'apparition sur
+la page publique. Chaque carte a son propre bouton "Enregistrer"
+(voir décision en 2.2).
+
+Dashboard /admin/page.tsx : ajouter une carte "Biographie" avec
+icône BookOpen (lucide-react) dans la grille des modules.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2.2 — LISTE DES CARTES (ordre)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Décision sauvegarde : BOUTON PAR CARTE (pas de sauvegarde globale).
+Justification :
+  - Cohérent avec le pattern albums ([id]/page.tsx = un formulaire, un submit)
+  - Évite la perte de modifications si l'admin oublie de scroller jusqu'en bas
+  - Chaque section est indépendante (pas de dépendances croisées)
+  - Feedback d'erreur localisé (ex : "Erreur upload hero image")
+  - La table bio_content autorise des UPDATE partiels (nullable columns)
+
+Les cartes sont des Server Components qui font un re-fetch après submit
+via revalidatePath('/admin/bio') + revalidatePath('/biographie').
+
+─────────────────────────────────────────────────────────────────
+CARTE 1 — Hero
+─────────────────────────────────────────────────────────────────
+Titre carte : "Hero — Image et accroche"
+
+┌─ HERO ──────────────────────────────────────────────────────┐
+│                                                             │
+│  Image de fond                                              │
+│  ┌─────────────────────────────────────────────┐           │
+│  │ [aperçu actuel : bio-hero.webp   60vh]       │ [Remplac] │
+│  └─────────────────────────────────────────────┘           │
+│  Format recommandé : 1920×1080px WebP                       │
+│                                                             │
+│  Sous-titre (affiché sous "RICOUNE" en gros)                │
+│  [                                              ]  (120c)   │
+│  Valeur actuelle : "L'artiste incontournable..."            │
+│                                                             │
+│  Note : Le titre h1 "RICOUNE" est constant (non éditable).  │
+│                                          [Enregistrer hero] │
+└─────────────────────────────────────────────────────────────┘
+
+Champs :
+  - hero_image_url → composant ImageUploadField (voir 2.5)
+  - hero_subtitle  → <input type="text" maxLength={150}>
+Bouton : "Enregistrer hero" → UPDATE bio_content + revalidatePath
+
+─────────────────────────────────────────────────────────────────
+CARTE 2 — Citation
+─────────────────────────────────────────────────────────────────
+Titre carte : "Citation"
+
+┌─ CITATION ──────────────────────────────────────────────────┐
+│                                                             │
+│  Texte de la citation                                       │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │ La musique, c'est le partage. Je chante pour les... │   │
+│  └─────────────────────────────────────────────────────┘   │
+│  (textarea 3 lignes, maxLength 300)                         │
+│                                                             │
+│  Note : la citation est présentée entre « » automatiquement │
+│         sur la page publique. Ne pas inclure les guillemets. │
+│                                          [Enregistrer]      │
+└─────────────────────────────────────────────────────────────┘
+
+Champs :
+  - quote_text → <textarea rows={3} maxLength={300}>
+Note : pas de champ quote_author — la citation est implicitement
+celle de Ricoune, pas d'attribution affichée sur la page.
+
+─────────────────────────────────────────────────────────────────
+CARTE 3 — Histoire
+─────────────────────────────────────────────────────────────────
+Titre carte : "Histoire — Portrait et biographie"
+
+┌─ HISTOIRE ──────────────────────────────────────────────────┐
+│                                                             │
+│  Titre de section                                           │
+│  [ De Montpellier aux scènes festives          ] (100c)     │
+│                                                             │
+│  Portrait (affiché à gauche du texte, ratio 3/4)            │
+│  ┌──────────────────────────────┐                           │
+│  │  [aperçu : ricoune-bio.webp] │ [Remplacer portrait]      │
+│  └──────────────────────────────┘                           │
+│  Format recommandé : 600×800px WebP, focalisé vers le haut  │
+│                                                             │
+│  Texte alternatif portrait (accessibilité)                  │
+│  [ Portrait de Ricoune, artiste auteur-...     ] (150c)     │
+│                                                             │
+│  Paragraphe 1                                               │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ Né à Montpellier en 1963, Ricoune grandit bercé par...│ │
+│  └────────────────────────────────────────────────────────┘ │
+│  (textarea 6 lignes)                                        │
+│                                                             │
+│  Paragraphe 2                                               │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ Au fil des années, Ricoune affine son style unique...  │ │
+│  └────────────────────────────────────────────────────────┘ │
+│  (textarea 4 lignes)                                        │
+│                                          [Enregistrer]      │
+└─────────────────────────────────────────────────────────────┘
+
+Champs :
+  - history_title        → <input type="text" maxLength={100}>
+  - portrait_image_url   → composant ImageUploadField
+  - portrait_alt         → <input type="text" maxLength={150}>
+  - history_paragraph_1  → <textarea rows={6}>
+  - history_paragraph_2  → <textarea rows={4}>
+
+─────────────────────────────────────────────────────────────────
+CARTE 4 — Frise chronologique (cas spécial, voir 2.3)
+─────────────────────────────────────────────────────────────────
+Titre carte : "Frise chronologique — Moments clés"
+
+Champs static :
+  - timeline_title → <input type="text" maxLength={80}>
+
+Zone dynamique : liste des événements (voir 2.3 pour le détail).
+
+─────────────────────────────────────────────────────────────────
+CARTE 5 — Photo Strip
+─────────────────────────────────────────────────────────────────
+Titre carte : "Section photos — 'Toujours là où ça vibre'"
+
+┌─ PHOTO STRIP ───────────────────────────────────────────────┐
+│                                                             │
+│  Label (badge au-dessus du titre)                           │
+│  [ EN SCÈNE                    ] (30c)                      │
+│                                                             │
+│  Titre de section                                           │
+│  [ Toujours là où ça vibre     ] (80c)                      │
+│                                                             │
+│  Libellé bouton galerie                                     │
+│  [ Voir toute la galerie        ] (60c)                     │
+│                                                             │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌───────────┐ │
+│  │  Photo 1         │  │  Photo 2         │  │  Photo 3  │ │
+│  │  [aperçu/vide]   │  │  [aperçu/vide]   │  │  [ap/vi]  │ │
+│  │  [Remplacer]     │  │  [Remplacer]     │  │  [Remp]   │ │
+│  └──────────────────┘  └──────────────────┘  └───────────┘ │
+│  Format recommandé : 800×600px WebP (ratio 4/3)             │
+│                                                             │
+│  ⚠️ Ces 3 photos étaient brisées en production (fichiers    │
+│     manquants). Upload requis dès B3 pour résoudre le bug.  │
+│                                          [Enregistrer]      │
+└─────────────────────────────────────────────────────────────┘
+
+Champs :
+  - strip_label       → <input type="text" maxLength={30}>
+  - strip_title       → <input type="text" maxLength={80}>
+  - strip_cta_label   → <input type="text" maxLength={60}>
+  - strip_photo_1_url → composant ImageUploadField
+  - strip_photo_2_url → composant ImageUploadField
+  - strip_photo_3_url → composant ImageUploadField
+
+─────────────────────────────────────────────────────────────────
+CARTE 6 — Philosophie
+─────────────────────────────────────────────────────────────────
+Titre carte : "Philosophie"
+
+┌─ PHILOSOPHIE ───────────────────────────────────────────────┐
+│                                                             │
+│  Texte (affiché centré, taille lg)                          │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │ Pour Ricoune, la musique n'est pas un métier, c'est... │ │
+│  └────────────────────────────────────────────────────────┘ │
+│  (textarea 5 lignes)                                        │
+│                                          [Enregistrer]      │
+└─────────────────────────────────────────────────────────────┘
+
+Champs :
+  - philosophy_text → <textarea rows={5}>
+
+─────────────────────────────────────────────────────────────────
+CARTE 7 — CTA double
+─────────────────────────────────────────────────────────────────
+Titre carte : "CTA — Appel à l'action"
+
+┌─ CTA ───────────────────────────────────────────────────────┐
+│                                                             │
+│  Texte d'introduction                                       │
+│  [ Envie de vivre l'expérience Ricoune en live ?  ] (150c) │
+│                                                             │
+│  Bouton 1 (lien vers /concerts — lien fixe)                 │
+│  Libellé : [ Voir les prochaines dates    ] (60c)           │
+│  Lien cible : /concerts  (non éditable — constant)          │
+│                                                             │
+│  Bouton 2 (lien vers /professionnels/... — lien fixe)       │
+│  Libellé : [ Demander un devis            ] (60c)           │
+│  Lien cible : /professionnels/demande-de-devis (constant)   │
+│                                          [Enregistrer]      │
+└─────────────────────────────────────────────────────────────┘
+
+Champs :
+  - cta_text           → <input type="text" maxLength={150}>
+  - cta_button_1_label → <input type="text" maxLength={60}>
+  - cta_button_2_label → <input type="text" maxLength={60}>
+
+Décision : les href des boutons (/concerts, /professionnels/...) restent
+hardcodés. Si un jour on veut les rendre éditables, on ajoutera les
+colonnes cta_button_1_href et cta_button_2_href plus tard.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2.3 — CARTE FRISE CHRONOLOGIQUE (détail)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Wireframe de la section frise dans la carte 4 :
+
+┌─ FRISE CHRONOLOGIQUE ───────────────────────────────────────┐
+│                                                             │
+│  Titre de section                                           │
+│  [ Moments clés                 ] (80c)  [Enregistrer]      │
+│                                                             │
+│  ─────────────────────────────────────────────────────────  │
+│  ÉVÉNEMENTS (11 au départ)                                  │
+│  ─────────────────────────────────────────────────────────  │
+│                                                             │
+│  ↑↓  ┌──────────────────────────────────────────────────┐  │
+│      │ Année : [ 1963 ]                                  │  │
+│      │ Description :                                     │  │
+│      │ [ Naissance à Saint-Drézéry (près de Montpellie] │  │
+│      └────────────────────────────────────────[🗑]─────┘  │
+│                                                             │
+│  ↑↓  ┌──────────────────────────────────────────────────┐  │
+│      │ Année : [ 1983 ]                                  │  │
+│      │ Description :                                     │  │
+│      │ [ Fonde son premier groupe "Génération 83"       ] │  │
+│      └────────────────────────────────────────[🗑]─────┘  │
+│  ... (idem pour les 9 autres événements)                    │
+│                                                             │
+│  [+ Ajouter un événement]                                   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+Décision : FLÈCHES HAUT/BAS (↑↓) plutôt que drag & drop @dnd-kit.
+
+Justification :
+  - Cohérent avec AlbumCard.tsx (ChevronUp/ChevronDown) et VideoCard.tsx
+    (moveVideo up/down) — même pattern dans tout l'admin.
+  - Pas de nouvelle dépendance (@dnd-kit = 35 ko gzip).
+  - 11 événements max — un drag & drop pour si peu d'items est superflu.
+  - Si drag & drop voulu plus tard, le sort_order est déjà en place.
+
+Comportement flèches :
+  - Clic ↑ sur le premier élément → bouton désactivé
+  - Clic ↓ sur le dernier → bouton désactivé
+  - Clic → appel RPC reorder_timeline_events avec le tableau réordonné
+  - revalidatePath('/admin/bio') + revalidatePath('/biographie') post-RPC
+
+Comportement "+ Ajouter un événement" :
+  - Ajoute une ligne vide en fin de liste (sort_order = MAX + 1)
+  - INSERT INTO bio_timeline_events (year, description, sort_order)
+    VALUES ('', '', max_sort_order)
+  - Les champs sont immédiatement éditables (pas de page séparée)
+
+Comportement [🗑] supprimer :
+  - Confirmation inline (pattern AlbumCard : clic → "Confirmer ?", 5s timeout)
+  - DELETE FROM bio_timeline_events WHERE id = '...'
+  - Pas de suppression possible si c'est le dernier événement (afficher
+    un message d'info plutôt qu'une erreur)
+
+Sauvegarde des modifications textuelles :
+  - Bouton "Enregistrer" par événement (champ Année + Description).
+  - Pas de debounce/autosave — explicite pour éviter les sauvegardes
+    accidentelles.
+  - UPDATE bio_timeline_events SET year='...', description='...'
+    WHERE id='...'
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2.4 — ÉDITION DE TEXTE RICHE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Analyse du besoin réel :
+  - history_paragraph_1 (~200 mots de texte narratif)
+  - history_paragraph_2 (~60 mots de texte narratif)
+  - philosophy_text (~80 mots de texte narratif)
+  - quote_text (~20 mots)
+
+Ces textes dans fr.ts sont du PLAIN TEXT — pas de gras, pas de liens,
+pas de listes, pas de markdown. Ce sont des paragraphes narratifs simples.
+
+Décision : TEXTAREA SIMPLE. Pas d'éditeur riche.
+
+Justification :
+  - Le composant public ne supporte pas le HTML/Markdown (c'est un simple
+    <p>{text}</p>). Ajouter un WYSIWYG imposerait de modifier aussi le
+    rendu public pour parser du HTML/Markdown.
+  - Risque d'injection HTML si on n'échappe pas correctement.
+  - Bundle cost d'un éditeur riche : TipTap ~40ko, Lexical ~30ko,
+    Toast UI ~60ko — injustifié pour 3 paragraphes.
+  - Si un jour on veut du gras/italique, on pourra ajouter un parser
+    Markdown minimal + un textarea avec preview. Décision différée.
+
+Si tu veux quand même un éditeur riche pour les paragraphes, voici
+les options par ordre de recommandation :
+
+| Lib         | Gzip   | React 19 | Notes                               |
+|-------------|--------|----------|-------------------------------------|
+| TipTap      | ~40 ko | OUI      | Bien maintenu, extensions à la carte|
+| Lexical     | ~30 ko | OUI      | Meta, bien intégré Next.js          |
+| Toast UI ME | ~60 ko | OUI      | WYSIWYG complet, lourd              |
+
+Recommandation si éditeur voulu : TipTap avec StarterKit seulement
+(Bold, Italic, Link, HardBreak). Stocker en HTML dans la colonne text.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━
+2.5 — UPLOAD IMAGES
+━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Composant : nouveau composant `BioImageUpload` (pas réutilisation directe
+de PhotosUploader).
+
+Pourquoi nouveau composant et pas PhotosUploader :
+  - PhotosUploader gère N images en batch (multi-file) pour la galerie.
+  - BioImageUpload gère 1 image à la fois avec aperçu de l'image actuelle.
+  - L'API est différente : on veut mettre à jour une colonne spécifique
+    de bio_content (hero_image_url, portrait_image_url, strip_photo_X_url).
+
+Mais il réutilise la même logique de compression :
+  - browser-image-compression (déjà installé)
+  - Même config (maxSizeMB, maxWidthOrHeight, useWebWorker: true)
+
+Interface proposée pour BioImageUpload :
+
+```tsx
+// (conception — pas d'implémentation)
+<BioImageUpload
+  label="Image de fond hero"
+  currentUrl={bio.hero_image_url}
+  recommendedSize="1920×1080px WebP"
+  storagePrefix="hero"
+  onUploadComplete={(url) => { /* update bio_content.hero_image_url */ }}
+/>
+```
+
+Comportement :
+  1. Affiche un aperçu de l'image actuelle (si currentUrl non null)
+     via <img src={currentUrl} className="h-32 object-cover rounded" />
+     (même pattern que AlbumForm.tsx ligne 108)
+  2. Zone de drop / bouton "Remplacer" pour choisir un fichier
+  3. Compression client via browser-image-compression
+  4. Upload vers bucket "bio" via supabase.storage.from('bio').upload(...)
+  5. Récupération de l'URL publique via getPublicUrl(...)
+  6. UPDATE bio_content SET {column} = {url} WHERE singleton = true
+  7. revalidatePath('/admin/bio') + revalidatePath('/biographie')
+  8. Affiche le nouvel aperçu
+
+Gestion "Supprimer" :
+  - Bouton "Supprimer l'image" → UPDATE bio_content SET {column} = NULL
+  - Pas de suppression du fichier dans Storage (évite les orphelins
+    si une erreur survient) — nettoyage Storage en tâche manuelle.
+
+Localisation du composant : src/app/admin/bio/BioImageUpload.tsx
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LIVRABLE 3 — DÉCOUPAGE EN SOUS-SPRINTS B1 → B5
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+B1 — Schéma DB + migration des données existantes (fr.ts)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Effort : S (2-3h)
+Objectif : tables créées dans Supabase, données fr.ts seedées.
+La page publique /biographie n'est PAS encore modifiée (toujours fr.ts).
+
+Fichiers créés :
+  - supabase/schema.sql         ← append uniquement (bio_content + bio_timeline_events)
+
+Fichiers modifiés :
+  - aucun fichier Next.js modifié
+
+Migrations SQL à appliquer (via SQL Editor Supabase) :
+  1. CREATE TABLE bio_content       (cf. 1.1)
+  2. CREATE TABLE bio_timeline_events (cf. 1.2)
+  3. Triggers updated_at             (cf. 1.1 + 1.2)
+  4. RLS policies                    (cf. 1.3)
+  5. GRANTs                          (cf. 1.3)
+  6. RPC reorder_timeline_events     (cf. 1.4)
+  7. Bucket Storage "bio" + policies (via Supabase UI ou SQL)
+  8. Seed initial (INSERT) avec les données de fr.ts :
+
+```sql
+-- ⚠️ NE PAS EXÉCUTER — CONCEPTION UNIQUEMENT (seed example)
+INSERT INTO bio_content (
+  hero_subtitle, quote_text, history_title,
+  history_paragraph_1, history_paragraph_2,
+  portrait_alt, timeline_title,
+  strip_label, strip_title, strip_cta_label,
+  philosophy_text, cta_text,
+  cta_button_1_label, cta_button_2_label,
+  hero_image_url, portrait_image_url
+  -- strip_photo_X_url laissés NULL → uploadés dans B3
+) VALUES (
+  'L''artiste incontournable des scènes festives',
+  'La musique, c''est le partage. Je chante pour les gens, avec les gens.',
+  'De Montpellier aux scènes festives',
+  'Né à Montpellier en 1963, Ricoune grandit bercé...',
+  'Au fil des années, Ricoune affine son style unique...',
+  'Portrait de Ricoune, artiste auteur-compositeur',
+  'Moments clés',
+  'EN SCÈNE',
+  'Toujours là où ça vibre',
+  'Voir toute la galerie',
+  'Pour Ricoune, la musique n''est pas un métier...',
+  'Envie de vivre l''expérience Ricoune en live ?',
+  'Voir les prochaines dates',
+  'Demander un devis',
+  NULL,   -- hero_image_url uploadé dans B3
+  NULL    -- portrait_image_url uploadé dans B3
+);
+
+INSERT INTO bio_timeline_events (year, description, sort_order) VALUES
+  ('1963', 'Naissance à Saint-Drézéry (près de Montpellier)', 0),
+  ('1983', 'Fonde son premier groupe "Génération 83"', 1),
+  ('1993', 'Le groupe devient "Ricoune et les Counass"', 2),
+  ('1994', 'Premier album "Le Chat de Jourdan"', 3),
+  ('2001', 'Naissance du nom de scène "Ricoune" + album "Sans interdits"', 4),
+  ('2013', 'Album "Accent du Sud" + tube "Dans un verre à ballon"', 5),
+  ('2016', '"Le Best Of, 20 ans" (anniversaire de carrière)', 6),
+  ('2021', 'Album "Quand un fainéant se rebelle"', 7),
+  ('2023', 'Single "Las Terrenas"', 8),
+  ('2024', 'Single "La Belle Partouze"', 9),
+  ('2025', 'Tournée des ferias (Béziers + villages)', 10);
+```
+
+Tests de non-régression B1 :
+  ✓ SELECT * FROM bio_content → 1 ligne
+  ✓ SELECT * FROM bio_timeline_events ORDER BY sort_order → 11 lignes
+  ✓ Tentative d'INSERT 2ème ligne dans bio_content → erreur attendue (contrainte singleton)
+  ✓ Page /biographie publique intacte (toujours fr.ts — aucun changement)
+
+Risques B1 :
+  - Conflit de noms de trigger si les fonctions sont nommées identiquement
+    à d'autres → utiliser des noms spécifiques (update_bio_content_timestamp)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+B2 — Page publique /biographie branchée sur Supabase (lecture)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Effort : M (3-4h)
+Objectif : /biographie lit depuis Supabase. fr.ts n'est plus consulté.
+Même rendu visuel qu'avant — migration transparente.
+
+Fichiers créés :
+  - src/lib/bio.ts
+    → getBioContent(): Promise<BioContent | null>
+    → getBioTimeline(): Promise<BioTimelineEvent[]>
+    → Type BioContent (mapping des colonnes)
+
+Fichiers modifiés :
+  - src/app/biographie/page.tsx
+    → Devient un vrai Server Component avec fetch Supabase
+    → Passe les données en props à BiographiePageClient
+    → Ajout fallback si bio_content est null (voir Livrable 4)
+
+  - src/app/biographie/BiographiePageClient.tsx
+    → Suppression de useLanguage() et import LanguageContext
+    → Reçoit { bio, timeline } en props
+    → Remplace t.biography.* par bio.* et timeline[]
+
+Fichiers NON modifiés dans B2 :
+  - src/locales/fr.ts (clés bio toujours présentes, nettoyage en B5)
+  - src/locales/en.ts (idem)
+  - src/components/bio/BioTimeline.tsx (interface inchangée)
+
+Structure page.tsx après B2 :
+
+```tsx
+// (conception)
+export default async function BiographiePage() {
+  const bio = await getBioContent()    // SELECT * FROM bio_content LIMIT 1
+  const timeline = await getBioTimeline() // SELECT * FROM bio_timeline_events ORDER BY sort_order
+
+  return <BiographiePageClient bio={bio} timeline={timeline} />
+}
+```
+
+Gestion du cas bio_content NULL (colonne image_url NULL) :
+  - Les champs texte : si null → afficher la valeur fr.ts comme fallback
+    temporaire (ou string vide)
+  - hero_image_url null → conserver "/images/bio/bio-hero.webp" en fallback
+  - portrait_image_url null → conserver "/images/bio/ricoune-bio.webp" en fallback
+  - strip_photo_X_url null → afficher un placeholder gris (les images
+    étaient déjà cassées avant)
+
+Cache Next.js :
+  - revalidatePath('/biographie') dans chaque Server Action admin
+  - Page statique par défaut (SSG) — revalidation explicite depuis l'admin
+  - Pas d'ISR, pas de cache tags — même pattern que videos/albums
+
+Tests de non-régression B2 :
+  ✓ Rendu visuel /biographie identique à avant (textes, frise, photos existing)
+  ✓ Aucune erreur console côté client
+  ✓ useLanguage() supprimé de BiographiePageClient (plus d'import LanguageContext)
+  ✓ La frise affiche les 11 événements dans le bon ordre
+  ✓ Les images bio-hero.webp et ricoune-bio.webp s'affichent
+  ✓ Strip photos : placeholders acceptables (les images étaient déjà cassées)
+
+Risques B2 :
+  - Si la requête Supabase échoue, la page doit avoir un fallback gracieux
+    (pas de page blanche). Pattern : try/catch + retour aux valeurs fr.ts.
+  - Hydration mismatch si BiographiePageClient reçoit undefined au lieu
+    de '' pour les champs null → normaliser dans getBioContent().
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+B3 — Admin CRUD bio_content (cartes statiques)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Effort : L (5-7h)
+Objectif : page /admin/bio fonctionnelle pour éditer Hero, Citation,
+Histoire, Photo Strip, Philosophie, CTA. Upload images vers bucket "bio".
+
+Fichiers créés :
+  - src/app/admin/bio/page.tsx        (Server Component, fetch bio_content)
+  - src/app/admin/bio/actions.ts      (Server Actions : updateBioContent,
+                                       uploadBioImage)
+  - src/app/admin/bio/BioImageUpload.tsx  (composant upload image)
+  - src/app/admin/bio/HeroCard.tsx
+  - src/app/admin/bio/QuoteCard.tsx
+  - src/app/admin/bio/HistoryCard.tsx
+  - src/app/admin/bio/StripCard.tsx
+  - src/app/admin/bio/PhilosophyCard.tsx
+  - src/app/admin/bio/CtaCard.tsx
+
+Fichiers modifiés :
+  - src/app/admin/page.tsx
+    → Ajout carte "Biographie" dans la grille des modules (icône BookOpen)
+
+Migrations SQL B3 : aucune (tables créées en B1)
+
+Tests de non-régression B3 :
+  ✓ /admin/bio accessible depuis /admin (carte cliquable)
+  ✓ Formulaire Hero : modifier le sous-titre → recharger /biographie → vu
+  ✓ Upload image hero → URL stockée dans hero_image_url → affichée sur /biographie
+  ✓ Upload portrait → affiché dans section Histoire
+  ✓ Upload strip photos 1/2/3 → bug images brisées résolu
+  ✓ Modification citation → visible sur /biographie
+  ✓ Modification CTA → texte boutons mis à jour sur /biographie
+
+Risques B3 :
+  - Upload Storage : bien vérifier les policies RLS du bucket "bio"
+    (authenticated write, public read)
+  - Ne pas oublier le GRANT EXECUTE sur la RPC même si B3 ne l'utilise pas
+  - Les Server Actions doivent vérifier auth.role() = 'authenticated'
+    ou équivalent (pattern existant : createClient() côté server retourne
+    un client avec le cookie de session)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+B4 — Admin CRUD bio_timeline_events (drag & drop flèches)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Effort : M (3-4h)
+Objectif : carte Frise dans /admin/bio — ajouter, éditer, réordonner,
+supprimer les événements.
+
+Fichiers créés :
+  - src/app/admin/bio/TimelineCard.tsx  (Client Component — interactivité)
+  - src/app/admin/bio/actions.ts        ← ajout des actions timeline :
+    → createTimelineEvent(year, description)
+    → updateTimelineEvent(id, year, description)
+    → deleteTimelineEvent(id)
+    → reorderTimeline(eventIds: string[])  ← appelle RPC
+
+Fichiers modifiés :
+  - src/app/admin/bio/page.tsx
+    → Fetch bio_timeline_events en plus de bio_content
+    → Passe events à TimelineCard
+
+Migrations SQL B4 : aucune (RPC créée en B1)
+
+Tests de non-régression B4 :
+  ✓ Liste des 11 événements affichée dans l'ordre sort_order
+  ✓ Clic ↑ sur 1983 → 1963 et 1983 swappés → /biographie reflète le nouvel ordre
+  ✓ Clic "+ Ajouter" → nouvel événement en bas de liste → visible sur /biographie
+  ✓ Supprimer un événement → retiré de la frise publique
+  ✓ Éditer un texte → bouton "Enregistrer" → mise à jour visible
+  ✓ Clic ↑ sur le 1er élément → bouton désactivé
+  ✓ Clic ↓ sur le dernier élément → bouton désactivé
+  ✓ BioTimeline.tsx public : rendu identique, juste source données changée
+
+Risques B4 :
+  - La RPC reorder_timeline_events doit être testée avec un tableau partiel
+    (si on swap juste 2 éléments, on passe quand même tous les IDs)
+  - Cas edge : 0 événements → la frise disparaît de la page publique
+    (voir Livrable 4, point 2)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+B5 — Cleanup
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Effort : S (1-2h)
+Objectif : supprimer les résidus de l'ancienne architecture.
+
+Fichiers modifiés :
+  - src/locales/fr.ts
+    → Supprimer la section biography: {...} (lignes 218–246)
+    → Supprimer la clé biography du type Translations (ligne 33-38)
+    → Supprimer biography.discoverBio utilisé en dehors de bio page si besoin
+      (vérifier ArtistSection.tsx ligne 34 — c'est un lien, pas une clé texte)
+
+  - src/locales/en.ts
+    → Idem : supprimer biography: {...} (lignes 130–158)
+    → Mettre à jour le type si partagé avec fr.ts (interface Translations)
+
+  - src/locales/fr.ts ET en.ts
+    → Vérifier et supprimer : nav.biography n'est PAS dans les clés bio
+      (c'est dans nav:, pas à supprimer) — LAISSER nav.biography intact
+
+Fichiers potentiellement supprimés :
+  - Aucun composant à supprimer : BioTimeline.tsx reste utilisé (même
+    composant, nouvelle source de données).
+
+Migrations SQL B5 : aucune.
+
+Tests de non-régression B5 :
+  ✓ TypeScript build propre (tsc --noEmit) — aucune clé biography.* utilisée
+    dans du code TypeScript après suppression
+  ✓ Page /biographie toujours fonctionnelle (données viennent de Supabase)
+  ✓ Navbar et Footer : nav.biography toujours présent (non supprimé)
+  ✓ ArtistSection.tsx et AboutSection.tsx : liens /biographie toujours valides
+
+Risques B5 :
+  - Des composants externes (ArtistSection, AboutSection) utilisent
+    t.artist.discoverBio (fr.ts:144) pour le LIBELLÉ du lien /biographie,
+    pas t.biography.*. Ces clés artist.* sont hors périmètre et à NE PAS
+    supprimer.
+  - Vérifier qu'aucun usage de t.biography.* ne subsiste dans les fichiers
+    avant suppression (grep exhaustif).
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LIVRABLE 4 — POINTS OUVERTS / DÉCISIONS À TRANCHER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Les points suivants nécessitent ta validation avant Phase 3 :
+
+─────────────────────────────────────────────────────────────────────────────
+POINT 1 — Garde-t-on BioTimeline.tsx ou on le réécrit ?
+─────────────────────────────────────────────────────────────────────────────
+Recommandation : GARDER tel quel.
+
+Justification : BioTimeline reçoit events: TimelineEvent[] en props. Le
+type TimelineEvent actuel {year, description} correspond exactement aux
+colonnes de bio_timeline_events. Aucun refactor nécessaire — on change
+juste la source des données (fr.ts → Supabase).
+
+Si tu veux ajouter un titre court par événement (champ optionnel title?),
+il faudra :
+  a) Ajouter colonne title TEXT à bio_timeline_events
+  b) Étendre l'interface TimelineEvent
+  c) Modifier le rendu dans BioTimeline.tsx
+
+→ DÉCISION : ajoute-t-on un champ title par événement ?
+
+─────────────────────────────────────────────────────────────────────────────
+POINT 2 — Comportement si bio_timeline_events est vide
+─────────────────────────────────────────────────────────────────────────────
+La frise disparaît de la page publique (section masquée) ou affiche un
+placeholder ?
+
+Recommandation A : masquer la section complète si events.length === 0
+(condition dans page.tsx : {timeline.length > 0 && <section>...</section>})
+Recommandation B : afficher un placeholder "Aucun événement configuré"
+(visible uniquement en dev, masqué si events.length === 0 côté public)
+
+→ DÉCISION : option A (masquer) ou option B (placeholder) ?
+
+─────────────────────────────────────────────────────────────────────────────
+POINT 3 — Comportement au premier déploiement (bio_content vide ou NULL)
+─────────────────────────────────────────────────────────────────────────────
+Deux stratégies :
+
+Stratégie A (retenue dans ce document) :
+  Le seed B1 insère les données fr.ts dès la migration.
+  → Au premier déploiement (après B2), les données sont déjà en DB.
+  → Aucun fallback nécessaire pour les textes.
+  → Les images (hero_image_url, portrait_image_url) sont NULL jusqu'à
+    l'upload dans B3. Fallback vers les fichiers /images/bio/*.webp existants.
+
+Stratégie B : fallback complet vers fr.ts si bio_content est null.
+  → Plus résilient mais plus de code à maintenir.
+
+→ DÉCISION : confirmes-tu la Stratégie A (seed immédiat en B1) ?
+
+─────────────────────────────────────────────────────────────────────────────
+POINT 4 — Upload des images existantes : qui, quand ?
+─────────────────────────────────────────────────────────────────────────────
+Les images bio-hero.webp et ricoune-bio.webp existent en local
+(public/images/bio/). Il faut les uploader dans le bucket "bio" de
+Supabase Storage pour que l'admin puisse les gérer.
+
+Options :
+  Option A : upload manuel via le Dashboard Supabase Storage (avant B3).
+             URLs publiques récupérées et seedées dans bio_content.
+  Option B : upload programmatique dans le script seed (B1).
+             Complexifie B1 — probablement pas nécessaire.
+  Option C : l'admin les uploade lui-même via /admin/bio lors de B3.
+             Les fallbacks /images/bio/*.webp assurent l'affichage pendant B2.
+
+Recommandation : Option C (upload via admin lors de B3 — plus simple).
+Les fallbacks locaux couvrent la période B1→B3.
+
+→ DÉCISION : confirmes-tu Option C ?
+
+─────────────────────────────────────────────────────────────────────────────
+POINT 5 — Les fichiers /public/images/photos/ (bug images strip cassées)
+─────────────────────────────────────────────────────────────────────────────
+Les fichiers 3O8A8773.jpg, 3O8A5701.jpg, 3O8A8845.jpg n'existent pas dans
+public/images/photos/ (dossier absent). Le bug est résolu mécaniquement
+en B3 quand l'admin uploade 3 nouvelles photos pour le strip.
+
+Question : as-tu ces 3 photos en local (sur ton poste ou dans un dossier
+Drive) pour les uploader lors de B3 ?
+
+→ DÉCISION : confirmer que les photos de scène sont disponibles pour B3.
+   Si non disponibles, le strip sera visible avec placeholders gris.
+
+─────────────────────────────────────────────────────────────────────────────
+POINT 6 — Frise : flèches ↑↓ ou drag & drop @dnd-kit ?
+─────────────────────────────────────────────────────────────────────────────
+Ce document recommande les flèches ↑↓ (cohérence avec VideoCard et
+AlbumCard existants, pas de nouvelle dépendance).
+
+Si tu préfères le drag & drop (UX plus intuitive, pattern "albums tracks"
+mentionné dans le contexte) :
+  → @dnd-kit/core + @dnd-kit/sortable : ~35 ko gzip, React 19 compatible
+  → Pattern DndContext + SortableContext + useSortable par item
+  → L'appel à reorder_timeline_events reste identique dans les deux cas
+
+→ DÉCISION : flèches ↑↓ ou drag & drop @dnd-kit ?
+
+─────────────────────────────────────────────────────────────────────────────
+POINT 7 — Cache /biographie : revalidatePath ou revalidateTag ?
+─────────────────────────────────────────────────────────────────────────────
+Le document propose revalidatePath('/biographie') dans chaque Server
+Action (cohérent avec le pattern actuel de tous les modules).
+
+Alternative : cache tags (fetch('/...', { next: { tags: ['bio'] } }))
++ revalidateTag('bio') dans les actions. Plus granulaire mais plus de
+boilerplate.
+
+Recommandation : revalidatePath simple (cohérence avec les modules
+existants, complexité minimale).
+
+→ DÉCISION : confirmes-tu revalidatePath('/biographie') ?
+
+═══════════════════════════════════════════════════════════════════════════════
+RÉCAPITULATIF DES 7 DÉCISIONS À TRANCHER
+═══════════════════════════════════════════════════════════════════════════════
+
+| # | Question                                          | Reco doc              |
+|---|---------------------------------------------------|-----------------------|
+| 1 | Ajouter champ title? par événement de frise ?    | NON (garder {y,d})    |
+| 2 | Frise vide : masquer ou placeholder ?            | Masquer               |
+| 3 | Seed immédiat en B1 (Stratégie A) ?              | OUI                   |
+| 4 | Upload images existantes : via admin en B3 ?     | OUI (Option C)        |
+| 5 | Photos de scène disponibles pour upload en B3 ?  | [à confirmer]         |
+| 6 | Frise : flèches ↑↓ ou drag & drop ?             | Flèches ↑↓            |
+| 7 | Cache : revalidatePath ?                         | OUI                   |
+
+═══════════════════════════════════════════════════════════════════════════════
+FIN DU DOCUMENT — conception-bio-phase2.txt
+Aucune modification de fichier Next.js effectuée.
+Aucune migration SQL exécutée.
+En attente de validation avant Phase 3.
+═══════════════════════════════════════════════════════════════════════════════
