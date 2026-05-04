@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useState, useActionState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, LogOut, Loader2, CheckCircle } from 'lucide-react'
 import { signOut } from '../actions'
@@ -85,6 +85,49 @@ export default function BioAdminClient({ bio, timeline }: Props) {
     FormData
   >(updateBioContent, undefined)
 
+  const [imgDbStatus, setImgDbStatus] = useState<
+    Record<string, 'saved' | 'error' | null>
+  >({})
+
+  async function saveImageUrl(field: string, url: string) {
+    const fd = new FormData()
+    fd.append(field, url)
+    const result = await updateBioContent(undefined, fd)
+    const status = result?.error ? 'error' : 'saved'
+    setImgDbStatus((prev) => ({ ...prev, [field]: status }))
+    if (status === 'saved') {
+      setTimeout(() => {
+        setImgDbStatus((prev) => ({ ...prev, [field]: null }))
+      }, 3000)
+    }
+  }
+
+  const stripPhotos: {
+    field: string
+    currentUrl: string | null
+    storagePrefix: string
+    label: string
+  }[] = [
+    {
+      field: 'strip_photo_1_url',
+      currentUrl: bio?.strip_photo_1_url ?? null,
+      storagePrefix: 'strip-1',
+      label: 'Photo 1',
+    },
+    {
+      field: 'strip_photo_2_url',
+      currentUrl: bio?.strip_photo_2_url ?? null,
+      storagePrefix: 'strip-2',
+      label: 'Photo 2',
+    },
+    {
+      field: 'strip_photo_3_url',
+      currentUrl: bio?.strip_photo_3_url ?? null,
+      storagePrefix: 'strip-3',
+      label: 'Photo 3',
+    },
+  ]
+
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-[#0a0a0a]">
       <div className="mx-auto max-w-3xl px-6 py-8">
@@ -144,6 +187,29 @@ export default function BioAdminClient({ bio, timeline }: Props) {
             </h2>
             <form action={heroAction} className="space-y-4">
               <div>
+                <p className={LABEL}>Image de fond hero</p>
+                <BioImageUpload
+                  label=""
+                  currentUrl={bio?.hero_image_url ?? null}
+                  storagePrefix="hero"
+                  recommendedSize="1920×1080px WebP"
+                  onUploadComplete={async (url) => {
+                    await saveImageUrl('hero_image_url', url)
+                  }}
+                />
+                {imgDbStatus['hero_image_url'] === 'saved' && (
+                  <span className="mt-1.5 flex items-center gap-1 text-xs text-emerald-400">
+                    <CheckCircle size={11} />
+                    URL enregistrée
+                  </span>
+                )}
+                {imgDbStatus['hero_image_url'] === 'error' && (
+                  <p className="mt-1.5 text-xs text-red-400">
+                    Erreur d&apos;enregistrement — réessaie
+                  </p>
+                )}
+              </div>
+              <div>
                 <label htmlFor="hero_subtitle" className={LABEL}>
                   Sous-titre hero
                 </label>
@@ -195,6 +261,29 @@ export default function BioAdminClient({ bio, timeline }: Props) {
               Histoire
             </h2>
             <form action={historyAction} className="space-y-4">
+              <div>
+                <p className={LABEL}>Portrait</p>
+                <BioImageUpload
+                  label=""
+                  currentUrl={bio?.portrait_image_url ?? null}
+                  storagePrefix="portrait"
+                  recommendedSize="600×800px WebP (format portrait)"
+                  onUploadComplete={async (url) => {
+                    await saveImageUrl('portrait_image_url', url)
+                  }}
+                />
+                {imgDbStatus['portrait_image_url'] === 'saved' && (
+                  <span className="mt-1.5 flex items-center gap-1 text-xs text-emerald-400">
+                    <CheckCircle size={11} />
+                    URL enregistrée
+                  </span>
+                )}
+                {imgDbStatus['portrait_image_url'] === 'error' && (
+                  <p className="mt-1.5 text-xs text-red-400">
+                    Erreur d&apos;enregistrement — réessaie
+                  </p>
+                )}
+              </div>
               <div>
                 <label htmlFor="history_title" className={LABEL}>
                   Titre
@@ -253,7 +342,51 @@ export default function BioAdminClient({ bio, timeline }: Props) {
             </form>
           </section>
 
-          {/* ── Carte 4 : Philosophie ── */}
+          {/* ── Carte 4 : Photo Strip ── */}
+          <section className="rounded-lg border border-zinc-800 bg-zinc-900 p-6">
+            <h2
+              className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-300"
+              style={{ fontFamily: 'var(--font-oswald)' }}
+            >
+              Photo Strip — En scène
+            </h2>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              {stripPhotos.map(({ field, currentUrl, storagePrefix, label }) => (
+                <div key={field}>
+                  <p className={LABEL}>{label}</p>
+                  <BioImageUpload
+                    label=""
+                    currentUrl={currentUrl}
+                    storagePrefix={storagePrefix}
+                    recommendedSize="800×600px WebP"
+                    onUploadComplete={async (url) => {
+                      await saveImageUrl(field, url)
+                    }}
+                  />
+                  {imgDbStatus[field] === 'saved' && (
+                    <span className="mt-1.5 flex items-center gap-1 text-xs text-emerald-400">
+                      <CheckCircle size={11} />
+                      URL enregistrée
+                    </span>
+                  )}
+                  {imgDbStatus[field] === 'error' && (
+                    <p className="mt-1.5 text-xs text-red-400">
+                      Erreur d&apos;enregistrement — réessaie
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+            <p
+              className="mt-4 text-xs text-zinc-500"
+              style={{ fontFamily: 'var(--font-raleway)' }}
+            >
+              Les photos paysage (ratio 4/3 ou plus large) donnent un meilleur rendu.
+              Évite les portraits qui risquent d&apos;avoir la tête coupée par le cadrage automatique.
+            </p>
+          </section>
+
+          {/* ── Carte 5 : Philosophie ── */}
           <section className="rounded-lg border border-zinc-800 bg-zinc-900 p-6">
             <h2
               className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-300"
@@ -279,7 +412,7 @@ export default function BioAdminClient({ bio, timeline }: Props) {
             </form>
           </section>
 
-          {/* ── Carte 5 : CTA ── */}
+          {/* ── Carte 6 : CTA ── */}
           <section className="rounded-lg border border-zinc-800 bg-zinc-900 p-6">
             <h2
               className="mb-4 text-sm font-semibold uppercase tracking-wider text-zinc-300"
@@ -331,34 +464,6 @@ export default function BioAdminClient({ bio, timeline }: Props) {
               </div>
               <SaveRow state={ctaState} pending={ctaPending} />
             </form>
-          </section>
-
-          {/* ── Section test upload (conservée B3.1) ── */}
-          <section className="rounded-lg border border-amber-900/40 bg-zinc-900 p-6">
-            <h2
-              className="mb-1 text-sm font-semibold uppercase tracking-wider text-amber-400"
-              style={{ fontFamily: 'var(--font-oswald)' }}
-            >
-              Test Upload — B3.1
-            </h2>
-            <p
-              className="mb-5 text-xs text-zinc-500"
-              style={{ fontFamily: 'var(--font-raleway)' }}
-            >
-              Vérifie que l&apos;upload vers le bucket{' '}
-              <code className="rounded bg-zinc-800 px-1 text-zinc-400">bio</code> fonctionne.
-              Cette section sera remplacée par les cartes éditables en B3.2 / B3.3.
-              L&apos;URL retournée est loguée dans la console (F12).
-            </p>
-            <BioImageUpload
-              label="Image de test"
-              currentUrl={null}
-              storagePrefix="test"
-              recommendedSize="Tout format — test uniquement"
-              onUploadComplete={(url) => {
-                console.log('[BioImageUpload test] URL reçue :', url)
-              }}
-            />
           </section>
 
         </div>

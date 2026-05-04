@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 const ALLOWED_FIELDS = [
+  // Texte (B3.2)
   'hero_subtitle',
   'quote_text',
   'history_title',
@@ -14,6 +15,12 @@ const ALLOWED_FIELDS = [
   'cta_text',
   'cta_button_1_label',
   'cta_button_2_label',
+  // Images (B3.3)
+  'hero_image_url',
+  'portrait_image_url',
+  'strip_photo_1_url',
+  'strip_photo_2_url',
+  'strip_photo_3_url',
 ] as const
 
 type AllowedField = (typeof ALLOWED_FIELDS)[number]
