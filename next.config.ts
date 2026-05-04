@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
         hostname: "ulwyypcxocpudwxkgceo.supabase.co",
         pathname: "/storage/v1/object/public/album-covers/**",
       },
+      {
+        protocol: "https",
+        hostname: "ulwyypcxocpudwxkgceo.supabase.co",
+        pathname: "/storage/v1/object/public/bio/**",
+      },
     ],
   },
   async headers() {

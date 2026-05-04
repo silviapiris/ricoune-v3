@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import BiographiePageClient from "./BiographiePageClient";
+import { getBioContent, getBioTimeline } from "@/lib/bio";
 
 export const metadata: Metadata = {
   title: "Biographie",
@@ -17,6 +18,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function BiographiePage() {
-  return <BiographiePageClient />;
+export default async function BiographiePage() {
+  const [bio, timeline] = await Promise.all([
+    getBioContent(),
+    getBioTimeline(),
+  ]);
+
+  return <BiographiePageClient bio={bio} timeline={timeline} />;
 }

@@ -4,17 +4,24 @@ import Image from "next/image";
 import Link from "next/link";
 import AnimatedSection from "@/components/AnimatedSection";
 import BioTimeline from "@/components/bio/BioTimeline";
-import { useLanguage } from "@/contexts/LanguageContext";
+import type { BioContent, BioTimelineEvent } from "@/lib/bio";
 
-export default function BiographiePageClient(): React.ReactElement {
-  const { t } = useLanguage();
+interface Props {
+  bio: BioContent | null;
+  timeline: BioTimelineEvent[];
+}
+
+export default function BiographiePageClient({ bio, timeline }: Props): React.ReactElement {
+  const heroSrc = bio?.hero_image_url ?? "/images/bio/bio-hero.webp";
+  const portraitSrc = bio?.portrait_image_url ?? "/images/bio/ricoune-bio.webp";
+
   return (
     <>
       {/* ===== 1. HERO ===== */}
       <section className="relative flex min-h-[60vh] items-center justify-center overflow-hidden">
         <Image
-          src="/images/bio/bio-hero.webp"
-          alt="Ricoune sur sc&egrave;ne"
+          src={heroSrc}
+          alt="Ricoune sur scène"
           fill
           priority
           className="object-cover"
@@ -26,7 +33,7 @@ export default function BiographiePageClient(): React.ReactElement {
             RICOUNE
           </h1>
           <p className="mt-4 font-[family-name:var(--font-raleway)] text-xl text-white/80">
-            {t.biography.subtitle}
+            {bio?.hero_subtitle ?? ""}
           </p>
         </div>
       </section>
@@ -40,7 +47,7 @@ export default function BiographiePageClient(): React.ReactElement {
                 &laquo;
               </span>
               <blockquote className="mt-2 font-[family-name:var(--font-raleway)] text-xl italic leading-relaxed text-white md:text-2xl">
-                {t.biography.quote}
+                {bio?.quote_text ?? ""}
               </blockquote>
               <span className="mt-2 inline-block font-[family-name:var(--font-oswald)] text-6xl leading-none text-rc-yellow">
                 &raquo;
@@ -55,7 +62,7 @@ export default function BiographiePageClient(): React.ReactElement {
         <div className="mx-auto max-w-6xl px-4">
           <AnimatedSection className="mb-10">
             <h2 className="font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
-              {t.biography.historyTitle}
+              {bio?.history_title ?? ""}
             </h2>
           </AnimatedSection>
 
@@ -64,8 +71,8 @@ export default function BiographiePageClient(): React.ReactElement {
               <div className="mx-auto w-full max-w-[280px] md:max-w-none">
                 <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-rc-yellow/20 shadow-xl">
                   <Image
-                    src="/images/bio/ricoune-bio.webp"
-                    alt={t.biography.bioPortraitAlt}
+                    src={portraitSrc}
+                    alt={bio?.portrait_alt ?? ""}
                     fill
                     className="object-cover object-top"
                     sizes="(max-width: 768px) 280px, 33vw"
@@ -74,10 +81,10 @@ export default function BiographiePageClient(): React.ReactElement {
               </div>
               <div className="space-y-4 md:text-justify">
                 <p className="leading-relaxed text-white/85">
-                  {t.biography.historyP1}
+                  {bio?.history_paragraph_1 ?? ""}
                 </p>
                 <p className="leading-relaxed text-white/85">
-                  {t.biography.historyP2}
+                  {bio?.history_paragraph_2 ?? ""}
                 </p>
               </div>
             </div>
@@ -85,52 +92,54 @@ export default function BiographiePageClient(): React.ReactElement {
         </div>
       </section>
 
-      {/* ===== 4. MOMENTS CLES (Timeline) ===== */}
-      <section className="py-16 md:py-24">
-        <div className="mx-auto max-w-4xl px-4">
-          <AnimatedSection className="mb-10">
-            <h2 className="font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
-              {t.biography.keyMomentsTitle}
-            </h2>
-          </AnimatedSection>
+      {/* ===== 4. MOMENTS CLÉS (Timeline) ===== */}
+      {timeline.length > 0 && (
+        <section className="py-16 md:py-24">
+          <div className="mx-auto max-w-4xl px-4">
+            <AnimatedSection className="mb-10">
+              <h2 className="font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
+                {bio?.timeline_title ?? ""}
+              </h2>
+            </AnimatedSection>
 
-          <BioTimeline events={t.biography.timeline} />
-        </div>
-      </section>
+            <BioTimeline
+              events={timeline.map(({ year, description }) => ({ year, description }))}
+            />
+          </div>
+        </section>
+      )}
 
       {/* ===== 4b. PHOTO STRIP ===== */}
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-6xl px-4">
           <AnimatedSection className="mb-10">
-            <span className="rc-section-label">{t.biography.stripLabel}</span>
+            <span className="rc-section-label">{bio?.strip_label ?? ""}</span>
             <h2 className="mt-3 font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
-              {t.biography.stripTitle}
+              {bio?.strip_title ?? ""}
             </h2>
           </AnimatedSection>
 
           <AnimatedSection>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              {[
-                "/images/photos/3O8A8773-800x453.jpg",
-                "/images/photos/3O8A5701-800x523.jpg",
-                "/images/photos/3O8A8845-800x453.jpg",
-              ].map((src, i) => (
-                <Link href="/photos" key={src} className="group block overflow-hidden rounded-xl">
-                  <div className="relative aspect-[4/3] w-full overflow-hidden">
-                    <Image
-                      src={src}
-                      alt={`Ricoune en scène ${i + 1}`}
-                      fill
-                      className="object-cover transition-all duration-300 group-hover:scale-[1.03] group-hover:saturate-150"
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                    />
-                  </div>
-                </Link>
-              ))}
+              {[bio?.strip_photo_1_url, bio?.strip_photo_2_url, bio?.strip_photo_3_url]
+                .filter((src): src is string => src !== null && src !== undefined)
+                .map((src, i) => (
+                  <Link href="/photos" key={src} className="group block overflow-hidden rounded-xl">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden">
+                      <Image
+                        src={src}
+                        alt={`Ricoune en scène ${i + 1}`}
+                        fill
+                        className="object-cover transition-all duration-300 group-hover:scale-[1.03] group-hover:saturate-150"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    </div>
+                  </Link>
+                ))}
             </div>
             <div className="mt-8 text-center">
               <Link href="/photos" className="rc-btn-outline">
-                {t.biography.stripCta}
+                {bio?.strip_cta_label ?? ""}
               </Link>
             </div>
           </AnimatedSection>
@@ -142,7 +151,7 @@ export default function BiographiePageClient(): React.ReactElement {
         <div className="mx-auto max-w-3xl px-4 text-center">
           <AnimatedSection>
             <p className="text-lg leading-relaxed text-white/90">
-              {t.biography.philosophy}
+              {bio?.philosophy_text ?? ""}
             </p>
           </AnimatedSection>
         </div>
@@ -154,13 +163,15 @@ export default function BiographiePageClient(): React.ReactElement {
           <AnimatedSection>
             <div className="rc-card px-6 py-12 text-center md:px-12 md:py-16">
               <p className="mb-8 text-xl text-white/90 md:text-2xl">
-                {t.biography.ctaText}
+                {bio?.cta_text ?? ""}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link href="/concerts" className="rc-btn">
-                  {t.biography.viewDates}
+                  {bio?.cta_button_1_label ?? ""}
                 </Link>
-                <Link href="/professionnels/demande-de-devis" className="rc-btn-outline">{t.biography.requestQuote}</Link>
+                <Link href="/professionnels/demande-de-devis" className="rc-btn-outline">
+                  {bio?.cta_button_2_label ?? ""}
+                </Link>
               </div>
             </div>
           </AnimatedSection>
