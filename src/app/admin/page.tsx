@@ -1,6 +1,6 @@
 import { Oswald, Raleway } from 'next/font/google'
 import Link from 'next/link'
-import { Calendar, Image, Disc3, Video, Mail, FileText, KeyRound } from 'lucide-react'
+import { Calendar, Image, Disc3, Video, Mail, FileText, KeyRound, BookOpen } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { signOut } from './actions'
 import { getConcerts } from './concerts/actions'
@@ -200,6 +200,25 @@ export default async function AdminDashboardPage() {
                 </div>
                 <p className="text-xs text-zinc-400" style={{ fontFamily: 'var(--font-raleway)' }}>
                   Gérer les albums et tracklist
+                </p>
+              </Link>
+
+              {/* Carte ACTIVE Biographie */}
+              <Link
+                href="/admin/bio"
+                className="group flex flex-col gap-2 rounded-lg border border-zinc-700 bg-zinc-800/50 p-5 transition-all hover:border-[#f5c518]/50 hover:bg-zinc-800"
+              >
+                <div className="flex items-center justify-between">
+                  <BookOpen size={22} className="text-[#f5c518]" />
+                </div>
+                <div
+                  className="text-base font-semibold uppercase tracking-wider text-[#f5c518]"
+                  style={{ fontFamily: 'var(--font-oswald)' }}
+                >
+                  Biographie
+                </div>
+                <p className="text-xs text-zinc-400" style={{ fontFamily: 'var(--font-raleway)' }}>
+                  Modifier les textes et photos de la page bio
                 </p>
               </Link>
 
