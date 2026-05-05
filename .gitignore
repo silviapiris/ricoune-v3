@@ -44,3 +44,11 @@ next-env.d.ts
 .vercel
 site pour Kévin/écoute et visus/9 lives/
 site pour Kévin/écoute et visus/8 bonus/marcel_photo_01.pdf
+
+# Credentials & secrets - prevent accidental commits (added 05/05/2026)
+*mdp*.txt
+*password*.txt
+*passwd*.txt
+*credentials*.txt
+*secrets*.txt
+*token*.txt
