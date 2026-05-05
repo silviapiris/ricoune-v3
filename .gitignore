@@ -52,3 +52,6 @@ site pour Kévin/écoute et visus/8 bonus/marcel_photo_01.pdf
 *credentials*.txt
 *secrets*.txt
 *token*.txt
+
+# Migration scripts archived out of repo (added 05/05/2026)
+scripts/migrate-*.mjs
