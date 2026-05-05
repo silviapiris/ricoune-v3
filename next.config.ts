@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "frame-ancestors 'none'; frame-src https://www.youtube.com https://www.youtube-nocookie.com",
+              "frame-ancestors 'none'; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://challenges.cloudflare.com",
           },
         ],
       },

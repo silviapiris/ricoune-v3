@@ -13,6 +13,7 @@ export async function signIn(
 ): Promise<SignInState> {
   const email = formData.get('email')
   const password = formData.get('password')
+  const captchaToken = formData.get('cf-turnstile-response')
 
   if (typeof email !== 'string' || typeof password !== 'string') {
     return { error: 'Champs invalides.' }
@@ -22,11 +23,18 @@ export async function signIn(
     return { error: 'Email et mot de passe requis.' }
   }
 
+  if (typeof captchaToken !== 'string' || !captchaToken) {
+    return { error: 'Veuillez compléter le CAPTCHA.' }
+  }
+
   const supabase = await createClient()
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
+    options: {
+      captchaToken,
+    },
   })
 
   if (error) {
