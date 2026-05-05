@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimitDevis } from "@/lib/rate-limit";
 import { devisSchema } from "@/lib/validations/devis";
 
 export async function POST(request: Request): Promise<NextResponse> {
@@ -11,7 +11,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       headersList.get("x-real-ip") ||
       "unknown";
 
-    if (!rateLimit(ip, 3, 3_600_000)) {
+    if (!(await rateLimitDevis(ip))) {
       return NextResponse.json(
         { error: "Trop de requêtes. Réessayez dans une heure." },
         { status: 429 },

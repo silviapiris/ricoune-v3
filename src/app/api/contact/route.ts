@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
-import { rateLimit } from "@/lib/rate-limit";
+import { rateLimitContact } from "@/lib/rate-limit";
 import { contactSchema } from "@/lib/validations/contact";
 import { createClient } from "@/lib/supabase/server";
 
@@ -12,7 +12,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       headersList.get("x-real-ip") ||
       "unknown";
 
-    if (!rateLimit(ip, 3, 3_600_000)) {
+    if (!(await rateLimitContact(ip))) {
       return NextResponse.json(
         { error: "Trop de requêtes. Réessayez dans une heure." },
         { status: 429 },
