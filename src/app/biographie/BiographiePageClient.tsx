@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import AnimatedSection from "@/components/AnimatedSection";
 import BioTimeline from "@/components/bio/BioTimeline";
+import { useLanguage } from "@/contexts/LanguageContext";
 import type { BioContent, BioTimelineEvent } from "@/lib/bio";
 
 interface Props {
@@ -12,6 +13,16 @@ interface Props {
 }
 
 export default function BiographiePageClient({ bio, timeline }: Props): React.ReactElement {
+  const { lang } = useLanguage();
+
+  const txt = (fr: string | null | undefined, en: string | null | undefined): string => {
+    if (lang === "en") {
+      const enTrimmed = en?.trim();
+      return enTrimmed ? enTrimmed : (fr ?? "");
+    }
+    return fr ?? "";
+  };
+
   const heroSrc = bio?.hero_image_url ?? "/images/bio/bio-hero.webp";
   const portraitSrc = bio?.portrait_image_url ?? "/images/bio/ricoune-bio.webp";
 
@@ -33,7 +44,7 @@ export default function BiographiePageClient({ bio, timeline }: Props): React.Re
             RICOUNE
           </h1>
           <p className="mt-4 font-[family-name:var(--font-raleway)] text-xl text-white/80">
-            {bio?.hero_subtitle ?? ""}
+            {txt(bio?.hero_subtitle, bio?.hero_subtitle_en)}
           </p>
         </div>
       </section>
@@ -47,7 +58,7 @@ export default function BiographiePageClient({ bio, timeline }: Props): React.Re
                 &laquo;
               </span>
               <blockquote className="mt-2 font-[family-name:var(--font-raleway)] text-xl italic leading-relaxed text-white md:text-2xl">
-                {bio?.quote_text ?? ""}
+                {txt(bio?.quote_text, bio?.quote_text_en)}
               </blockquote>
               <span className="mt-2 inline-block font-[family-name:var(--font-oswald)] text-6xl leading-none text-rc-yellow">
                 &raquo;
@@ -62,7 +73,7 @@ export default function BiographiePageClient({ bio, timeline }: Props): React.Re
         <div className="mx-auto max-w-6xl px-4">
           <AnimatedSection className="mb-10">
             <h2 className="font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
-              {bio?.history_title ?? ""}
+              {txt(bio?.history_title, bio?.history_title_en)}
             </h2>
           </AnimatedSection>
 
@@ -72,7 +83,7 @@ export default function BiographiePageClient({ bio, timeline }: Props): React.Re
                 <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-rc-yellow/20 shadow-xl">
                   <Image
                     src={portraitSrc}
-                    alt={bio?.portrait_alt ?? ""}
+                    alt={txt(bio?.portrait_alt, bio?.portrait_alt_en)}
                     fill
                     className="object-cover object-top"
                     sizes="(max-width: 768px) 280px, 33vw"
@@ -81,10 +92,10 @@ export default function BiographiePageClient({ bio, timeline }: Props): React.Re
               </div>
               <div className="space-y-4 md:text-justify">
                 <p className="leading-relaxed text-white/85">
-                  {bio?.history_paragraph_1 ?? ""}
+                  {txt(bio?.history_paragraph_1, bio?.history_paragraph_1_en)}
                 </p>
                 <p className="leading-relaxed text-white/85">
-                  {bio?.history_paragraph_2 ?? ""}
+                  {txt(bio?.history_paragraph_2, bio?.history_paragraph_2_en)}
                 </p>
               </div>
             </div>
@@ -98,12 +109,15 @@ export default function BiographiePageClient({ bio, timeline }: Props): React.Re
           <div className="mx-auto max-w-4xl px-4">
             <AnimatedSection className="mb-10">
               <h2 className="font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
-                {bio?.timeline_title ?? ""}
+                {txt(bio?.timeline_title, bio?.timeline_title_en)}
               </h2>
             </AnimatedSection>
 
             <BioTimeline
-              events={timeline.map(({ year, description }) => ({ year, description }))}
+              events={timeline.map(({ year, year_en, description, description_en }) => ({
+                year: txt(year, year_en),
+                description: txt(description, description_en),
+              }))}
             />
           </div>
         </section>
@@ -113,9 +127,9 @@ export default function BiographiePageClient({ bio, timeline }: Props): React.Re
       <section className="py-16 md:py-24">
         <div className="mx-auto max-w-6xl px-4">
           <AnimatedSection className="mb-10">
-            <span className="rc-section-label">{bio?.strip_label ?? ""}</span>
+            <span className="rc-section-label">{txt(bio?.strip_label, bio?.strip_label_en)}</span>
             <h2 className="mt-3 font-[family-name:var(--font-oswald)] text-3xl font-bold text-white">
-              {bio?.strip_title ?? ""}
+              {txt(bio?.strip_title, bio?.strip_title_en)}
             </h2>
           </AnimatedSection>
 
@@ -139,7 +153,7 @@ export default function BiographiePageClient({ bio, timeline }: Props): React.Re
             </div>
             <div className="mt-8 text-center">
               <Link href="/photos" className="rc-btn-outline">
-                {bio?.strip_cta_label ?? ""}
+                {txt(bio?.strip_cta_label, bio?.strip_cta_label_en)}
               </Link>
             </div>
           </AnimatedSection>
@@ -151,7 +165,7 @@ export default function BiographiePageClient({ bio, timeline }: Props): React.Re
         <div className="mx-auto max-w-3xl px-4 text-center">
           <AnimatedSection>
             <p className="text-lg leading-relaxed text-white/90">
-              {bio?.philosophy_text ?? ""}
+              {txt(bio?.philosophy_text, bio?.philosophy_text_en)}
             </p>
           </AnimatedSection>
         </div>
@@ -163,14 +177,14 @@ export default function BiographiePageClient({ bio, timeline }: Props): React.Re
           <AnimatedSection>
             <div className="rc-card px-6 py-12 text-center md:px-12 md:py-16">
               <p className="mb-8 text-xl text-white/90 md:text-2xl">
-                {bio?.cta_text ?? ""}
+                {txt(bio?.cta_text, bio?.cta_text_en)}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link href="/concerts" className="rc-btn">
-                  {bio?.cta_button_1_label ?? ""}
+                  {txt(bio?.cta_button_1_label, bio?.cta_button_1_label_en)}
                 </Link>
                 <Link href="/professionnels/demande-de-devis" className="rc-btn-outline">
-                  {bio?.cta_button_2_label ?? ""}
+                  {txt(bio?.cta_button_2_label, bio?.cta_button_2_label_en)}
                 </Link>
               </div>
             </div>
