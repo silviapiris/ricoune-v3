@@ -88,6 +88,11 @@ export default function BioAdminClient({ bio, timeline }: Props) {
     FormData
   >(updateBioContent, undefined)
 
+  const [stripState, stripAction, stripPending] = useActionState<
+    BioTextState | undefined,
+    FormData
+  >(updateBioContent, undefined)
+
   // ── Image DB status (B3.3) ────────────────────────────────────────────────
   const [imgDbStatus, setImgDbStatus] = useState<
     Record<string, 'saved' | 'error' | null>
@@ -488,40 +493,85 @@ export default function BioAdminClient({ bio, timeline }: Props) {
             >
               Photo Strip — En scène
             </h2>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-              {stripPhotos.map(({ field, currentUrl, storagePrefix, label }) => (
-                <div key={field}>
-                  <p className={LABEL}>{label}</p>
-                  <BioImageUpload
-                    label=""
-                    currentUrl={currentUrl}
-                    storagePrefix={storagePrefix}
-                    recommendedSize="800×600px WebP"
-                    onUploadComplete={async (url) => {
-                      await saveImageUrl(field, url)
-                    }}
-                  />
-                  {imgDbStatus[field] === 'saved' && (
-                    <span className="mt-1.5 flex items-center gap-1 text-xs text-emerald-400">
-                      <CheckCircle size={11} />
-                      URL enregistrée
-                    </span>
-                  )}
-                  {imgDbStatus[field] === 'error' && (
-                    <p className="mt-1.5 text-xs text-red-400">
-                      Erreur d&apos;enregistrement — réessaie
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-            <p
-              className="mt-4 text-xs text-zinc-500"
-              style={{ fontFamily: 'var(--font-raleway)' }}
-            >
-              Les photos paysage (ratio 4/3 ou plus large) donnent un meilleur rendu.
-              Évite les portraits qui risquent d&apos;avoir la tête coupée par le cadrage automatique.
-            </p>
+            <form action={stripAction} className="space-y-4">
+              <div>
+                <label htmlFor="strip_label" className={LABEL}>
+                  Sur-titre du strip
+                </label>
+                <input
+                  id="strip_label"
+                  type="text"
+                  name="strip_label"
+                  maxLength={60}
+                  defaultValue={bio?.strip_label ?? ''}
+                  disabled={stripPending}
+                  className={INPUT}
+                />
+              </div>
+              <div>
+                <label htmlFor="strip_title" className={LABEL}>
+                  Titre du strip
+                </label>
+                <input
+                  id="strip_title"
+                  type="text"
+                  name="strip_title"
+                  maxLength={100}
+                  defaultValue={bio?.strip_title ?? ''}
+                  disabled={stripPending}
+                  className={INPUT}
+                />
+              </div>
+              <div>
+                <label htmlFor="strip_cta_label" className={LABEL}>
+                  Libellé du bouton (CTA)
+                </label>
+                <input
+                  id="strip_cta_label"
+                  type="text"
+                  name="strip_cta_label"
+                  maxLength={60}
+                  defaultValue={bio?.strip_cta_label ?? ''}
+                  disabled={stripPending}
+                  className={INPUT}
+                />
+              </div>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                {stripPhotos.map(({ field, currentUrl, storagePrefix, label }) => (
+                  <div key={field}>
+                    <p className={LABEL}>{label}</p>
+                    <BioImageUpload
+                      label=""
+                      currentUrl={currentUrl}
+                      storagePrefix={storagePrefix}
+                      recommendedSize="800×600px WebP"
+                      onUploadComplete={async (url) => {
+                        await saveImageUrl(field, url)
+                      }}
+                    />
+                    {imgDbStatus[field] === 'saved' && (
+                      <span className="mt-1.5 flex items-center gap-1 text-xs text-emerald-400">
+                        <CheckCircle size={11} />
+                        URL enregistrée
+                      </span>
+                    )}
+                    {imgDbStatus[field] === 'error' && (
+                      <p className="mt-1.5 text-xs text-red-400">
+                        Erreur d&apos;enregistrement — réessaie
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p
+                className="text-xs text-zinc-500"
+                style={{ fontFamily: 'var(--font-raleway)' }}
+              >
+                Les photos paysage (ratio 4/3 ou plus large) donnent un meilleur rendu.
+                Évite les portraits qui risquent d&apos;avoir la tête coupée par le cadrage automatique.
+              </p>
+              <SaveRow state={stripState} pending={stripPending} />
+            </form>
           </section>
 
           {/* ── Carte 6 : Philosophie ── */}

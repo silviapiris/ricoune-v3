@@ -15,6 +15,9 @@ const ALLOWED_FIELDS = [
   'cta_text',
   'cta_button_1_label',
   'cta_button_2_label',
+  'strip_label',
+  'strip_title',
+  'strip_cta_label',
   // Images (B3.3)
   'hero_image_url',
   'portrait_image_url',
