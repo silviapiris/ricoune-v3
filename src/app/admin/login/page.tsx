@@ -1,14 +1,12 @@
 'use client'
 
-import { Turnstile } from '@marsidev/react-turnstile'
 import Link from 'next/link'
 import { Oswald, Raleway } from 'next/font/google'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useActionState } from 'react'
 import { PasswordInput } from '@/components/admin/PasswordInput'
+import TurnstileWidget from '@/components/forms/TurnstileWidget'
 import { signIn, type SignInState } from './actions'
-
-const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
 const oswald = Oswald({
   subsets: ['latin'],
@@ -137,25 +135,7 @@ export default function AdminLoginPage() {
             />
           </div>
 
-          {TURNSTILE_SITE_KEY ? (
-            <div className="my-4 flex justify-center">
-              <Turnstile
-                siteKey={TURNSTILE_SITE_KEY}
-                options={{
-                  theme: 'dark',
-                  language: 'fr',
-                }}
-              />
-            </div>
-          ) : (
-            <p
-              role="alert"
-              className="rounded border border-red-900/50 bg-red-950/50 px-4 py-2.5 text-center text-sm text-red-400"
-              style={{ fontFamily: 'var(--font-raleway)' }}
-            >
-              Erreur de configuration : clé Turnstile manquante.
-            </p>
-          )}
+          <TurnstileWidget />
 
           <button
             type="submit"
