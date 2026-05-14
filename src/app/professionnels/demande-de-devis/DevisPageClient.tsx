@@ -5,6 +5,7 @@ import Link from "next/link";
 import { SelectField } from "@/components/ui/SelectField";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { devisSchema } from "@/lib/validations/devis";
+import TurnstileWidget from "@/components/forms/TurnstileWidget";
 
 const INPUT_CLASSES =
   "w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-white/40 outline-none transition-colors focus:border-rc-yellow focus:outline-none";
@@ -44,7 +45,12 @@ export default function DevisPageClient(): React.JSX.Element {
   }
 
   async function handleSubmit(e: FormEvent): Promise<void> {
+    const formElement = e.currentTarget as HTMLFormElement;
     e.preventDefault();
+    const captchaToken =
+      (new FormData(formElement).get("cf-turnstile-response") as
+        | string
+        | null) ?? "";
     setErrors({});
     setLoading(true);
     setError(false);
@@ -77,7 +83,11 @@ export default function DevisPageClient(): React.JSX.Element {
       const res = await fetch("/api/devis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...result.data, website: honeypot }),
+        body: JSON.stringify({
+          ...result.data,
+          website: honeypot,
+          captchaToken,
+        }),
       });
       if (!res.ok) throw new Error("Request failed");
       setSuccess(true);
@@ -311,6 +321,8 @@ export default function DevisPageClient(): React.JSX.Element {
 
           {/* RGPD */}
           <p className="text-sm text-white/50">{t.devis.rgpd}</p>
+
+          <TurnstileWidget />
 
           {/* Submit */}
           <button

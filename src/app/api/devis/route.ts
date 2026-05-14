@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { rateLimitDevis } from "@/lib/rate-limit";
 import { devisSchema } from "@/lib/validations/devis";
+import { verifyTurnstileToken } from "@/lib/verify-turnstile";
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
@@ -19,6 +20,22 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 
     const body = await request.json() as Record<string, unknown>;
+
+    const captchaToken = body.captchaToken as string | undefined;
+    if (!captchaToken) {
+      return NextResponse.json(
+        { success: false, error: "Verification anti-bot manquante" },
+        { status: 400 },
+      );
+    }
+
+    const isValidCaptcha = await verifyTurnstileToken(captchaToken, ip);
+    if (!isValidCaptcha) {
+      return NextResponse.json(
+        { success: false, error: "Une erreur est survenue. Veuillez reessayer." },
+        { status: 403 },
+      );
+    }
 
     // Honeypot : si le champ "website" est rempli, c'est un bot
     if (body.website) {
