@@ -1,8 +1,11 @@
 'use client'
 
+import { Turnstile } from '@marsidev/react-turnstile'
 import Link from 'next/link'
 import { useActionState } from 'react'
 import { sendPasswordResetAction } from '../login/actions'
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
 export default function AdminForgotPasswordPage() {
   const [state, formAction, isPending] = useActionState(
@@ -46,6 +49,26 @@ export default function AdminForgotPasswordPage() {
               placeholder="vous@exemple.com"
             />
           </div>
+
+          {TURNSTILE_SITE_KEY ? (
+            <div className="my-4 flex justify-center">
+              <Turnstile
+                siteKey={TURNSTILE_SITE_KEY}
+                options={{
+                  theme: 'dark',
+                  language: 'fr',
+                }}
+              />
+            </div>
+          ) : (
+            <p
+              role="alert"
+              className="rounded border border-red-900/50 bg-red-950/50 px-4 py-2.5 text-center text-sm text-red-400"
+              style={{ fontFamily: 'var(--font-raleway)' }}
+            >
+              Erreur de configuration : clé Turnstile manquante.
+            </p>
+          )}
 
           <button
             type="submit"

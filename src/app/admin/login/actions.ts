@@ -90,6 +90,11 @@ export async function sendPasswordResetAction(
     return genericResponse
   }
 
+  const captchaToken = formData.get('cf-turnstile-response')
+  if (typeof captchaToken !== 'string' || !captchaToken) {
+    return genericResponse
+  }
+
   // Rate limit par email (fail-open si Upstash indisponible)
   try {
     const { success } = await passwordResetLimiter.limit(email)
@@ -104,6 +109,7 @@ export async function sendPasswordResetAction(
   const supabase = await createClient()
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: 'https://ricoune.com/auth/callback',
+    captchaToken,
   })
 
   if (error) {
