@@ -7,6 +7,7 @@ import { contactSchema } from "@/lib/validations/contact";
 import type { ContactFormData } from "@/lib/validations/contact";
 import { SelectField } from "@/components/ui/SelectField";
 import { useLanguage } from "@/contexts/LanguageContext";
+import TurnstileWidget from "@/components/forms/TurnstileWidget";
 
 const INPUT_CLASS =
   "w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/40 focus:border-rc-yellow focus:outline-none transition-colors";
@@ -48,7 +49,12 @@ export default function ContactForm({
 
   const handleSubmit = useCallback(
     async (e: FormEvent): Promise<void> => {
+      const formElement = e.currentTarget as HTMLFormElement;
       e.preventDefault();
+      const captchaToken =
+        (new FormData(formElement).get("cf-turnstile-response") as
+          | string
+          | null) ?? "";
       setErrors({});
       setStatus("idle");
 
@@ -70,7 +76,11 @@ export default function ContactForm({
         const res = await fetch("/api/contact", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...result.data, website: honeypot }),
+          body: JSON.stringify({
+            ...result.data,
+            website: honeypot,
+            captchaToken,
+          }),
         });
         if (!res.ok) throw new Error("Failed");
         setStatus("success");
@@ -255,6 +265,8 @@ export default function ContactForm({
         <p className="text-xs text-white/50">
           {t.contact.form.rgpd}
         </p>
+
+        <TurnstileWidget />
 
         {/* Submit */}
         <button type="submit" disabled={loading} className="rc-btn w-full">
