@@ -1,8 +1,10 @@
 'use client'
 
 import { Turnstile } from '@marsidev/react-turnstile'
+import Link from 'next/link'
 import { Oswald, Raleway } from 'next/font/google'
-import { useActionState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { Suspense, useActionState } from 'react'
 import { signIn, type SignInState } from './actions'
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
@@ -20,6 +22,45 @@ const raleway = Raleway({
 })
 
 const initialState: SignInState = {}
+
+const errorMessages: Record<string, string> = {
+  invalid_link: 'Le lien est invalide. Demandez un nouveau lien de réinitialisation.',
+  expired_link: 'Le lien a expiré. Demandez un nouveau lien de réinitialisation.',
+}
+
+function UrlMessageBanners() {
+  const searchParams = useSearchParams()
+  const urlError = searchParams.get('error')
+  const urlSuccess = searchParams.get('password_updated')
+  const urlErrorMessage = urlError ? errorMessages[urlError] ?? null : null
+  const passwordUpdatedMessage =
+    urlSuccess === '1'
+      ? 'Mot de passe mis à jour avec succès. Connectez-vous avec votre nouveau mot de passe.'
+      : null
+
+  return (
+    <>
+      {urlErrorMessage && (
+        <p
+          role="alert"
+          className="mb-4 rounded border border-red-900/50 bg-red-950/50 px-4 py-2.5 text-center text-sm text-red-400"
+          style={{ fontFamily: 'var(--font-raleway)' }}
+        >
+          {urlErrorMessage}
+        </p>
+      )}
+      {passwordUpdatedMessage && (
+        <p
+          role="status"
+          className="mb-4 rounded border border-green-900/50 bg-green-950/50 px-4 py-2.5 text-center text-sm text-green-400"
+          style={{ fontFamily: 'var(--font-raleway)' }}
+        >
+          {passwordUpdatedMessage}
+        </p>
+      )}
+    </>
+  )
+}
 
 export default function AdminLoginPage() {
   const [state, formAction, pending] = useActionState(signIn, initialState)
@@ -41,6 +82,10 @@ export default function AdminLoginPage() {
         >
           Espace de gestion réservé
         </p>
+
+        <Suspense fallback={null}>
+          <UrlMessageBanners />
+        </Suspense>
 
         <form action={formAction} className="space-y-5">
           <div>
@@ -64,13 +109,22 @@ export default function AdminLoginPage() {
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="mb-2 block text-sm font-medium text-zinc-200"
-              style={{ fontFamily: 'var(--font-raleway)' }}
-            >
-              Mot de passe
-            </label>
+            <div className="mb-2 flex items-center justify-between">
+              <label
+                htmlFor="password"
+                className="text-sm font-medium text-zinc-200"
+                style={{ fontFamily: 'var(--font-raleway)' }}
+              >
+                Mot de passe
+              </label>
+              <Link
+                href="/admin/forgot-password"
+                className="text-xs text-zinc-400 transition hover:text-rc-yellow hover:underline"
+                style={{ fontFamily: 'var(--font-raleway)' }}
+              >
+                Mot de passe oublié ?
+              </Link>
+            </div>
             <input
               id="password"
               name="password"
@@ -122,13 +176,6 @@ export default function AdminLoginPage() {
             </p>
           )}
         </form>
-
-        <p
-          className="mt-6 text-center text-xs text-zinc-500"
-          style={{ fontFamily: 'var(--font-raleway)' }}
-        >
-          Si vous avez perdu votre accès, contactez Silvia.
-        </p>
       </div>
     </div>
   )

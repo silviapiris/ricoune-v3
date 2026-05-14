@@ -37,12 +37,13 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   // Protection des routes /admin/*
-  // Exception : /admin/login est accessible sans authentification
+  // Exceptions : /admin/login et /admin/forgot-password sont accessibles sans authentification
   const pathname = request.nextUrl.pathname
 
   if (
     pathname.startsWith('/admin') &&
     pathname !== '/admin/login' &&
+    pathname !== '/admin/forgot-password' &&
     !user
   ) {
     const url = request.nextUrl.clone()
