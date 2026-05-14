@@ -2,16 +2,26 @@
 
 import { Turnstile } from '@marsidev/react-turnstile'
 import Link from 'next/link'
-import { useActionState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useActionState, useEffect } from 'react'
 import { sendPasswordResetAction } from '../login/actions'
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
 
 export default function AdminForgotPasswordPage() {
+  const router = useRouter()
   const [state, formAction, isPending] = useActionState(
     sendPasswordResetAction,
     undefined,
   )
+
+  useEffect(() => {
+    if (state?.email) {
+      router.push(
+        `/admin/reset-password?email=${encodeURIComponent(state.email)}`,
+      )
+    }
+  }, [state?.email, router])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-rc-dark p-4">
@@ -26,7 +36,7 @@ export default function AdminForgotPasswordPage() {
           className="mb-8 text-center text-sm text-zinc-400"
           style={{ fontFamily: 'var(--font-raleway)' }}
         >
-          Saisissez votre email pour recevoir un lien de réinitialisation.
+          Saisissez votre email pour recevoir un code de vérification.
         </p>
 
         <form action={formAction} className="space-y-5">
@@ -76,18 +86,8 @@ export default function AdminForgotPasswordPage() {
             className="w-full rounded bg-rc-yellow px-4 py-3 font-semibold uppercase tracking-wider text-rc-dark transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             style={{ fontFamily: 'var(--font-oswald)' }}
           >
-            {isPending ? 'Envoi en cours...' : 'Envoyer le lien'}
+            {isPending ? 'Envoi en cours...' : 'Envoyer le code'}
           </button>
-
-          {state?.message && (
-            <p
-              role="status"
-              className="rounded border border-blue-900/50 bg-blue-950/50 px-4 py-2.5 text-center text-sm text-blue-300"
-              style={{ fontFamily: 'var(--font-raleway)' }}
-            >
-              {state.message}
-            </p>
-          )}
         </form>
 
         <p className="mt-6 text-center">

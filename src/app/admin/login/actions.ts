@@ -62,6 +62,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 export type SendPasswordResetResult = {
   success: true
   message: string
+  email: string
 }
 
 /**
@@ -74,18 +75,17 @@ export async function sendPasswordResetAction(
   _prevState: SendPasswordResetResult | undefined,
   formData: FormData,
 ): Promise<SendPasswordResetResult> {
+  const emailRaw = formData.get('email')
+  const email =
+    typeof emailRaw === 'string' ? emailRaw.trim().toLowerCase() : ''
+
   const genericResponse: SendPasswordResetResult = {
     success: true,
     message:
-      'Si cet email est associé à un compte, un lien de réinitialisation a été envoyé.',
+      'Si cet email est associé à un compte, un code de vérification a été envoyé.',
+    email,
   }
 
-  const emailRaw = formData.get('email')
-  if (typeof emailRaw !== 'string') {
-    return genericResponse
-  }
-
-  const email = emailRaw.trim().toLowerCase()
   if (!email || !EMAIL_REGEX.test(email)) {
     return genericResponse
   }
@@ -108,7 +108,6 @@ export async function sendPasswordResetAction(
 
   const supabase = await createClient()
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://ricoune.com/auth/callback',
     captchaToken,
   })
 
