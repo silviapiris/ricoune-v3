@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useState, useTransition } from 'react'
+import { PasswordInput } from '@/components/admin/PasswordInput'
 import { updatePasswordAction } from './actions'
 
 function ResetPasswordContent() {
@@ -110,10 +111,9 @@ function ResetPasswordContent() {
           >
             Nouveau mot de passe
           </label>
-          <input
+          <PasswordInput
             id="password"
             name="password"
-            type="password"
             required
             minLength={12}
             autoComplete="new-password"
@@ -132,10 +132,9 @@ function ResetPasswordContent() {
           >
             Confirmer le mot de passe
           </label>
-          <input
+          <PasswordInput
             id="confirmPassword"
             name="confirmPassword"
-            type="password"
             required
             minLength={12}
             autoComplete="new-password"

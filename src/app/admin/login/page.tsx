@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Oswald, Raleway } from 'next/font/google'
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useActionState } from 'react'
+import { PasswordInput } from '@/components/admin/PasswordInput'
 import { signIn, type SignInState } from './actions'
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY
@@ -125,10 +126,9 @@ export default function AdminLoginPage() {
                 Mot de passe oublié ?
               </Link>
             </div>
-            <input
+            <PasswordInput
               id="password"
               name="password"
-              type="password"
               required
               autoComplete="current-password"
               disabled={pending}
