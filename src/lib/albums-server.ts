@@ -68,6 +68,7 @@ export async function getAlbums(): Promise<Album[]> {
     .from('albums')
     .select('*, album_tracks(title, position)')
     .eq('is_published', true)
+    .not('cover_storage_path', 'is', null)
     .order('sort_order', { ascending: true })
 
   if (error) {
@@ -86,6 +87,7 @@ export async function getAlbumBySlug(slug: string): Promise<Album | null> {
     .select('*, album_tracks(title, position)')
     .eq('slug', slug)
     .eq('is_published', true)
+    .not('cover_storage_path', 'is', null)
     .maybeSingle()
 
   if (error) {
