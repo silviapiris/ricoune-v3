@@ -37,7 +37,7 @@ export const socialLinks: Record<string, SocialLink> = {
   },
   deezer: {
     name: "Deezer",
-    href: "https://www.deezer.com/search/ricoune",
+    href: "https://www.deezer.com/fr/artist/55221",
     label: "Ecouter sur Deezer",
   },
 };
