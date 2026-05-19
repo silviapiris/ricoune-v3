@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Oswald, Raleway } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -99,6 +100,14 @@ export default function RootLayout({
           <Footer />
           <ScrollToTop />
           <Analytics />
+          {process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL && process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID && (
+            <Script
+              src={process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL}
+              data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+              strategy="afterInteractive"
+              defer
+            />
+          )}
         </Providers>
       </body>
     </html>
