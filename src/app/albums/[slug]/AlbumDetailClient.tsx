@@ -125,9 +125,9 @@ export default function AlbumDetailClient({ album, prev, next }: Props) {
                   <span className="w-8 text-right text-sm font-medium text-white/40">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  {track.spotify_track_url ? (
+                  {track.track_url ? (
                     <a
-                      href={track.spotify_track_url}
+                      href={track.track_url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm text-white/80 hover:text-white transition-colors"

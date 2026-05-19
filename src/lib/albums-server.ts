@@ -8,7 +8,7 @@ export interface Album {
   year: number
   description?: string
   coverUrl: string
-  tracklist: Array<{ title: string; spotify_track_url: string | null }>
+  tracklist: Array<{ title: string; track_url: string | null }>
   streaming: {
     spotify?: string
     apple?: string
@@ -37,7 +37,7 @@ type AlbumRow = {
   amazon_url: string | null
   youtube_url: string | null
   is_published: boolean
-  album_tracks: Array<{ title: string; position: number; spotify_track_url: string | null }>
+  album_tracks: Array<{ title: string; position: number; track_url: string | null }>
 }
 
 function mapRow(row: AlbumRow): Album {
@@ -45,7 +45,7 @@ function mapRow(row: AlbumRow): Album {
     .sort((a, b) => a.position - b.position)
     .map((t) => ({
       title: t.title,
-      spotify_track_url: t.spotify_track_url,
+      track_url: t.track_url,
     }))
 
   return {
@@ -69,7 +69,7 @@ export async function getAlbums(): Promise<Album[]> {
 
   const { data, error } = await supabase
     .from('albums')
-    .select('*, album_tracks(title, position, spotify_track_url)')
+    .select('*, album_tracks(title, position, track_url)')
     .eq('is_published', true)
     .not('cover_storage_path', 'is', null)
     .order('sort_order', { ascending: true })
@@ -87,7 +87,7 @@ export async function getAlbumBySlug(slug: string): Promise<Album | null> {
 
   const { data, error } = await supabase
     .from('albums')
-    .select('*, album_tracks(title, position, spotify_track_url)')
+    .select('*, album_tracks(title, position, track_url)')
     .eq('slug', slug)
     .eq('is_published', true)
     .not('cover_storage_path', 'is', null)

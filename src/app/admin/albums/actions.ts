@@ -23,7 +23,7 @@ export type AdminAlbum = {
 }
 
 export type AdminAlbumWithTracks = AdminAlbum & {
-  tracks: { position: number; title: string; spotify_track_url: string | null }[]
+  tracks: { position: number; title: string; track_url: string | null }[]
 }
 
 export type AlbumActionState = { error?: string }
@@ -84,7 +84,7 @@ export async function getAlbumWithTracksById(
       supabase.from('albums').select('*').eq('id', id).maybeSingle(),
       supabase
         .from('album_tracks')
-        .select('title, position, spotify_track_url')
+        .select('title, position, track_url')
         .eq('album_id', id)
         .order('position', { ascending: true }),
     ])
@@ -101,7 +101,7 @@ export async function getAlbumWithTracksById(
 
   return {
     ...(albumData as AdminAlbum),
-    tracks: (tracksData ?? []) as { position: number; title: string; spotify_track_url: string | null }[],
+    tracks: (tracksData ?? []) as { position: number; title: string; track_url: string | null }[],
   }
 }
 
