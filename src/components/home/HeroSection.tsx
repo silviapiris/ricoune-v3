@@ -16,7 +16,7 @@ export default function HeroSection(): React.ReactElement {
         fill
         priority
         className="object-cover object-[55%_center] md:object-center"
-        sizes="(max-width: 768px) 300vw, 100vw"
+        sizes="100vw"
       />
       {/* Gradient soutenant le texte en bas sans écraser le sujet */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
