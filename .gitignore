@@ -55,3 +55,9 @@ site pour Kévin/écoute et visus/8 bonus/marcel_photo_01.pdf
 
 # Migration scripts archived out of repo (added 05/05/2026)
 scripts/migrate-*.mjs
+# Audits ponctuels (rapports d'analyse perf/SEO/sécurité non versionnés)
+# À archiver dans OneDrive Ricoune-archives/audits/
+audit-*.txt
+audit-*.md
+lighthouse-*.html
+lighthouse-*.pdf
